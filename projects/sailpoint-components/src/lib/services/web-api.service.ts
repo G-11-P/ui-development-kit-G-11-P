@@ -40,6 +40,7 @@ export type UpdateEnvironmentRequest = {
   authtype: AuthMethods;
   clientId?: string;
   clientSecret?: string;
+  bypassTLS?: boolean;
 }
 
 export type Tenant = {

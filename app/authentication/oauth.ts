@@ -1,6 +1,6 @@
 import { dialog, shell } from "electron";
 import { getTokenDetails, parseJwt } from "./auth";
-import { getConfig, getSecureValue, setSecureValue } from "./config";
+import { getConfig, getConfigEnvironment, getSecureValue, setSecureValue } from "./config";
 import { LambdaUUIDResponse, RefreshResponse, TokenResponse, TokenSet, EncryptedTokenData } from "./types";
 import { generateKeyPair, decryptToken } from "./crypto";
 
@@ -165,47 +165,57 @@ export const OAuthLogin = async ({ tenant, baseAPIUrl, environment }: { tenant: 
         // Step 1: Generate fresh RSA key pair for this authentication session
         const publicKeyBase64 = await generateFreshKeyPair();
         
-        // Step 2: Initiate authentication flow with the public key
-        const authResponse = await fetch(authLambdaAuthURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                tenant,
-                apiBaseURL: baseAPIUrl,
-                publicKey: publicKeyBase64
-            }),
-        });
-
-        if (!authResponse.ok) {
-            throw new Error(`Auth lambda returned non-200 status: ${authResponse.status}`);
+        // Handle TLS bypass for certain situations
+        const envConfig = getConfigEnvironment(environment);
+        if (envConfig.bypassTLS) {
+            console.log(`TLS bypass enabled for OAuth login in environment: ${environment}`);
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        } else {
+            // Ensure default behavior if not bypassing
+            delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
         }
-
-        const authData: LambdaUUIDResponse = await authResponse.json();
-        console.log('Auth Response:', authData);
-
-        // Step 3: Present Auth URL to user
-        console.log('Attempting to open browser for authentication');
-        try {
-            // Using Electron's shell.openExternal to open the browser
-            await shell.openExternal(authData.authURL);
-            console.log('Successfully opened OAuth URL in default browser');
-
-        } catch (err) {
-            dialog.showMessageBox({
-                title: 'OAuth Login',
-                message: 'Please manually open the OAuth login page below',
-                detail: authData.authURL,
-                buttons: ['OK']
+        
+            // Step 2: Initiate authentication flow with the public key
+            const authResponse = await fetch(authLambdaAuthURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tenant,
+                    apiBaseURL: baseAPIUrl,
+                    publicKey: publicKeyBase64
+                }),
             });
-            console.warn('Cannot open browser automatically. Please manually open OAuth login page below');
-            console.log('OAuth URL:', authData.authURL);
-            // Continue with the flow even if browser opening fails
-        }
 
-        // Return the UUID and auth URL immediately for the frontend to start polling
-        return { success: true, uuid: authData.id, authUrl: authData.authURL };
+            if (!authResponse.ok) {
+                throw new Error(`Auth lambda returned non-200 status: ${authResponse.status}`);
+            }
+
+            const authData: LambdaUUIDResponse = await authResponse.json();
+            console.log('Auth Response:', authData);
+
+            // Step 3: Present Auth URL to user
+            console.log('Attempting to open browser for authentication');
+            try {
+                // Using Electron's shell.openExternal to open the browser
+                await shell.openExternal(authData.authURL);
+                console.log('Successfully opened OAuth URL in default browser');
+
+            } catch (err) {
+                dialog.showMessageBox({
+                    title: 'OAuth Login',
+                    message: 'Please manually open the OAuth login page below',
+                    detail: authData.authURL,
+                    buttons: ['OK']
+                });
+                console.warn('Cannot open browser automatically. Please manually open OAuth login page below');
+                console.log('OAuth URL:', authData.authURL);
+                // Continue with the flow even if browser opening fails
+            }
+
+            // Return the UUID and auth URL immediately for the frontend to start polling
+            return { success: true, uuid: authData.id, authUrl: authData.authURL };
     } catch (error) {
         console.error('OAuth login error:', error);
         return { success: false, error: 'OAuth login failed: ' + error };
@@ -223,9 +233,8 @@ export const refreshOAuthToken = async (environment: string): Promise<void> => {
         console.log(`Refreshing OAuth token for environment: ${environment}`);
 
         // Get API URL from config
-        const config = getConfig();
-        const envConfig = config.environments[environment];
-        if (!envConfig) {
+        const envConfig = getConfigEnvironment(environment);
+        if (!envConfig.baseurl) {
             throw new Error('Environment configuration not found');
         }
 
@@ -244,44 +253,54 @@ export const refreshOAuthToken = async (environment: string): Promise<void> => {
             tenant: tenant || environment
         };
 
-        const response = await fetch(authLambdaRefreshURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(refreshRequestBody),
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Lambda refresh failed: ${response.status} ${response.statusText} - ${errorText}`);
+        // Handle TLS bypass for certain situations
+        if (envConfig.bypassTLS) {
+            console.log(`TLS bypass enabled for OAuth login in environment: ${environment}`);
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        } else {
+            // Ensure default behavior if not bypassing
+            delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
         }
 
-        const refreshData: RefreshResponse = await response.json();
 
-        if (!refreshData.access_token) {
-            throw new Error('No access token in refresh response');
-        }
+            const response = await fetch(authLambdaRefreshURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(refreshRequestBody),
+            });
 
-        if (!refreshData.refresh_token) {
-            throw new Error('No refresh token in refresh response');
-        }
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Lambda refresh failed: ${response.status} ${response.statusText} - ${errorText}`);
+            }
 
-        // Parse tokens to get expiry
-        const accessTokenClaims = parseJwt(refreshData.access_token);
-        const refreshTokenClaims = parseJwt(refreshData.refresh_token);
+            const refreshData: RefreshResponse = await response.json();
 
-        const tokenSet = {
-            accessToken: refreshData.access_token,
-            accessExpiry: new Date(accessTokenClaims.exp * 1000),
-            refreshToken: refreshData.refresh_token,
-            refreshExpiry: new Date(refreshTokenClaims.exp * 1000),
-        };
+            if (!refreshData.access_token) {
+                throw new Error('No access token in refresh response');
+            }
 
-        // Store the new tokens for future use
-        storeOAuthTokens(environment, tokenSet);
+            if (!refreshData.refresh_token) {
+                throw new Error('No refresh token in refresh response');
+            }
 
-        console.log('OAuth token refresh successful');
+            // Parse tokens to get expiry
+            const accessTokenClaims = parseJwt(refreshData.access_token);
+            const refreshTokenClaims = parseJwt(refreshData.refresh_token);
+
+            const tokenSet = {
+                accessToken: refreshData.access_token,
+                accessExpiry: new Date(accessTokenClaims.exp * 1000),
+                refreshToken: refreshData.refresh_token,
+                refreshExpiry: new Date(refreshTokenClaims.exp * 1000),
+            };
+
+            // Store the new tokens for future use
+            storeOAuthTokens(environment, tokenSet);
+
+            console.log('OAuth token refresh successful');
     } catch (error) {
         console.error('Error refreshing OAuth token:', error);
         throw error;

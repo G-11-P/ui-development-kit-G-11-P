@@ -21,6 +21,7 @@ export type Tenant = {
   clientSecret: string | null;
   authtype: "oauth" | "pat";
   tenantName: string;
+  bypassTLS?: boolean;
 }
 
 export const getTenants = (): Tenant[] => {
@@ -52,6 +53,7 @@ export const getTenants = (): Tenant[] => {
         clientSecret: storedPATTokens?.clientSecret || null,
         authtype: envConfig.authtype,
         tenantName: environment,
+        bypassTLS: envConfig.bypassTLS || false,
       });
     }
     return tenants;
@@ -82,23 +84,24 @@ export interface CLIConfig {
       tenanturl: string;
       baseurl: string;
       authtype: "oauth" | "pat";
+      bypassTLS?: boolean;
     };
   };
 }
 
-export function getConfigEnvironment(environment: string): { tenanturl, baseurl, authtype } {
+export function getConfigEnvironment(environment: string): { tenanturl: string, baseurl: string, authtype: string, bypassTLS?: boolean } {
   try {
-    
+    const config = getConfig();
+    if (!config.environments[environment]) {
+      return { tenanturl: '', baseurl: '', authtype: 'undefined', bypassTLS: false };
+    }
+
+    const { tenanturl, baseurl, authtype, bypassTLS } = config.environments[environment];
+    return { tenanturl, baseurl, authtype, bypassTLS };
   } catch (error) {
-    
+    console.error('Error getting config environment:', error);
+    return { tenanturl: '', baseurl: '', authtype: 'undefined', bypassTLS: false };
   }
-      const config = getConfig();
-      if (!config.environments[environment]) {
-        return { tenanturl: '', baseurl: '', authtype: 'undefined' };
-      }
-  
-      const { tenanturl, baseurl, authtype } = config.environments[environment];
-      return { tenanturl, baseurl, authtype };
 }
 
 export function getConfig(): CLIConfig {
@@ -145,6 +148,7 @@ export interface UpdateEnvironmentRequest {
   authtype: 'oauth' | 'pat';
   clientId?: string;
   clientSecret?: string;
+  bypassTLS?: boolean;
 }
 // This function will update the environment or create one if it doesn't exist
 export const updateEnvironment = (
@@ -175,6 +179,7 @@ export const updateEnvironment = (
       tenanturl: configureRequest.tenantUrl,
       baseurl: configureRequest.baseUrl,
       authtype: configureRequest.authtype,
+      bypassTLS: configureRequest.bypassTLS || false,
     }
 
     // Save credentials securely if provided

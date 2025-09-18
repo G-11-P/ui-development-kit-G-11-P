@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
@@ -41,6 +42,7 @@ type Tenant = {
   name: string;
   authtype: AuthMethods;
   tenantName: string;
+  bypassTLS?: boolean;
 }
 
 type ComponentState = {
@@ -77,6 +79,7 @@ type ComponentState = {
     MatSelectModule,
     MatInputModule,
     MatRadioModule,
+    MatCheckboxModule,
     MatSnackBarModule,
     FormsModule,
     SharedModule,
@@ -94,6 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     name: '',
     authtype: 'oauth',
     tenantName: '',
+    bypassTLS: false,
   }
 
   // State management
@@ -503,6 +507,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         authtype: this.state.actualTenant.authtype as 'oauth' | 'pat',
         clientId: clientId,
         clientSecret: clientSecret,
+        bypassTLS: this.state.actualTenant.bypassTLS || false,
       });
 
       if (result.success) {

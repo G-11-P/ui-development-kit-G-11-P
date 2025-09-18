@@ -96,6 +96,17 @@
             </mat-form-field>
           </div>
 
+          <!-- TLS Bypass Option -->
+          <div class="form-row">
+            <mat-checkbox [(ngModel)]="state.actualTenant.bypassTLS" name="bypassTLS" color="warn">
+              Bypass TLS Certificate Validation
+            </mat-checkbox>
+            <div class="tls-bypass-hint">
+              <mat-icon class="warning-icon" color="warn">warning</mat-icon>
+              <span>Enable only if you're behind a corporate proxy (like Zscaler) that intercepts HTTPS traffic. This will disable SSL certificate validation for this environment.</span>
+            </div>
+          </div>
+
           <!-- PAT Fields -->
           <div *ngIf="state.actualTenant.authtype === 'pat'" class="pat-section">
             <div class="form-row">

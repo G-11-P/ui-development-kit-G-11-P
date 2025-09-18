@@ -159,6 +159,28 @@
         margin-top: 16px;
       }
       
+      .tls-bypass-hint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 8px;
+        padding: 12px;
+        background-color: rgba(244, 67, 54, 0.05);
+        border-radius: 6px;
+        border-left: 3px solid var(--warn-color);
+        
+        .warning-icon {
+          margin-top: 2px;
+          flex-shrink: 0;
+        }
+        
+        span {
+          color: var(--text-secondary);
+          font-size: 13px;
+          line-height: 1.4;
+        }
+      }
+      
       .oauth-section {
         margin-top: 16px;
         

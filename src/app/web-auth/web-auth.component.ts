@@ -41,10 +41,13 @@ export class WebAuthComponent implements OnInit {
     // Check if we're handling an OAuth callback
     const queryParams = new URLSearchParams(window.location.search);
     if (queryParams.has('success')) {
-      void this.checkLoginStatus();
+      void this.checkLoginStatus(true);
     } else if (queryParams.has('error')) {
       const error = queryParams.get('message') || 'Authentication failed';
       this.showError(error);
+    } else {
+      // Check initial login status and emit event (silent check)
+      void this.checkLoginStatus(false);
     }
   }
 
@@ -121,7 +124,7 @@ export class WebAuthComponent implements OnInit {
     }
   }
 
-  async checkLoginStatus(): Promise<void> {
+  async checkLoginStatus(showSuccessMessage: boolean = false): Promise<void> {
     try {
       const response = await fetch('/api/auth/login-status', {
         credentials: 'include' // Important for session cookies
@@ -131,19 +134,30 @@ export class WebAuthComponent implements OnInit {
       
       if (status.isLoggedIn) {
         this.isAuthenticated = true;
-        this.username = status.username || 'User';
+        this.username = status.username || status.environment || 'User';
         this.authEvent.emit({
           success: true,
           username: this.username
         });
-        this.showSuccess(`Successfully authenticated as ${this.username}`);
+        if (showSuccessMessage) {
+          this.showSuccess(`Successfully authenticated as ${this.username}`);
+        }
       } else {
         this.isAuthenticated = false;
-        // Don't show error for initial check
+        this.username = '';
+        // Always emit the current state, even if not authenticated
+        this.authEvent.emit({
+          success: false
+        });
       }
     } catch (error) {
       console.error('Error checking login status:', error);
       this.isAuthenticated = false;
+      this.username = '';
+      // Emit failure state on error
+      this.authEvent.emit({
+        success: false
+      });
     }
   }
 

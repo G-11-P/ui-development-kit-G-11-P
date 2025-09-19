@@ -132,9 +132,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     void this.loadTenants();
-    void this.checkLoginStatus()
 
-    
     this.connectionService.connectedSubject$.subscribe((connection) => {
       this.state.isConnected = connection.connected;
       this.state.name = connection.name || '';
@@ -144,17 +142,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       void this.checkSessionStatus();
     }
 
-    // Check for OAuth callback parameters
-    if (this.state.isWebMode) {
-      const url = new URL(document.location.href);
-      if (url.searchParams.has('success')) {
-        this.showSnackbar('Login successful!');
-        void this.checkLoginStatus();
-      } else if (url.searchParams.has('error')) {
-        const errorMessage = url.searchParams.get('message') || 'Unknown error';
-        this.showSnackbar(`OAuth error: ${errorMessage}`);
-      }
-    }
+    // In web mode, the WebAuthComponent will handle login status checks and OAuth callbacks
+    // No need to duplicate that logic here
 
     this.state.loading = false;
 
@@ -354,10 +343,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         connected: true, 
         name: event.username || 'User' 
       });
-      this.showSnackbar(`Successfully authenticated as ${event.username}`);
+      if (event.username) {
+        this.showSnackbar(`Successfully authenticated as ${event.username}`);
+      }
     } else {
       // Handle logout or auth failure
       this.state.isConnected = false;
+      this.state.name = '';
       this.connectionService.connectedSubject$.next({ connected: false });
       if (event.message) {
         this.showSnackbar(event.message);

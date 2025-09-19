@@ -83,7 +83,7 @@ app.use(cookieParser());
 
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // limit each IP to 5 requests per minute
+  max: 100, // limit each IP to 5 requests per minute
   message: { error: 'Too many request attempts. Please try again later.' }
 });
 

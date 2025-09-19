@@ -328,6 +328,87 @@ app.get('/api/auth/login-status', rateLimiter, (req: Request, res: Response) => 
   });
 });
 
+// Check access token status and auto-refresh if needed
+app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Response) => {
+  console.log('GET /api/auth/status/access/ called');
+  
+  // Check if user is authenticated and has token data
+  if (!req.session.isAuthenticated || !tokenData) {
+    return res.json({
+      authtype: 'oauth' as const,
+      accessTokenIsValid: false,
+      needsRefresh: false
+    });
+  }
+  
+  // Check if access token is still valid
+  const now = new Date();
+  let accessTokenIsValid = tokenData.accessExpiry > now;
+  const canRefresh = tokenData.refreshToken && tokenData.refreshExpiry && tokenData.refreshExpiry > now;
+  
+  // If token is expired but we can refresh, attempt to refresh it
+  if (!accessTokenIsValid && canRefresh) {
+    console.log('Access token expired, attempting to refresh...');
+    
+    try {
+      // Extract tenant name for token endpoint
+      let tenantName = '';
+      try {
+        const tenantUrl = new URL(SERVER_CONFIG.tenantUrl);
+        tenantName = tenantUrl.hostname.split('.')[0]; 
+      } catch (error) {
+        console.error('Failed to parse tenant URL for token refresh:', error);
+      }
+      
+      if (tenantName) {
+        // Use the SailPoint token refresh endpoint
+        const tokenEndpoint = `https://${tenantName}.api.identitynow-demo.com/oauth/token`;
+        
+        const params = new URLSearchParams();
+        params.append('grant_type', 'refresh_token');
+        params.append('client_id', SERVER_CONFIG.clientId);
+        params.append('client_secret', SERVER_CONFIG.clientSecret);
+        params.append('refresh_token', tokenData.refreshToken!);
+        
+        const refreshResponse = await axios.post(tokenEndpoint, params, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        
+        const { access_token, refresh_token, expires_in } = refreshResponse.data;
+        
+        // Update token data with new tokens
+        tokenData = {
+          accessToken: access_token,
+          accessExpiry: new Date(Date.now() + expires_in * 1000),
+          refreshToken: refresh_token || tokenData.refreshToken, // Use new refresh token if provided, otherwise keep existing
+          refreshExpiry: tokenData.refreshExpiry // Keep existing refresh token expiry
+        };
+        
+        // Parse JWT to update user info if needed
+        const decodedToken = parseJWT(access_token);
+        const username = decodedToken.user_name || req.session.username || 'User';
+        req.session.username = username;
+        
+        accessTokenIsValid = true;
+        console.log('Token refreshed successfully');
+      }
+    } catch (refreshError) {
+      console.error('Failed to refresh token:', refreshError);
+      // If refresh fails, the token is still invalid
+      accessTokenIsValid = false;
+    }
+  }
+  
+  res.json({
+    authtype: 'oauth' as const,
+    accessTokenIsValid,
+    expiry: tokenData.accessExpiry,
+    needsRefresh: !accessTokenIsValid && canRefresh
+  });
+});
+
 // Logout endpoint
 app.post('/api/auth/logout', rateLimiter, csrfProtection, (req: Request, res: Response) => {
   console.log('POST /api/auth/logout called');
@@ -402,6 +483,7 @@ app.listen(PORT, () => {
   console.log('  POST /api/auth/web-login (CSRF protected)');
   console.log('  GET  /oauth/callback');
   console.log('  GET  /api/auth/login-status');
+  console.log('  GET  /api/auth/status/access/');
   console.log('  GET  /api/auth/csrf-token');
   console.log('  POST /api/auth/logout (CSRF protected)');
   console.log('  POST /api/sdk/:methodName (CSRF protected)');

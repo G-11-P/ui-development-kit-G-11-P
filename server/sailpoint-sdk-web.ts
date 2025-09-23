@@ -63,7 +63,7 @@ function generateErrorResponse(error: unknown): ApiResponse<any> {
 export function createSdkConfiguration(accessToken: string, basePath: string): sdk.Configuration {
   return new sdk.Configuration({
     accessToken: accessToken,
-    basePath: basePath
+    baseurl: basePath
   });
 }
 

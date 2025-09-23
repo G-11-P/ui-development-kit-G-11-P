@@ -104,6 +104,7 @@ export class WebApiService implements ElectronAPIInterface {
   private authtype: AuthMethods = 'pat';
   private activeEnvironment: string | null = null;
   private tokens: Map<string, TokenSet> = new Map();
+  private csrfToken: string | null = null;
 
   constructor() {
     // Create proxy to handle dynamic SDK method calls
@@ -134,16 +135,56 @@ export class WebApiService implements ElectronAPIInterface {
   }
 
   /**
+   * Get CSRF token from the server
+   */
+  private async getCsrfToken(): Promise<string> {
+    if (this.csrfToken) {
+      return this.csrfToken;
+    }
+
+    try {
+      const response = await fetch(`${this.apiUrl}/auth/csrf-token`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get CSRF token');
+      }
+
+      const { csrfToken } = await response.json();
+      this.csrfToken = csrfToken;
+      return csrfToken;
+    } catch (error) {
+      console.error('Error getting CSRF token:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Helper method to make API calls to the web service
    */
   private async apiCall<T>(endpoint: string, method: string = 'GET', body?: any): Promise<T> {
     const url = `${this.apiUrl}/${endpoint}`;
     
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Add CSRF token for non-GET requests
+    if (method !== 'GET') {
+      try {
+        const csrfToken = await this.getCsrfToken();
+        headers['x-csrf-token'] = csrfToken;
+      } catch (error) {
+        console.error('Failed to get CSRF token for request:', error);
+        // Continue without CSRF token - let the server handle the error
+      }
+    }
+    
     const options: RequestInit = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       credentials: 'include', // Includes cookies for session management
     };
     
@@ -154,6 +195,15 @@ export class WebApiService implements ElectronAPIInterface {
     const response = await fetch(url, options);
     
     if (!response.ok) {
+      // If it's a CSRF error, clear the cached token and retry once
+      if (response.status === 403 && method !== 'GET') {
+        const errorText = await response.text();
+        if (errorText.includes('CSRF')) {
+          this.csrfToken = null; // Clear cached token
+          return this.apiCall(endpoint, method, body); // Retry once
+        }
+      }
+      
       const error = await response.text();
       throw new Error(`API call failed: ${error}`);
     }

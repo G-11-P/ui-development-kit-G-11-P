@@ -105,7 +105,25 @@ export class WebApiService implements ElectronAPIInterface {
   private activeEnvironment: string | null = null;
   private tokens: Map<string, TokenSet> = new Map();
 
-  constructor() { }
+  constructor() {
+    // Create proxy to handle dynamic SDK method calls
+    return new Proxy(this, {
+      get(target: WebApiService, prop: string | symbol) {
+        if (prop in target || typeof prop === 'symbol') {
+          return (target as any)[prop];
+        }
+        
+        // For unknown methods, assume they are SDK methods and proxy them through callSdkMethod
+        if (typeof prop === 'string' && prop !== 'constructor') {
+          return function(this: WebApiService, ...args: any[]) {
+            return this.callSdkMethod(prop, ...args);
+          }.bind(target);
+        }
+        
+        return undefined;
+      }
+    });
+  }
   
   /**
    * Configure the API URL for the web service

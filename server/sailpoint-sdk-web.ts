@@ -3937,5 +3937,22 @@ export async function executeSdkMethod(
   }
 
   const config = createSdkConfiguration(accessToken, basePath);
-  return await sdkFunction(params, config);
+  
+  // Check the function signature to determine how to call it
+  // Some functions take (params, config), others take just (config)
+  const functionLength = sdkFunction.length;
+  
+  let result: ApiResponse<any>;
+  if (functionLength === 1) {
+    // Function only takes config parameter: (config: Configuration)
+    console.log('Calling SDK function with config only');
+    result = await (sdkFunction as any)(config);
+  } else {
+    // Function takes params and config: (params: any, config: Configuration)
+    console.log('Calling SDK function with params and config');
+    result = await sdkFunction(params, config);
+  }
+  
+  console.log('SDK result headers:', JSON.stringify(result.headers, null, 2));
+  return result;
 }

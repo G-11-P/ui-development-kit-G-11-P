@@ -1,14 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { EnvironmentInfo } from '../../../services/connection.service';
+import { BehaviorSubject } from 'rxjs';
 import { ShortcutsComponent } from './shortcuts.component';
+import { ConnectionService } from '../../../services/connection.service';
 
 describe('ShortcutsComponent', () => {
   let component: ShortcutsComponent;
   let fixture: ComponentFixture<ShortcutsComponent>;
+  let mockConnectionService: Partial<ConnectionService>;
 
   beforeEach(async () => {
+    // Create mock ConnectionService
+    mockConnectionService = {
+      currentEnvironmentSubject$: new BehaviorSubject<EnvironmentInfo | undefined>({ 
+        name: 'test-env', 
+        apiUrl: 'https://test.api.identitynow.com', 
+        baseUrl: 'https://test.identitynow.com',
+        authtype: 'oauth' as const
+      })
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ShortcutsComponent]
+      imports: [ShortcutsComponent],
+      providers: [
+        { provide: ConnectionService, useValue: mockConnectionService }
+      ]
     })
       .compileComponents();
 
@@ -49,6 +65,13 @@ describe('ShortcutsComponent', () => {
 
     component.onShortcutClick(shortcut);
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      shortcut.url.replace(':TENANTURL:', 'https://test.identitynow.com'), 
+      '_blank'
+    );
+  });
+
+  it('should replace tenant URL placeholder correctly', () => {
+    expect(component.tenantUrl).toBe('https://test.identitynow.com');
   });
 }); 

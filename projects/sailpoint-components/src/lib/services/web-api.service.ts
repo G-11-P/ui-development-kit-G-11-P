@@ -111,12 +111,12 @@ export class WebApiService implements ElectronAPIInterface {
     return new Proxy(this, {
       get(target: WebApiService, prop: string | symbol) {
         if (prop in target || typeof prop === 'symbol') {
-          return (target as any)[prop];
+          return ((target as unknown) as Record<string | symbol, unknown>)[prop];
         }
         
         // For unknown methods, assume they are SDK methods and proxy them through callSdkMethod
         if (typeof prop === 'string' && prop !== 'constructor') {
-          return function(this: WebApiService, ...args: any[]) {
+          return function(this: WebApiService, ...args: unknown[]) {
             return this.callSdkMethod(prop, ...args);
           }.bind(target);
         }
@@ -152,7 +152,7 @@ export class WebApiService implements ElectronAPIInterface {
         throw new Error('Failed to get CSRF token');
       }
 
-      const { csrfToken } = await response.json();
+      const { csrfToken } = await response.json() as { csrfToken: string };
       this.csrfToken = csrfToken;
       return csrfToken;
     } catch (error) {
@@ -289,7 +289,7 @@ export class WebApiService implements ElectronAPIInterface {
   // This acts as a catch-all for any SailPoint API functions
   [key: string]: any;
   
-  async callSdkMethod(methodName: string, ...args: any[]): Promise<any> {
+  async callSdkMethod(methodName: string, ...args: unknown[]): Promise<unknown> {
     // Most SDK methods expect the first argument to be the request parameters object
     // For compatibility with the SDK wrapper, pass the first argument directly
     const requestParameters = args[0] || {};

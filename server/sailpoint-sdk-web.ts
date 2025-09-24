@@ -3953,6 +3953,5 @@ export async function executeSdkMethod(
     result = await sdkFunction(params, config);
   }
   
-  console.log('SDK result headers:', JSON.stringify(result.headers, null, 2));
   return result;
 }

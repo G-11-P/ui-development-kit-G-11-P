@@ -20,4 +20,4 @@ if (!app) {
 // This keeps all the business logic in one place
 
 // Export the Lambda handler
-exports.handler = serverlessExpress({ app });
+exports.handler = serverlessExpress(app);

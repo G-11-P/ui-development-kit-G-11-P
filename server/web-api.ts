@@ -127,21 +127,6 @@ const SERVER_CONFIG = {
 // In-memory token storage
 let tokenData: TokenData | null = null;
 
-// File uploads configuration
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
-    cb(null, uploadDir);
-  },
-  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-    cb(null, file.originalname);
-  }
-});
-const upload = multer({ storage });
 
 // Helper functions
 function generateStateParam(data: OAuthState): string {
@@ -150,16 +135,6 @@ function generateStateParam(data: OAuthState): string {
   return Buffer.from(`${randomBytes}:${stateObj}`).toString('base64');
 }
 
-function parseStateParam(state: string): OAuthState | null {
-  try {
-    const decoded = Buffer.from(state, 'base64').toString('utf-8');
-    const [, stateObj] = decoded.split(':', 2);
-    return JSON.parse(stateObj);
-  } catch (error) {
-    console.error('Failed to parse OAuth state parameter:', error);
-    return null;
-  }
-}
 
 function parseJWT(token: string): any {
   try {

@@ -482,16 +482,6 @@ app.get('/api/config', rateLimiter, (req: Request, res: Response) => {
 });
 
 
-// Serve the Angular app for all other routes (only in local development)
-app.get('*', rateLimiter, (req: Request, res: Response) => {
-  // In Lambda, don't try to serve static files - that's handled by CloudFront/S3
-  if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    res.status(404).json({ error: 'Static files are served by CloudFront in Lambda environment' });
-  } else {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  }
-});
-
 // Export app for Lambda or other environments
 export default app;
 

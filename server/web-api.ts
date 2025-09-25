@@ -507,16 +507,20 @@ app.get('*', rateLimiter, (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Web API server running on port ${PORT}`);
-  console.log(`OAuth client configured for: ${SERVER_CONFIG.tenantUrl}`);
-  console.log('Available endpoints:');
-  console.log('  POST /api/auth/web-login (CSRF protected)');
-  console.log('  GET  /oauth/callback');
-  console.log('  GET  /api/auth/login-status');
-  console.log('  GET  /api/auth/status/access/');
-  console.log('  GET  /api/auth/csrf-token');
+// Export app for Lambda or other environments
+export default app;
+
+// Start server only if running directly (not when imported)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Web API server running on port ${PORT}`);
+    console.log(`OAuth client configured for: ${SERVER_CONFIG.tenantUrl}`);
+    console.log('Available endpoints:');
+    console.log('  POST /api/auth/web-login (CSRF protected)');
+    console.log('  GET  /oauth/callback');
+    console.log('  GET  /api/auth/login-status');
+    console.log('  GET  /api/auth/status/access/');
+    console.log('  GET  /api/auth/csrf-token');
   console.log('  POST /api/auth/logout (CSRF protected)');
   console.log('  POST /api/sdk/:methodName (CSRF protected)');
-});
+})};

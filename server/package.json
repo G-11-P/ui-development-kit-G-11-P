@@ -7,11 +7,13 @@
     "start": "ts-node web-api.ts",
     "build": "tsc",
     "dev": "nodemon --exec ts-node web-api.ts",
-    "serve": "node dist/web-api.js"
+    "serve": "node dist/web-api.js",
+    "lambda:build": "npm run build && npm install --production"
   },
   "author": "SailPoint",
   "license": "MIT",
   "dependencies": {
+    "@vendia/serverless-express": "^4.12.6",
     "axios": "^1.12.0",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",

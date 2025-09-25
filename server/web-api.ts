@@ -73,7 +73,6 @@ if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
     if (!req.url || req.url === '') {
       req.url = '/';
     }
-    console.log('Original URL modified to:', req.url);
     next();
   });
 }
@@ -100,8 +99,13 @@ app.use(cookieParser());
 
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 100, // limit each IP to 5 requests per minute
-  message: { error: 'Too many request attempts. Please try again later.' }
+  max: 100, // limit each IP to 100 requests per minute
+  message: { error: 'Too many request attempts. Please try again later.' },
+  // In Lambda/API Gateway, trust the proxy and validate properly
+  validate: process.env.AWS_LAMBDA_FUNCTION_NAME ? {
+    trustProxy: false, // Disable the trust proxy validation in Lambda
+    xForwardedForHeader: false // Disable X-Forwarded-For validation
+  } : undefined
 });
 
 // CSRF middleware

@@ -1,0 +1,211 @@
+name: Deploy UI Development Kit to AWS
+
+on:
+  push:
+    branches: ['main']
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'main' }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write # Required for AWS OIDC
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: deploy-ui-dev-kit-${{ github.run_id }}
+          aws-region: us-east-1
+          role-duration-seconds: 3600
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Determine deployment target
+        run: |
+          if [[ ${{ github.ref }} == refs/pull/* ]]; then
+            PR_NUMBER=$(echo ${{ github.ref }} | awk -F '/' '{print $3}')
+            echo "STACK_NAME=ui-dev-kit-pr-$PR_NUMBER" >> $GITHUB_ENV
+            echo "IS_PR=true" >> $GITHUB_ENV
+          else
+            echo "STACK_NAME=ui-dev-kit" >> $GITHUB_ENV
+            echo "IS_PR=false" >> $GITHUB_ENV
+          fi
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd server && npm ci
+
+      - name: Build Angular application
+        run: npm run build -- -c web-production
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+      - name: Build server TypeScript
+        run: |
+          cd server
+          npm run build
+
+      - name: Build and deploy SAM application
+        run: |
+          sam build
+          if [ "$IS_PR" = "true" ]; then
+            # For PRs, override the stack name
+            sam deploy \
+              --no-confirm-changeset \
+              --no-fail-on-empty-changeset \
+              --stack-name $STACK_NAME \
+              --s3-prefix $STACK_NAME \
+              --parameter-overrides Environment=prod \
+              --capabilities CAPABILITY_IAM \
+              --resolve-s3
+          else
+            # For main branch, use samconfig.toml defaults
+            sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+          fi
+
+      - name: Get deployment outputs
+        id: outputs
+        run: |
+          S3_BUCKET=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" \
+            --output text)
+          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
+          echo "s3_bucket=$S3_BUCKET" >> $GITHUB_OUTPUT
+          
+          CLOUDFRONT_URL=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].Outputs[?OutputKey=='WebsiteURL'].OutputValue" \
+            --output text)
+          echo "CLOUDFRONT_URL=$CLOUDFRONT_URL" >> $GITHUB_ENV
+          echo "cloudfront_url=$CLOUDFRONT_URL" >> $GITHUB_OUTPUT
+          
+          API_URL=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayURL'].OutputValue" \
+            --output text)
+          echo "API_URL=$API_URL" >> $GITHUB_ENV
+          echo "api_url=$API_URL" >> $GITHUB_OUTPUT
+
+      - name: Upload Angular app to S3
+        run: |
+          aws s3 sync ./dist s3://$S3_BUCKET --delete
+          
+      - name: Invalidate CloudFront cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" \
+            --output text)
+          
+          aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*"
+
+      - name: Comment on PR with deployment info
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('🚀 Preview Deployment')
+            );
+            
+            const commentBody = `🚀 **Preview Deployment Ready**
+            
+            Your changes have been deployed and are available at:
+            - **Web App**: ${{ steps.outputs.outputs.cloudfront_url }}
+            - **API**: ${{ steps.outputs.outputs.api_url }}
+            - **Stack**: \`${{ env.STACK_NAME }}\`
+            
+            Built from commit: ${{ github.event.pull_request.head.sha }}
+            
+            ---
+            *This comment will be updated with each new deployment.*`;
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
+
+      - name: Output deployment URLs
+        run: |
+          echo "🎉 Deployment completed successfully!"
+          echo "Web Application: $CLOUDFRONT_URL"
+          echo "API Endpoint: $API_URL" 
+          echo "Stack Name: $STACK_NAME"
+
+  cleanup-pr-stacks:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: cleanup-ui-dev-kit-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Delete PR stack
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          STACK_NAME="ui-dev-kit-pr-$PR_NUMBER"
+          
+          echo "Cleaning up stack: $STACK_NAME"
+          
+          # Check if stack exists
+          if aws cloudformation describe-stacks --stack-name $STACK_NAME &>/dev/null; then
+            echo "Stack exists, deleting..."
+            aws cloudformation delete-stack --stack-name $STACK_NAME
+            echo "Stack deletion initiated for $STACK_NAME"
+          else
+            echo "Stack $STACK_NAME does not exist, nothing to clean up"
+          fi

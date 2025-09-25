@@ -71,49 +71,49 @@ Resources:
             Method: ANY
             ApiId: !Ref UiDevKitApiGateway
 
-  # S3 Bucket for hosting the Angular web app
   UiDevKitWebSiteBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub "sailpoint-ui-dev-kit-${Environment}-${AWS::AccountId}"
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - BucketKeyEnabled: true
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: index.html  # SPA routing support
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
+      Type: "AWS::S3::Bucket"
+      Properties:
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - BucketKeyEnabled: true
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: index.html
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
 
   # S3 Bucket Policy for CloudFront access
   UiDevKitWebSiteBucketPolicy:
-    Type: AWS::S3::BucketPolicy
+    Type: "AWS::S3::BucketPolicy"
     Properties:
       Bucket: !Ref UiDevKitWebSiteBucket
       PolicyDocument:
         Version: "2012-10-17"
+        Id: "PolicyForCloudFrontPrivateContent"
         Statement:
         - Sid: "AllowCloudFrontServicePrincipal"
           Effect: "Allow"
           Principal:
             Service: "cloudfront.amazonaws.com"
           Action: "s3:GetObject"
-          Resource: !Sub "${UiDevKitWebSiteBucket}/*"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref UiDevKitWebSiteBucket, "/*" ] ]
           Condition:
             StringEquals:
-              "AWS:SourceArn": !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${UiDevKitCloudFrontDistribution}"
+              "AWS:SourceArn": !Join [ "", [ "arn:aws:cloudfront::", !Ref "AWS::AccountId", ":distribution/", !Ref UiDevKitCloudFrontDistribution ] ]
         - Sid: "PublicReadGetObject"
           Effect: "Allow"
           Principal: "*"
-          Action: "s3:GetObject"
-          Resource: !Sub "${UiDevKitWebSiteBucket}/*"
+          Action:
+            - "s3:GetObject"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref UiDevKitWebSiteBucket, "/*" ] ]
 
   # Origin Access Control for CloudFront
   CloudFrontOriginAccessControl:
-    Type: AWS::CloudFront::OriginAccessControl
+    Type: "AWS::CloudFront::OriginAccessControl"
     Properties:
       OriginAccessControlConfig:
         Name: !Sub "${AWS::StackName}-OAC"
@@ -123,53 +123,57 @@ Resources:
 
   # CloudFront Distribution for the web app
   UiDevKitCloudFrontDistribution:
-    Type: AWS::CloudFront::Distribution
+    Type: "AWS::CloudFront::Distribution"
     Properties:
       DistributionConfig:
         Origins:
-        # S3 Origin for the Angular app
-        - DomainName: !GetAtt UiDevKitWebSiteBucket.RegionalDomainName
-          Id: "UiDevKitS3Origin"
-          S3OriginConfig:
-            OriginAccessIdentity: ""
-          OriginAccessControlId: !Ref CloudFrontOriginAccessControl
-        # API Gateway origin for backend calls
-        - DomainName: !Sub "${UiDevKitApiGateway}.execute-api.${AWS::Region}.amazonaws.com"
-          Id: "UiDevKitApiOrigin"
+        - DomainName: !Join ["", [!Ref UiDevKitWebSiteBucket, ".s3-website-", !Ref "AWS::Region", ".amazonaws.com"]]
+          Id: "UiDevKitWebS3Origin"
           CustomOriginConfig:
-            OriginProtocolPolicy: "https-only"
-            OriginSSLProtocols: 
-              - "TLSv1.2"
+            OriginProtocolPolicy: "http-only"
         Enabled: true
         DefaultRootObject: "index.html"
         HttpVersion: "http2"
         DefaultCacheBehavior:
-          AllowedMethods: ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-          CachedMethods: ["GET", "HEAD"]
-          TargetOriginId: "UiDevKitS3Origin"
-          ViewerProtocolPolicy: "redirect-to-https"
-          CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"  # Managed-CachingOptimized
-          Compress: true
-        CacheBehaviors:
-        # API routes should not be cached
-        - PathPattern: "/api/*"
-          TargetOriginId: "UiDevKitApiOrigin"
-          ViewerProtocolPolicy: "redirect-to-https"
-          AllowedMethods: ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-          CachedMethods: ["GET", "HEAD"]
-          CachePolicyId: "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"  # Managed-CachingDisabled
-          OriginRequestPolicyId: "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"  # Managed-CORS-S3Origin
-        CustomErrorResponses:
-        # Handle SPA routing
-        - ErrorCode: 404
-          ResponseCode: 200
-          ResponsePagePath: "/index.html"
-        - ErrorCode: 403
-          ResponseCode: 200
-          ResponsePagePath: "/index.html"
-        PriceClass: "PriceClass_100"  # Use only North America and Europe
+          AllowedMethods:
+          - "DELETE"
+          - "GET"
+          - "HEAD"
+          - "OPTIONS"
+          - "PATCH"
+          - "POST"
+          - "PUT"
+          CachedMethods:
+          - "GET"
+          - "HEAD"
+          TargetOriginId: "UiDevKitWebS3Origin"
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: "none"
+          ViewerProtocolPolicy: "allow-all"
+          MinTTL: 0
+          DefaultTTL: 3600
+          MaxTTL: 86400
+        PriceClass: "PriceClass_200"
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: "whitelist"
+            Locations:
+            - "US"
+            - "CA"
+            - "GB"
+            - "DE"
         ViewerCertificate:
           CloudFrontDefaultCertificate: true
+  CloudFrontOriginAccessControl:
+    Type: "AWS::CloudFront::OriginAccessControl"
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-OAC"
+        OriginAccessControlOriginType: "s3"
+        SigningBehavior: "always"
+        SigningProtocol: "sigv4"
 
 Outputs:
   WebsiteURL:

@@ -10,10 +10,13 @@ if (!app) {
 
 console.log('Express app imported successfully for Lambda handler');
 
-// Configure serverless express
+// Configure serverless express with async handler
 const handler = serverlessExpress.configure({
-  app: app
+  app: app,
+  resolutionMode: 'PROMISE'
 });
 
-// Export the Lambda handler
-exports.handler = handler;
+// Export the Lambda handler as async
+exports.handler = async (event, context) => {
+  return await handler(event, context);
+};

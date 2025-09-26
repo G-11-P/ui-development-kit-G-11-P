@@ -1,10 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { environment } from '../../environments/environment';
 
 export type AuthEvent = {
   success: boolean;
@@ -35,6 +37,8 @@ export class WebAuthComponent implements OnInit {
   errorMessage = '';
   private csrfToken = '';
 
+  private http = inject(HttpClient);
+
   constructor(private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -53,20 +57,16 @@ export class WebAuthComponent implements OnInit {
 
   private async fetchCsrfToken(): Promise<string> {
     try {
-      const response = await fetch('/api/auth/csrf-token', {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch CSRF token');
-      }
-      
       interface CsrfTokenResponse {
         csrfToken: string;
       }
-      
-      const data: CsrfTokenResponse = await response.json();
-      return data.csrfToken;
+
+      const apiUrl = environment.webApiUrl || '/api';
+      const data = await this.http.get<CsrfTokenResponse>(`${apiUrl}/auth/csrf-token`, {
+        withCredentials: true
+      }).toPromise();
+
+      return data!.csrfToken;
     } catch (error) {
       console.error('Error fetching CSRF token:', error);
       throw error;
@@ -84,32 +84,27 @@ export class WebAuthComponent implements OnInit {
       
       // Call the server's authentication endpoint
       console.log('Calling auth endpoint...');
-      const response = await fetch('/api/auth/web-login', {
-        method: 'POST',
+      const apiUrl = environment.webApiUrl || '/api';
+      interface AuthResponse {
+        success: boolean;
+        authUrl?: string;
+      }
+
+      const result = await this.http.post<AuthResponse>(`${apiUrl}/auth/web-login`, {}, {
         headers: {
-          'Content-Type': 'application/json',
           'x-csrf-token': this.csrfToken
         },
-        credentials: 'include' // Important for session cookies
-      });
+        withCredentials: true
+      }).toPromise();
       
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error('CSRF token validation failed');
-        }
-        throw new Error(`Authentication request failed: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      if (result.success && result.authUrl) {
+      if (result && result.success && result.authUrl) {
         console.log('Redirecting to:', result.authUrl);
         window.location.href = result.authUrl;
         
         // Also keep the original redirect as a backup with a slight delay
         setTimeout(() => {
           console.log('Fallback redirect executing...');
-          window.location.href = result.authUrl;
+          window.location.href = result.authUrl!;
         }, 100);
       } else {
         console.error('Authentication failed, missing success or authUrl:', result);
@@ -126,11 +121,10 @@ export class WebAuthComponent implements OnInit {
 
   async checkLoginStatus(showSuccessMessage: boolean = false): Promise<void> {
     try {
-      const response = await fetch('/api/auth/login-status', {
-        credentials: 'include' // Important for session cookies
-      });
-      
-      const status = await response.json();
+      const apiUrl = environment.webApiUrl || '/api';
+      const status = await this.http.get<any>(`${apiUrl}/auth/login-status`, {
+        withCredentials: true
+      }).toPromise();
       
       if (status.isLoggedIn) {
         this.isAuthenticated = true;
@@ -171,21 +165,13 @@ export class WebAuthComponent implements OnInit {
         this.csrfToken = await this.fetchCsrfToken();
       }
       
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const apiUrl = environment.webApiUrl || '/api';
+      await this.http.post(`${apiUrl}/auth/logout`, {}, {
         headers: {
-          'Content-Type': 'application/json',
           'x-csrf-token': this.csrfToken
         },
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error('CSRF token validation failed');
-        }
-        throw new Error(`Logout request failed: ${response.status}`);
-      }
+        withCredentials: true
+      }).toPromise();
       
       // Clear the CSRF token after successful logout
       this.csrfToken = '';

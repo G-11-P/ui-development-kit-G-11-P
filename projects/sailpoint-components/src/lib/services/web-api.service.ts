@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, firstValueFrom, takeUntil, Subject } from 'rxjs';
+import { environment } from '../../../../../src/environments/environment';
 
 /**
  * Interface that defines all the methods used from window.electronAPI
@@ -101,7 +102,7 @@ export type AuthMethods = "oauth" | "pat";
   providedIn: 'root'
 })
 export class WebApiService implements ElectronAPIInterface, OnDestroy {
-  private apiUrl = '/api'; // Default API URL, can be configured
+  private apiUrl = environment.webApiUrl || '/api'; // Use environment config or fallback
   private tenants: Tenant[] = [];
   private authtype: AuthMethods = 'pat';
   private activeEnvironment: string | null = null;

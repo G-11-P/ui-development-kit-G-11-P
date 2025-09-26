@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { ConnectionService } from '../services/connection.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +26,7 @@ import { ElectronApiFactoryService } from 'sailpoint-components';
 import { DOCUMENT } from '@angular/common';
 import { WebAuthComponent, AuthEvent } from '../web-auth/web-auth.component';
 import { GenericDialogComponent, OAuthDialogComponent, OAuthDialogData } from 'sailpoint-components'
+import { environment } from '../../environments/environment';
 
 
 type AuthMethods = "oauth" | "pat";
@@ -116,6 +118,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   oauthAuthUrl: string | null = null;
   pollIntervalId: ReturnType<typeof setInterval> | undefined = undefined;
 
+  private http = inject(HttpClient);
+
   constructor(
     private router: Router,
     private connectionService: ConnectionService,
@@ -177,11 +181,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.state.isWebMode) return;
 
     try {
-      const response = await fetch('/api/auth/login-status', {
-        credentials: 'include' // Important for session cookies
-      });
-      
-      const status = await response.json();
+      const apiUrl = environment.webApiUrl || '/api';
+      const status = await this.http.get<any>(`${apiUrl}/auth/login-status`, {
+        withCredentials: true
+      }).toPromise();
       
       if (status.isLoggedIn && status.environment) {
         // Update connection state
@@ -361,10 +364,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.state.isWebMode) {
       // Call logout endpoint for web mode
       try {
-        await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include'
-        });
+        const apiUrl = environment.webApiUrl || '/api';
+        await this.http.post(`${apiUrl}/auth/logout`, {}, {
+          withCredentials: true
+        }).toPromise();
       } catch (error) {
         console.error('Error during web logout:', error);
       }

@@ -1,7 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, firstValueFrom, takeUntil, Subject } from 'rxjs';
-import { environment } from '../../../../../src/environments/environment';
+
+// Injection token for web API URL
+export const WEB_API_URL = new InjectionToken<string>('WEB_API_URL');
 
 /**
  * Interface that defines all the methods used from window.electronAPI
@@ -102,7 +104,7 @@ export type AuthMethods = "oauth" | "pat";
   providedIn: 'root'
 })
 export class WebApiService implements ElectronAPIInterface, OnDestroy {
-  private apiUrl = environment.webApiUrl || '/api'; // Use environment config or fallback
+  private apiUrl: string;
   private tenants: Tenant[] = [];
   private authtype: AuthMethods = 'pat';
   private activeEnvironment: string | null = null;
@@ -110,7 +112,11 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
   private csrfToken: string | null = null;
   private destroy$ = new Subject<void>();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    @Optional() @Inject(WEB_API_URL) webApiUrl: string | null
+  ) {
+    this.apiUrl = webApiUrl || '/api'; // Use injected URL or fallback
     // Create proxy to handle dynamic SDK method calls
     return new Proxy(this, {
       get(target: WebApiService, prop: string | symbol) {

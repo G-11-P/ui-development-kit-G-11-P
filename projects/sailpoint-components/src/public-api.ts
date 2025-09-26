@@ -16,6 +16,7 @@ export * from './lib/oauth-dialog/oauth-dialog.component';
 
 // Services
 export * from './lib/services';
+export { WEB_API_URL } from './lib/services/web-api.service';
 export * from './lib/transforms/transform-builder/transform-builder.component';
 export * from './lib/transforms/transforms.component';
 export * from './lib/attach-rule/attach-rule.component';

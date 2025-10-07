@@ -10,11 +10,32 @@ Parameters:
   Environment:
     Type: String
     Default: dev
-    AllowedValues: 
+    AllowedValues:
       - dev
       - stage
       - prod
     Description: Environment for the deployment
+  JWTSecret:
+    Type: String
+    Description: Secret key for JWT token signing
+    NoEcho: true
+  TenantUrl:
+    Type: String
+    Description: SailPoint tenant URL
+  ClientId:
+    Type: String
+    Description: OAuth client ID
+  ClientSecret:
+    Type: String
+    Description: OAuth client secret
+    NoEcho: true
+  RedirectUri:
+    Type: String
+    Description: OAuth redirect URI
+  OAuthScopes:
+    Type: String
+    Description: OAuth scopes to request
+    Default: sp:scopes:all
 
 Resources:
   # API Gateway for the backend services
@@ -53,9 +74,25 @@ Resources:
       MemorySize: 512
       Timeout: 30
       Description: Backend API for SailPoint UI Development Kit
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - "dynamodb:GetItem"
+                - "dynamodb:PutItem"
+                - "dynamodb:DeleteItem"
+              Resource: !GetAtt SessionsTable.Arn
       Environment:
         Variables:
           NODE_ENV: !Ref Environment
+          DYNAMO_TABLE_NAME: !Ref SessionsTable
+          JWT_SECRET: !Ref JWTSecret
+          TENANT_URL: !Ref TenantUrl
+          CLIENT_ID: !Ref ClientId
+          CLIENT_SECRET: !Ref ClientSecret
+          REDIRECT_URI: !Ref RedirectUri
+          OAUTH_SCOPES: !Ref OAuthScopes
       Events:
         # Catch-all API routes
         ApiProxy:
@@ -70,6 +107,35 @@ Resources:
             Path: /api
             Method: ANY
             ApiId: !Ref UiDevKitApiGateway
+        # OAuth callback route
+        OAuthCallback:
+          Type: HttpApi
+          Properties:
+            Path: /oauth/callback
+            Method: GET
+            ApiId: !Ref UiDevKitApiGateway
+
+  # DynamoDB table for session storage in Lambda
+  SessionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${AWS::StackName}-sessions"
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
 
   UiDevKitWebSiteBucket:
       Type: "AWS::S3::Bucket"
@@ -195,3 +261,9 @@ Outputs:
   ApiGatewayId:
     Description: "API Gateway ID"
     Value: !Ref UiDevKitApiGateway
+
+  DynamoTableName:
+    Description: "DynamoDB table name for session storage"
+    Value: !Ref SessionsTable
+    Export:
+      Name: !Sub "${AWS::StackName}-SessionsTable"

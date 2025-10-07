@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 import Tokens = require("csrf")
 import rateLimit from 'express-rate-limit';
+import { createStorage } from './session-storage';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -145,7 +146,10 @@ const SERVER_CONFIG = {
   scopes: process.env.OAUTH_SCOPES || 'sp:scopes:all'
 };
 
-// In-memory token storage
+// Initialize storage (DynamoDB for Lambda, memory for local)
+const storage = createStorage();
+
+// In-memory token storage for session-based approach
 let tokenData: TokenData | null = null;
 
 
@@ -169,17 +173,20 @@ function parseJWT(token: string): any {
 }
 
 // Simplified authentication endpoint
-app.post('/api/auth/web-login', rateLimiter, csrfProtection, (req: Request, res: Response) => {
+app.post('/api/auth/web-login', rateLimiter, csrfProtection, async (req: Request, res: Response) => {
   console.log('POST /api/auth/web-login called');
   
   // Generate and store state parameter
   const stateData: OAuthState = {
     redirectUrl: '/home'
   };
-  
+
   const state = generateStateParam(stateData);
   req.session.oauthState = state;
   req.session.oauthStateData = stateData;
+
+  // Also store in persistent storage for Lambda
+  await storage.setOAuthState(state, stateData, 10);
   
   // Extract tenant name from the tenant URL
   // Expected format: https://beta-15156.identitynow-demo.com/
@@ -215,17 +222,20 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
     return res.redirect('/home?error=oauth_error&message=' + encodeURIComponent(String(error)));
   }
   
-  // Validate state parameter
-  if (!state || state !== req.session.oauthState) {
-    console.error('Invalid OAuth state parameter');
-    return res.redirect('/home?error=invalid_state');
+  // Validate state parameter (check both session and persistent storage)
+  let stateData: OAuthState | null = null;
+
+  if (state && req.session.oauthState === state && req.session.oauthStateData) {
+    // Use session data if available (local development)
+    stateData = req.session.oauthStateData;
+  } else if (state) {
+    // Fall back to persistent storage (Lambda)
+    stateData = await storage.getOAuthState(state as string);
   }
-  
-  // Parse state data
-  const stateData = req.session.oauthStateData;
-  if (!stateData) {
-    console.error('Missing OAuth state data');
-    return res.redirect('/home?error=missing_state_data');
+
+  if (!state || !stateData) {
+    console.error('Invalid or missing OAuth state');
+    return res.redirect('/home?error=invalid_state');
   }
   
   try {
@@ -273,6 +283,11 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
         refreshToken: refresh_token,
         refreshExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       };
+
+      // Store in persistent storage for Lambda
+      if (req.sessionID) {
+        await storage.setTokenData(req.sessionID, tokenData);
+      }
       
       // Parse JWT to get user info
       const decodedToken = parseJWT(access_token);
@@ -292,15 +307,23 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
         refreshToken: 'mock-refresh-token-' + Date.now(),
         refreshExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       };
+
+      // Store in persistent storage for Lambda
+      if (req.sessionID) {
+        await storage.setTokenData(req.sessionID, tokenData);
+      }
       
       // Use mock session data
       req.session.isAuthenticated = true;
       req.session.username = 'Test User';
     }
     
-    // Clear OAuth state
+    // Clear OAuth state from both session and persistent storage
     delete req.session.oauthState;
     delete req.session.oauthStateData;
+    if (state) {
+      await storage.deleteOAuthState(state as string);
+    }
     
     // Redirect to success URL
     console.log('Authentication successful, redirecting to Angular app');
@@ -329,7 +352,20 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
   console.log('GET /api/auth/status/access/ called');
   
   // Check if user is authenticated and has token data
-  if (!req.session.isAuthenticated || !tokenData) {
+  if (!req.session.isAuthenticated) {
+    return res.json({
+      authtype: 'oauth' as const,
+      accessTokenIsValid: false,
+      needsRefresh: false
+    });
+  }
+
+  // Try to get token data from memory first, then persistent storage
+  if (!tokenData && req.sessionID) {
+    tokenData = await storage.getTokenData(req.sessionID);
+  }
+
+  if (!tokenData) {
     return res.json({
       authtype: 'oauth' as const,
       accessTokenIsValid: false,
@@ -381,6 +417,11 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
           refreshToken: refresh_token || tokenData.refreshToken, // Use new refresh token if provided, otherwise keep existing
           refreshExpiry: tokenData.refreshExpiry // Keep existing refresh token expiry
         };
+
+        // Update persistent storage
+        if (req.sessionID) {
+          await storage.setTokenData(req.sessionID, tokenData);
+        }
         
         // Parse JWT to update user info if needed
         const decodedToken = parseJWT(access_token);
@@ -406,15 +447,18 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
 });
 
 // Logout endpoint
-app.post('/api/auth/logout', rateLimiter, csrfProtection, (req: Request, res: Response) => {
+app.post('/api/auth/logout', rateLimiter, csrfProtection, async (req: Request, res: Response) => {
   console.log('POST /api/auth/logout called');
   
   // Clear session
   req.session.isAuthenticated = false;
   delete req.session.username;
-  
-  // Clear token data
+
+  // Clear token data from memory and persistent storage
   tokenData = null;
+  if (req.sessionID) {
+    await storage.deleteTokenData(req.sessionID);
+  }
   
   res.json({ success: true });
 });
@@ -441,8 +485,17 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
   const { args } = req.body;
   
   // Check if user is authenticated
-  if (!req.session.isAuthenticated || !tokenData) {
+  if (!req.session.isAuthenticated) {
     return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  // Try to get token data from memory first, then persistent storage
+  if (!tokenData && req.sessionID) {
+    tokenData = await storage.getTokenData(req.sessionID);
+  }
+
+  if (!tokenData) {
+    return res.status(401).json({ error: 'No token data found' });
   }
 
   // Check if access token is valid

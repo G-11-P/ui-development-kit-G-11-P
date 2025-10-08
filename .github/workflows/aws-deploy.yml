@@ -227,18 +227,7 @@ jobs:
           echo "Updating Lambda environment variables..."
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \
-            --environment Variables="{
-              \"NODE_ENV\":\"prod\",
-              \"DYNAMO_TABLE_NAME\":\"$STACK_NAME-sessions\",
-              \"JWT_SECRET\":\"$JWT_SECRET\",
-              \"SESSION_SECRET\":\"$JWT_SECRET\",
-              \"TENANT_URL\":\"$TENANT_URL\",
-              \"CLIENT_ID\":\"$CLIENT_ID\",
-              \"CLIENT_SECRET\":\"$CLIENT_SECRET\",
-              \"REDIRECT_URI\":\"$API_URL/oauth/callback\",
-              \"OAUTH_SCOPES\":\"${OAUTH_SCOPES:-sp:scopes:all}\",
-              \"WEBSITE_URL\":\"$CLOUDFRONT_URL\"
-            }"
+            --environment Variables="{\"NODE_ENV\":\"prod\",\"DYNAMO_TABLE_NAME\":\"$STACK_NAME-sessions\",\"JWT_SECRET\":\"$JWT_SECRET\",\"SESSION_SECRET\":\"$JWT_SECRET\",\"TENANT_URL\":\"$TENANT_URL\",\"CLIENT_ID\":\"$CLIENT_ID\",\"CLIENT_SECRET\":\"$CLIENT_SECRET\",\"REDIRECT_URI\":\"$API_URL/oauth/callback\",\"OAUTH_SCOPES\":\"${OAUTH_SCOPES:-sp:scopes:all}\",\"WEBSITE_URL\":\"$CLOUDFRONT_URL\"}"
 
           echo "✅ Lambda environment variables updated successfully"
 

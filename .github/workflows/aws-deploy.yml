@@ -202,7 +202,7 @@ jobs:
           # Update API Gateway CORS policy
           aws apigatewayv2 update-api \
             --api-id $API_GATEWAY_ID \
-            --cors-configuration AllowOrigins='["'$CLOUDFRONT_URL'"]',AllowMethods='["OPTIONS","GET","POST","PUT","PATCH","DELETE"]',AllowHeaders='["Content-Type","Authorization","x-csrf-token"]',AllowCredentials=true
+            --cors-configuration AllowOrigins='["'$CLOUDFRONT_URL'"]',AllowMethods='["OPTIONS","GET","POST","PUT","PATCH","DELETE"]',AllowHeaders='["Content-Type","Authorization","x-csrf-token","x-session-id"]',AllowCredentials=true
 
           echo "✅ CORS policy updated successfully"
 

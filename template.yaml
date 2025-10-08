@@ -55,10 +55,11 @@ Resources:
           - "PUT"
           - "PATCH" 
           - "DELETE"
-        AllowHeaders: 
+        AllowHeaders:
           - "Content-Type"
           - "Authorization"
           - "x-csrf-token"
+          - "x-session-id"
         AllowOrigins:
           - "*"
         AllowCredentials: false

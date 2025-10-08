@@ -223,39 +223,30 @@ jobs:
             exit 1
           fi
 
-          # Update Lambda environment variables with dynamic URLs
-          echo "Updating Lambda environment variables..."
+          # Update only the dynamic environment variables that need the actual deployed URLs
+          echo "Updating Lambda environment variables with dynamic URLs..."
 
-          # Use jq to create the JSON structure safely
-          jq -n \
-            --arg node_env "prod" \
-            --arg dynamo_table "$STACK_NAME-sessions" \
-            --arg jwt_secret "$JWT_SECRET" \
-            --arg session_secret "$JWT_SECRET" \
-            --arg tenant_url "$TENANT_URL" \
-            --arg client_id "$CLIENT_ID" \
-            --arg client_secret "$CLIENT_SECRET" \
+          # Get current environment variables to preserve existing values
+          CURRENT_ENV=$(aws lambda get-function-configuration \
+            --function-name $LAMBDA_FUNCTION_NAME \
+            --query "Environment.Variables" \
+            --output json)
+
+          # Update only the dynamic URLs while preserving all other environment variables
+          echo "$CURRENT_ENV" | jq \
             --arg redirect_uri "$API_URL/oauth/callback" \
-            --arg oauth_scopes "${OAUTH_SCOPES:-sp:scopes:all}" \
             --arg website_url "$CLOUDFRONT_URL" \
-            '{
-              Variables: {
-                NODE_ENV: $node_env,
-                DYNAMO_TABLE_NAME: $dynamo_table,
-                JWT_SECRET: $jwt_secret,
-                SESSION_SECRET: $session_secret,
-                TENANT_URL: $tenant_url,
-                CLIENT_ID: $client_id,
-                CLIENT_SECRET: $client_secret,
-                REDIRECT_URI: $redirect_uri,
-                OAUTH_SCOPES: $oauth_scopes,
-                WEBSITE_URL: $website_url
-              }
+            '. + {
+              REDIRECT_URI: $redirect_uri,
+              WEBSITE_URL: $website_url
             }' > /tmp/lambda-env.json
+
+          # Create the proper structure for AWS Lambda
+          jq '{Variables: .}' /tmp/lambda-env.json > /tmp/lambda-env-final.json
 
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \
-            --environment file:///tmp/lambda-env.json
+            --environment file:///tmp/lambda-env-final.json
 
           echo "✅ Lambda environment variables updated successfully"
 

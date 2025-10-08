@@ -36,6 +36,10 @@ Parameters:
     Type: String
     Description: OAuth scopes to request
     Default: sp:scopes:all
+  WebsiteUrl:
+    Type: String
+    Description: CloudFront URL for the Angular app
+    Default: http://localhost:4200
 
 Resources:
   # API Gateway for the backend services
@@ -89,11 +93,13 @@ Resources:
           NODE_ENV: !Ref Environment
           DYNAMO_TABLE_NAME: !Ref SessionsTable
           JWT_SECRET: !Ref JWTSecret
+          SESSION_SECRET: !Ref JWTSecret
           TENANT_URL: !Ref TenantUrl
           CLIENT_ID: !Ref ClientId
           CLIENT_SECRET: !Ref ClientSecret
           REDIRECT_URI: !Ref RedirectUri
           OAUTH_SCOPES: !Ref OAuthScopes
+          WEBSITE_URL: !Ref WebsiteUrl
       Events:
         # Catch-all API routes
         ApiProxy:

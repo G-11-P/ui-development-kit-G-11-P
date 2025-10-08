@@ -27,12 +27,16 @@ interface SessionStorage {
   getOAuthState(stateKey: string): Promise<OAuthState | null>;
   setOAuthState(stateKey: string, stateData: OAuthState, ttlMinutes?: number): Promise<void>;
   deleteOAuthState(stateKey: string): Promise<void>;
+  getCsrfSecret(sessionId: string): Promise<string | null>;
+  setCsrfSecret(sessionId: string, secret: string): Promise<void>;
+  deleteCsrfSecret(sessionId: string): Promise<void>;
 }
 
 // Memory-based storage for local development
 class MemoryStorage implements SessionStorage {
   private tokens = new Map<string, TokenData>();
   private oauthStates = new Map<string, { data: OAuthState; expires: number }>();
+  private csrfSecrets = new Map<string, string>();
 
   async getTokenData(sessionId: string): Promise<TokenData | null> {
     return this.tokens.get(sessionId) || null;
@@ -66,6 +70,18 @@ class MemoryStorage implements SessionStorage {
 
   async deleteOAuthState(stateKey: string): Promise<void> {
     this.oauthStates.delete(stateKey);
+  }
+
+  async getCsrfSecret(sessionId: string): Promise<string | null> {
+    return this.csrfSecrets.get(sessionId) || null;
+  }
+
+  async setCsrfSecret(sessionId: string, secret: string): Promise<void> {
+    this.csrfSecrets.set(sessionId, secret);
+  }
+
+  async deleteCsrfSecret(sessionId: string): Promise<void> {
+    this.csrfSecrets.delete(sessionId);
   }
 }
 
@@ -171,6 +187,47 @@ class DynamoStorage implements SessionStorage {
       }));
     } catch (error) {
       console.error('Error deleting OAuth state from DynamoDB:', error);
+    }
+  }
+
+  async getCsrfSecret(sessionId: string): Promise<string | null> {
+    try {
+      const result = await this.client.send(new GetCommand({
+        TableName: this.tableName,
+        Key: { pk: `csrf#${sessionId}`, sk: 'secret' }
+      }));
+
+      return result.Item?.secret || null;
+    } catch (error) {
+      console.error('Error getting CSRF secret from DynamoDB:', error);
+      return null;
+    }
+  }
+
+  async setCsrfSecret(sessionId: string, secret: string): Promise<void> {
+    try {
+      await this.client.send(new PutCommand({
+        TableName: this.tableName,
+        Item: {
+          pk: `csrf#${sessionId}`,
+          sk: 'secret',
+          secret: secret,
+          ttl: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+        }
+      }));
+    } catch (error) {
+      console.error('Error setting CSRF secret in DynamoDB:', error);
+    }
+  }
+
+  async deleteCsrfSecret(sessionId: string): Promise<void> {
+    try {
+      await this.client.send(new DeleteCommand({
+        TableName: this.tableName,
+        Key: { pk: `csrf#${sessionId}`, sk: 'secret' }
+      }));
+    } catch (error) {
+      console.error('Error deleting CSRF secret from DynamoDB:', error);
     }
   }
 }

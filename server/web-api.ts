@@ -86,12 +86,18 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  cookie: {
+    secure: false, // Set to true in production with HTTPS
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax' // Important for cross-origin requests
+  }
 }));
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+  origin: process.env.AWS_LAMBDA_FUNCTION_NAME
+    ? true // In Lambda, rely on API Gateway CORS configuration
+    : ['http://localhost:4200', 'http://127.0.0.1:4200'], // Local development
   credentials: true
 }));
 app.use(express.json());
@@ -110,20 +116,34 @@ const rateLimiter = rateLimit({
 });
 
 // CSRF middleware
-const csrfProtection = (req: Request, res: Response, next: NextFunction) => {
+const csrfProtection = async (req: Request, res: Response, next: NextFunction) => {
   // Skip CSRF for GET requests and OAuth callback
   if (req.method === 'GET' || req.path === '/oauth/callback') {
     return next();
   }
 
-  // Ensure session has CSRF secret
-  if (!req.session.csrfSecret) {
-    req.session.csrfSecret = tokens.secretSync();
+  // Get or create CSRF secret using persistent storage
+  let csrfSecret = req.session.csrfSecret;
+
+  // For Lambda, also check persistent storage
+  if (!csrfSecret && req.sessionID) {
+    csrfSecret = await storage.getCsrfSecret(req.sessionID);
+  }
+
+  // Create new secret if none exists
+  if (!csrfSecret) {
+    csrfSecret = tokens.secretSync();
+    req.session.csrfSecret = csrfSecret;
+
+    // Store in persistent storage for Lambda
+    if (req.sessionID) {
+      await storage.setCsrfSecret(req.sessionID, csrfSecret);
+    }
   }
 
   const token = req.headers['x-csrf-token'] as string || req.body._csrf;
-  
-  if (!token || !tokens.verify(req.session.csrfSecret, token)) {
+
+  if (!token || !tokens.verify(csrfSecret, token)) {
     return res.status(403).json({ error: 'Invalid CSRF token' });
   }
 
@@ -219,7 +239,8 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
   // Check if error was returned
   if (error) {
     console.error('OAuth error:', error);
-    return res.redirect('/home?error=oauth_error&message=' + encodeURIComponent(String(error)));
+    const websiteUrl = process.env.WEBSITE_URL || 'http://localhost:4200';
+    return res.redirect(`${websiteUrl}/home?error=oauth_error&message=` + encodeURIComponent(String(error)));
   }
   
   // Validate state parameter (check both session and persistent storage)
@@ -235,7 +256,8 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
 
   if (!state || !stateData) {
     console.error('Invalid or missing OAuth state');
-    return res.redirect('/home?error=invalid_state');
+    const websiteUrl = process.env.WEBSITE_URL || 'http://localhost:4200';
+    return res.redirect(`${websiteUrl}/home?error=invalid_state`);
   }
   
   try {
@@ -328,11 +350,13 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
     // Redirect to success URL
     console.log('Authentication successful, redirecting to Angular app');
     
-    // Use a full URL to the Angular app instead of a relative path
-    return res.redirect('http://localhost:4200/home?success=true');
+    // Redirect to success URL using the configured website URL
+    const websiteUrl = process.env.WEBSITE_URL || 'http://localhost:4200';
+    return res.redirect(`${websiteUrl}/home?success=true`);
   } catch (error) {
     console.error('Error in OAuth callback:', error);
-    return res.redirect('/home?error=callback_error');
+    const websiteUrl = process.env.WEBSITE_URL || 'http://localhost:4200';
+    return res.redirect(`${websiteUrl}/home?error=callback_error`);
   }
 });
 
@@ -449,32 +473,48 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
 // Logout endpoint
 app.post('/api/auth/logout', rateLimiter, csrfProtection, async (req: Request, res: Response) => {
   console.log('POST /api/auth/logout called');
-  
+
   // Clear session
   req.session.isAuthenticated = false;
   delete req.session.username;
+  delete req.session.csrfSecret;
 
-  // Clear token data from memory and persistent storage
+  // Clear token data and CSRF secret from memory and persistent storage
   tokenData = null;
   if (req.sessionID) {
     await storage.deleteTokenData(req.sessionID);
+    await storage.deleteCsrfSecret(req.sessionID);
   }
-  
+
   res.json({ success: true });
 });
 
 // CSRF token endpoint
-app.get('/api/auth/csrf-token', rateLimiter, (req: Request, res: Response) => {
+app.get('/api/auth/csrf-token', rateLimiter, async (req: Request, res: Response) => {
   console.log('GET /api/auth/csrf-token called');
-  
-  // Ensure session has CSRF secret
-  if (!req.session.csrfSecret) {
-    req.session.csrfSecret = tokens.secretSync();
+
+  // Get or create CSRF secret using persistent storage
+  let csrfSecret = req.session.csrfSecret;
+
+  // For Lambda, also check persistent storage
+  if (!csrfSecret && req.sessionID) {
+    csrfSecret = await storage.getCsrfSecret(req.sessionID);
   }
-  
+
+  // Create new secret if none exists
+  if (!csrfSecret) {
+    csrfSecret = tokens.secretSync();
+    req.session.csrfSecret = csrfSecret;
+
+    // Store in persistent storage for Lambda
+    if (req.sessionID) {
+      await storage.setCsrfSecret(req.sessionID, csrfSecret);
+    }
+  }
+
   // Generate CSRF token
-  const csrfToken = tokens.create(req.session.csrfSecret);
-  
+  const csrfToken = tokens.create(csrfSecret);
+
   res.json({ csrfToken });
 });
 

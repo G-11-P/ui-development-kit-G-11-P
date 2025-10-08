@@ -96,6 +96,7 @@ jobs:
                 ClientSecret="$CLIENT_SECRET" \
                 RedirectUri="$REDIRECT_URI" \
                 OAuthScopes="${OAUTH_SCOPES:-sp:scopes:all}" \
+                WebsiteUrl="http://localhost:4200" \
               --capabilities CAPABILITY_IAM \
               --resolve-s3
           else
@@ -109,7 +110,8 @@ jobs:
                 ClientId="$CLIENT_ID" \
                 ClientSecret="$CLIENT_SECRET" \
                 RedirectUri="$REDIRECT_URI" \
-                OAuthScopes="${OAUTH_SCOPES:-sp:scopes:all}"
+                OAuthScopes="${OAUTH_SCOPES:-sp:scopes:all}" \
+                WebsiteUrl="http://localhost:4200"
           fi
 
       - name: Get deployment outputs
@@ -185,19 +187,48 @@ jobs:
             grep -r "webApiUrl" ./dist/ || echo "No webApiUrl found"
           fi
 
-      - name: Update API Gateway CORS policy
+      - name: Update API Gateway CORS policy and Lambda environment variables
         run: |
           echo "Updating CORS policy for API Gateway: $API_GATEWAY_ID"
           echo "CloudFront URL: $CLOUDFRONT_URL"
+          echo "API URL: $API_URL"
 
-          # Extract just the domain from CloudFront URL (remove https://)
-          CLOUDFRONT_DOMAIN=$(echo $CLOUDFRONT_URL | sed 's|https://||')
-
+          # Update API Gateway CORS policy
           aws apigatewayv2 update-api \
             --api-id $API_GATEWAY_ID \
             --cors-configuration AllowOrigins='["'$CLOUDFRONT_URL'"]',AllowMethods='["OPTIONS","GET","POST","PUT","PATCH","DELETE"]',AllowHeaders='["Content-Type","Authorization","x-csrf-token"]',AllowCredentials=true
 
           echo "✅ CORS policy updated successfully"
+
+          # Get Lambda function name from CloudFormation stack
+          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].Resources[?LogicalResourceId=='UiDevKitBackendFunction'].PhysicalResourceId" \
+            --output text 2>/dev/null || aws cloudformation describe-stack-resources \
+            --stack-name $STACK_NAME \
+            --logical-resource-id UiDevKitBackendFunction \
+            --query "StackResources[0].PhysicalResourceId" \
+            --output text)
+
+          echo "Lambda function name: $LAMBDA_FUNCTION_NAME"
+
+          # Update Lambda environment variables with dynamic URLs
+          aws lambda update-function-configuration \
+            --function-name $LAMBDA_FUNCTION_NAME \
+            --environment Variables="{
+              NODE_ENV=prod,
+              DYNAMO_TABLE_NAME=$STACK_NAME-sessions,
+              JWT_SECRET=$JWT_SECRET,
+              SESSION_SECRET=$JWT_SECRET,
+              TENANT_URL=$TENANT_URL,
+              CLIENT_ID=$CLIENT_ID,
+              CLIENT_SECRET=$CLIENT_SECRET,
+              REDIRECT_URI=$API_URL/oauth/callback,
+              OAUTH_SCOPES=${OAUTH_SCOPES:-sp:scopes:all},
+              WEBSITE_URL=$CLOUDFRONT_URL
+            }"
+
+          echo "✅ Lambda environment variables updated successfully"
 
       - name: Upload Angular app to S3
         run: |

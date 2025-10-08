@@ -57,6 +57,7 @@ Resources:
           - "x-csrf-token"
         AllowOrigins:
           - "*"
+        AllowCredentials: false
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
         ThrottlingBurstLimit: 100

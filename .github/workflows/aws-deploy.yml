@@ -72,6 +72,13 @@ jobs:
           npm run build
 
       - name: Build and deploy SAM application (backend only)
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TENANT_URL: ${{ secrets.TENANT_URL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+          OAUTH_SCOPES: ${{ secrets.OAUTH_SCOPES }}
         run: |
           sam build
           if [ "$IS_PR" = "true" ]; then
@@ -81,12 +88,28 @@ jobs:
               --no-fail-on-empty-changeset \
               --stack-name $STACK_NAME \
               --s3-prefix $STACK_NAME \
-              --parameter-overrides Environment=prod \
+              --parameter-overrides \
+                Environment=prod \
+                JWTSecret="$JWT_SECRET" \
+                TenantUrl="$TENANT_URL" \
+                ClientId="$CLIENT_ID" \
+                ClientSecret="$CLIENT_SECRET" \
+                RedirectUri="$REDIRECT_URI" \
+                OAuthScopes="${OAUTH_SCOPES:-sp:scopes:all}" \
               --capabilities CAPABILITY_IAM \
               --resolve-s3
           else
-            # For main branch, use samconfig.toml defaults
-            sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+            # For main branch, use samconfig.toml defaults with parameter overrides
+            sam deploy \
+              --no-confirm-changeset \
+              --no-fail-on-empty-changeset \
+              --parameter-overrides \
+                JWTSecret="$JWT_SECRET" \
+                TenantUrl="$TENANT_URL" \
+                ClientId="$CLIENT_ID" \
+                ClientSecret="$CLIENT_SECRET" \
+                RedirectUri="$REDIRECT_URI" \
+                OAuthScopes="${OAUTH_SCOPES:-sp:scopes:all}"
           fi
 
       - name: Get deployment outputs

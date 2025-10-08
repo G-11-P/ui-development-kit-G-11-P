@@ -223,38 +223,40 @@ jobs:
             exit 1
           fi
 
-          # Update only the dynamic environment variables that need the actual deployed URLs
-          echo "Updating Lambda environment variables with dynamic URLs..."
+          # Update Lambda environment variables with all values from GitHub secrets and dynamic URLs
+          echo "Updating Lambda environment variables..."
           echo "API_URL: $API_URL"
           echo "CLOUDFRONT_URL: $CLOUDFRONT_URL"
 
-          # Get current environment variables to preserve existing values
-          echo "Getting current Lambda environment variables..."
-          CURRENT_ENV=$(aws lambda get-function-configuration \
-            --function-name $LAMBDA_FUNCTION_NAME \
-            --query "Environment.Variables" \
-            --output json)
-
-          echo "Current environment variables:"
-          echo "$CURRENT_ENV"
-
-          # Update only the dynamic URLs while preserving all other environment variables
-          echo "Building new environment variables..."
-          echo "$CURRENT_ENV" | jq \
+          # Build complete environment variables using GitHub secrets and dynamic URLs
+          echo "Building environment variables from GitHub secrets and dynamic URLs..."
+          jq -n \
+            --arg node_env "prod" \
+            --arg dynamo_table "$STACK_NAME-sessions" \
+            --arg jwt_secret "$JWT_SECRET" \
+            --arg session_secret "$JWT_SECRET" \
+            --arg tenant_url "$TENANT_URL" \
+            --arg client_id "$CLIENT_ID" \
+            --arg client_secret "$CLIENT_SECRET" \
             --arg redirect_uri "$API_URL/oauth/callback" \
+            --arg oauth_scopes "${OAUTH_SCOPES:-sp:scopes:all}" \
             --arg website_url "$CLOUDFRONT_URL" \
-            '. + {
-              REDIRECT_URI: $redirect_uri,
-              WEBSITE_URL: $website_url
-            }' > /tmp/lambda-env.json
+            '{
+              Variables: {
+                NODE_ENV: $node_env,
+                DYNAMO_TABLE_NAME: $dynamo_table,
+                JWT_SECRET: $jwt_secret,
+                SESSION_SECRET: $session_secret,
+                TENANT_URL: $tenant_url,
+                CLIENT_ID: $client_id,
+                CLIENT_SECRET: $client_secret,
+                REDIRECT_URI: $redirect_uri,
+                OAUTH_SCOPES: $oauth_scopes,
+                WEBSITE_URL: $website_url
+              }
+            }' > /tmp/lambda-env-final.json
 
-          echo "New environment variables (without Variables wrapper):"
-          cat /tmp/lambda-env.json
-
-          # Create the proper structure for AWS Lambda
-          jq '{Variables: .}' /tmp/lambda-env.json > /tmp/lambda-env-final.json
-
-          echo "Final environment variables (with Variables wrapper):"
+          echo "Environment variables to be set:"
           cat /tmp/lambda-env-final.json
 
           aws lambda update-function-configuration \

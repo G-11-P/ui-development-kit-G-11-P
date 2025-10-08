@@ -227,20 +227,34 @@ jobs:
           echo "Updating Lambda environment variables..."
 
           # Create a temporary JSON file to avoid shell escaping issues
-          cat > /tmp/lambda-env.json << EOF
+          cat > /tmp/lambda-env.json <<'EOF'
 {
-  "NODE_ENV": "prod",
-  "DYNAMO_TABLE_NAME": "$STACK_NAME-sessions",
-  "JWT_SECRET": "$JWT_SECRET",
-  "SESSION_SECRET": "$JWT_SECRET",
-  "TENANT_URL": "$TENANT_URL",
-  "CLIENT_ID": "$CLIENT_ID",
-  "CLIENT_SECRET": "$CLIENT_SECRET",
-  "REDIRECT_URI": "$API_URL/oauth/callback",
-  "OAUTH_SCOPES": "${OAUTH_SCOPES:-sp:scopes:all}",
-  "WEBSITE_URL": "$CLOUDFRONT_URL"
+  "Variables": {
+    "NODE_ENV": "PLACEHOLDER_NODE_ENV",
+    "DYNAMO_TABLE_NAME": "PLACEHOLDER_DYNAMO_TABLE_NAME",
+    "JWT_SECRET": "PLACEHOLDER_JWT_SECRET",
+    "SESSION_SECRET": "PLACEHOLDER_SESSION_SECRET",
+    "TENANT_URL": "PLACEHOLDER_TENANT_URL",
+    "CLIENT_ID": "PLACEHOLDER_CLIENT_ID",
+    "CLIENT_SECRET": "PLACEHOLDER_CLIENT_SECRET",
+    "REDIRECT_URI": "PLACEHOLDER_REDIRECT_URI",
+    "OAUTH_SCOPES": "PLACEHOLDER_OAUTH_SCOPES",
+    "WEBSITE_URL": "PLACEHOLDER_WEBSITE_URL"
+  }
 }
 EOF
+
+          # Replace placeholders with actual values
+          sed -i "s|PLACEHOLDER_NODE_ENV|prod|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_DYNAMO_TABLE_NAME|$STACK_NAME-sessions|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_JWT_SECRET|$JWT_SECRET|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_SESSION_SECRET|$JWT_SECRET|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_TENANT_URL|$TENANT_URL|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_CLIENT_ID|$CLIENT_ID|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_CLIENT_SECRET|$CLIENT_SECRET|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_REDIRECT_URI|$API_URL/oauth/callback|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_OAUTH_SCOPES|${OAUTH_SCOPES:-sp:scopes:all}|g" /tmp/lambda-env.json
+          sed -i "s|PLACEHOLDER_WEBSITE_URL|$CLOUDFRONT_URL|g" /tmp/lambda-env.json
 
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \

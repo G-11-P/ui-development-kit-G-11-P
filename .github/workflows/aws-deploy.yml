@@ -225,9 +225,26 @@ jobs:
 
           # Update Lambda environment variables with dynamic URLs
           echo "Updating Lambda environment variables..."
+
+          # Create a temporary JSON file to avoid shell escaping issues
+          cat > /tmp/lambda-env.json << EOF
+{
+  "NODE_ENV": "prod",
+  "DYNAMO_TABLE_NAME": "$STACK_NAME-sessions",
+  "JWT_SECRET": "$JWT_SECRET",
+  "SESSION_SECRET": "$JWT_SECRET",
+  "TENANT_URL": "$TENANT_URL",
+  "CLIENT_ID": "$CLIENT_ID",
+  "CLIENT_SECRET": "$CLIENT_SECRET",
+  "REDIRECT_URI": "$API_URL/oauth/callback",
+  "OAUTH_SCOPES": "${OAUTH_SCOPES:-sp:scopes:all}",
+  "WEBSITE_URL": "$CLOUDFRONT_URL"
+}
+EOF
+
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \
-            --environment Variables="{\"NODE_ENV\":\"prod\",\"DYNAMO_TABLE_NAME\":\"$STACK_NAME-sessions\",\"JWT_SECRET\":\"$JWT_SECRET\",\"SESSION_SECRET\":\"$JWT_SECRET\",\"TENANT_URL\":\"$TENANT_URL\",\"CLIENT_ID\":\"$CLIENT_ID\",\"CLIENT_SECRET\":\"$CLIENT_SECRET\",\"REDIRECT_URI\":\"$API_URL/oauth/callback\",\"OAUTH_SCOPES\":\"${OAUTH_SCOPES:-sp:scopes:all}\",\"WEBSITE_URL\":\"$CLOUDFRONT_URL\"}"
+            --environment file:///tmp/lambda-env.json
 
           echo "✅ Lambda environment variables updated successfully"
 

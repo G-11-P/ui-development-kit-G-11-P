@@ -180,6 +180,25 @@ function generateStateParam(data: OAuthState): string {
   return Buffer.from(`${randomBytes}:${stateObj}`).toString('base64');
 }
 
+function buildSailPointUrl(tenantUrl: string, subdomain: 'api' | 'login'): string {
+  try {
+    const url = new URL(tenantUrl);
+    const hostParts = url.hostname.split('.');
+
+    // Insert the subdomain after the first part (tenant name)
+    // e.g. "beta-15156.identitynow-demo.com" -> "beta-15156.api.identitynow-demo.com"
+    if (hostParts.length >= 2) {
+      hostParts.splice(1, 0, subdomain);
+      url.hostname = hostParts.join('.');
+    }
+
+    return url.toString().replace(/\/$/, ''); // Remove trailing slash
+  } catch (error) {
+    console.error('Error building SailPoint URL:', error);
+    throw new Error(`Failed to build ${subdomain} URL from tenant URL: ${tenantUrl}`);
+  }
+}
+
 
 function parseJWT(token: string): any {
   try {
@@ -207,21 +226,10 @@ app.post('/api/auth/web-login', rateLimiter, csrfProtection, async (req: Request
 
   // Also store in persistent storage for Lambda
   await storage.setOAuthState(state, stateData, 10);
-  
-  // Extract tenant name from the tenant URL
-  // Expected format: https://beta-15156.identitynow-demo.com/
-  let tenantName = '';
-  try {
-    // Parse the tenant URL to extract the subdomain
-    const tenantUrl = new URL(SERVER_CONFIG.tenantUrl);
-    tenantName = tenantUrl.hostname.split('.')[0]; // e.g. "beta-15156"
-    console.log('Extracted tenant name:', tenantName);
-  } catch (error) {
-    console.error('Failed to parse tenant URL:', error);
-  }
 
-  // Build the OAuth URL using the SailPoint login domain format
-  const authUrl = `https://${tenantName}.login.identitynow-demo.com/oauth/authorize?client_id=${SERVER_CONFIG.clientId}&response_type=code&redirect_uri=${encodeURIComponent(SERVER_CONFIG.redirectUri)}&scope=${encodeURIComponent(SERVER_CONFIG.scopes)}&state=${encodeURIComponent(state)}`;
+  // Build the OAuth URL using the SailPoint login domain
+  const loginBaseUrl = buildSailPointUrl(SERVER_CONFIG.tenantUrl, 'login');
+  const authUrl = `${loginBaseUrl}/oauth/authorize?client_id=${SERVER_CONFIG.clientId}&response_type=code&redirect_uri=${encodeURIComponent(SERVER_CONFIG.redirectUri)}&scope=${encodeURIComponent(SERVER_CONFIG.scopes)}&state=${encodeURIComponent(state)}`;
   
   console.log('Generated auth URL:', authUrl);
   
@@ -267,19 +275,9 @@ app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
     
     try {
       // Attempt to make a real token exchange
-      // Extract tenant name for token endpoint
-      let tenantName = '';
-      try {
-        const tenantUrl = new URL(SERVER_CONFIG.tenantUrl);
-        tenantName = tenantUrl.hostname.split('.')[0]; 
-      } catch (error) {
-        console.error('Failed to parse tenant URL for token exchange:', error);
-        
-      }
-      
-      // Use the SailPoint token endpoint format with proper headers
       console.log('Attempting token exchange with SailPoint');
-      const tokenEndpoint = `https://${tenantName}.api.identitynow-demo.com/oauth/token`;
+      const apiBaseUrl = buildSailPointUrl(SERVER_CONFIG.tenantUrl, 'api');
+      const tokenEndpoint = `${apiBaseUrl}/oauth/token`;
       console.log('Token endpoint:', tokenEndpoint);
       
       // Using form-urlencoded format as required by OAuth2 spec
@@ -407,54 +405,44 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
     console.log('Access token expired, attempting to refresh...');
     
     try {
-      // Extract tenant name for token endpoint
-      let tenantName = '';
-      try {
-        const tenantUrl = new URL(SERVER_CONFIG.tenantUrl);
-        tenantName = tenantUrl.hostname.split('.')[0]; 
-      } catch (error) {
-        console.error('Failed to parse tenant URL for token refresh:', error);
-      }
-      
-      if (tenantName) {
-        // Use the SailPoint token refresh endpoint
-        const tokenEndpoint = `https://${tenantName}.api.identitynow-demo.com/oauth/token`;
-        
-        const params = new URLSearchParams();
-        params.append('grant_type', 'refresh_token');
-        params.append('client_id', SERVER_CONFIG.clientId);
-        params.append('client_secret', SERVER_CONFIG.clientSecret);
-        params.append('refresh_token', tokenData.refreshToken!);
-        
-        const refreshResponse = await axios.post(tokenEndpoint, params, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        });
-        
-        const { access_token, refresh_token, expires_in } = refreshResponse.data;
-        
-        // Update token data with new tokens
-        tokenData = {
-          accessToken: access_token,
-          accessExpiry: new Date(Date.now() + expires_in * 1000),
-          refreshToken: refresh_token || tokenData.refreshToken, // Use new refresh token if provided, otherwise keep existing
-          refreshExpiry: tokenData.refreshExpiry // Keep existing refresh token expiry
-        };
+      // Use the SailPoint token refresh endpoint
+      const apiBaseUrl = buildSailPointUrl(SERVER_CONFIG.tenantUrl, 'api');
+      const tokenEndpoint = `${apiBaseUrl}/oauth/token`;
 
-        // Update persistent storage
-        if (req.sessionID) {
-          await storage.setTokenData(req.sessionID, tokenData);
+      const params = new URLSearchParams();
+      params.append('grant_type', 'refresh_token');
+      params.append('client_id', SERVER_CONFIG.clientId);
+      params.append('client_secret', SERVER_CONFIG.clientSecret);
+      params.append('refresh_token', tokenData.refreshToken!);
+
+      const refreshResponse = await axios.post(tokenEndpoint, params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-        
-        // Parse JWT to update user info if needed
-        const decodedToken = parseJWT(access_token);
-        const username = decodedToken.user_name || req.session.username || 'User';
-        req.session.username = username;
-        
-        accessTokenIsValid = true;
-        console.log('Token refreshed successfully');
+      });
+
+      const { access_token, refresh_token, expires_in } = refreshResponse.data;
+
+      // Update token data with new tokens
+      tokenData = {
+        accessToken: access_token,
+        accessExpiry: new Date(Date.now() + expires_in * 1000),
+        refreshToken: refresh_token || tokenData.refreshToken, // Use new refresh token if provided, otherwise keep existing
+        refreshExpiry: tokenData.refreshExpiry // Keep existing refresh token expiry
+      };
+
+      // Update persistent storage
+      if (req.sessionID) {
+        await storage.setTokenData(req.sessionID, tokenData);
       }
+
+      // Parse JWT to update user info if needed
+      const decodedToken = parseJWT(access_token);
+      const username = decodedToken.user_name || req.session.username || 'User';
+      req.session.username = username;
+
+      accessTokenIsValid = true;
+      console.log('Token refreshed successfully');
     } catch (refreshError) {
       console.error('Failed to refresh token:', refreshError);
       // If refresh fails, the token is still invalid
@@ -548,12 +536,10 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
     // Import the generated SDK wrapper
     const { executeSdkMethod } = require('./sailpoint-sdk-web');
     
-    // Extract tenant name for API base path
+    // Build API base path using helper function
     let basePath = '';
     try {
-      const tenantUrl = new URL(SERVER_CONFIG.tenantUrl);
-      const tenantName = tenantUrl.hostname.split('.')[0];
-      basePath = `https://${tenantName}.api.identitynow-demo.com`;
+      basePath = buildSailPointUrl(SERVER_CONFIG.tenantUrl, 'api');
     } catch (error) {
       console.error('Failed to construct API base path:', error);
       return res.status(500).json({ error: 'Failed to determine API base path' });

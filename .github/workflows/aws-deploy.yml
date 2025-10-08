@@ -201,10 +201,16 @@ jobs:
           echo "✅ CORS policy updated successfully"
 
           # Get Lambda function name from CloudFormation stack
-          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
+          echo "Getting Lambda function name from stack: $STACK_NAME"
+
+          # First, let's see what resources exist in the stack
+          echo "Stack resources:"
+          aws cloudformation describe-stack-resources \
             --stack-name $STACK_NAME \
-            --query "Stacks[0].Resources[?LogicalResourceId=='UiDevKitBackendFunction'].PhysicalResourceId" \
-            --output text 2>/dev/null || aws cloudformation describe-stack-resources \
+            --query "StackResources[?ResourceType=='AWS::Lambda::Function'].[LogicalResourceId,PhysicalResourceId]" \
+            --output table
+
+          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stack-resources \
             --stack-name $STACK_NAME \
             --logical-resource-id UiDevKitBackendFunction \
             --query "StackResources[0].PhysicalResourceId" \
@@ -212,20 +218,26 @@ jobs:
 
           echo "Lambda function name: $LAMBDA_FUNCTION_NAME"
 
+          if [ "$LAMBDA_FUNCTION_NAME" = "None" ] || [ -z "$LAMBDA_FUNCTION_NAME" ]; then
+            echo "❌ Failed to get Lambda function name"
+            exit 1
+          fi
+
           # Update Lambda environment variables with dynamic URLs
+          echo "Updating Lambda environment variables..."
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \
             --environment Variables="{
-              NODE_ENV=prod,
-              DYNAMO_TABLE_NAME=$STACK_NAME-sessions,
-              JWT_SECRET=$JWT_SECRET,
-              SESSION_SECRET=$JWT_SECRET,
-              TENANT_URL=$TENANT_URL,
-              CLIENT_ID=$CLIENT_ID,
-              CLIENT_SECRET=$CLIENT_SECRET,
-              REDIRECT_URI=$API_URL/oauth/callback,
-              OAUTH_SCOPES=${OAUTH_SCOPES:-sp:scopes:all},
-              WEBSITE_URL=$CLOUDFRONT_URL
+              \"NODE_ENV\":\"prod\",
+              \"DYNAMO_TABLE_NAME\":\"$STACK_NAME-sessions\",
+              \"JWT_SECRET\":\"$JWT_SECRET\",
+              \"SESSION_SECRET\":\"$JWT_SECRET\",
+              \"TENANT_URL\":\"$TENANT_URL\",
+              \"CLIENT_ID\":\"$CLIENT_ID\",
+              \"CLIENT_SECRET\":\"$CLIENT_SECRET\",
+              \"REDIRECT_URI\":\"$API_URL/oauth/callback\",
+              \"OAUTH_SCOPES\":\"${OAUTH_SCOPES:-sp:scopes:all}\",
+              \"WEBSITE_URL\":\"$CLOUDFRONT_URL\"
             }"
 
           echo "✅ Lambda environment variables updated successfully"

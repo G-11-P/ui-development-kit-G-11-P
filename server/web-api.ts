@@ -127,7 +127,7 @@ const csrfProtection = async (req: Request, res: Response, next: NextFunction) =
 
   // For Lambda, also check persistent storage
   if (!csrfSecret && req.sessionID) {
-    csrfSecret = await storage.getCsrfSecret(req.sessionID);
+    csrfSecret = (await storage.getCsrfSecret(req.sessionID)) || undefined;
   }
 
   // Create new secret if none exists
@@ -498,7 +498,7 @@ app.get('/api/auth/csrf-token', rateLimiter, async (req: Request, res: Response)
 
   // For Lambda, also check persistent storage
   if (!csrfSecret && req.sessionID) {
-    csrfSecret = await storage.getCsrfSecret(req.sessionID);
+    csrfSecret = (await storage.getCsrfSecret(req.sessionID)) || undefined;
   }
 
   // Create new secret if none exists

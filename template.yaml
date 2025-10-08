@@ -61,7 +61,7 @@ Resources:
           - "x-csrf-token"
           - "x-session-id"
         AllowOrigins:
-          - "*"
+          - ""
         AllowCredentials: false
       DefaultRouteSettings:
         DetailedMetricsEnabled: true

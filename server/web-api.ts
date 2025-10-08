@@ -118,8 +118,13 @@ app.use((req, res, next) => {
 
   // In Lambda, use a custom session identifier that persists across requests
   if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    console.log(`[SESSION] Lambda mode - checking for cookies`);
+    console.log(`[SESSION] req.cookies:`, req.cookies);
+    console.log(`[SESSION] All headers:`, JSON.stringify(req.headers));
+
     // Get or create custom session ID from cookie
     let customSessionId = req.cookies ? req.cookies['custom-session-id'] : undefined;
+    console.log(`[SESSION] Custom session ID from cookie: ${customSessionId || 'NOT_FOUND'}`);
 
     if (!customSessionId) {
       // Generate a new custom session ID
@@ -133,6 +138,7 @@ app.use((req, res, next) => {
         sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
+      console.log(`[SESSION] Set cookie for custom session ID`);
     } else {
       console.log(`[SESSION] Using existing custom session ID: ${customSessionId}`);
     }

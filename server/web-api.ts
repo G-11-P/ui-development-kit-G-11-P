@@ -58,6 +58,13 @@ declare module 'express-session' {
   }
 }
 
+// Request augmentation for custom session ID
+declare module 'express-serve-static-core' {
+  interface Request {
+    customSessionId?: string;
+  }
+}
+
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -93,13 +100,40 @@ app.use(session({
   }
 }));
 
-// Add session logging middleware
+// Add session logging middleware and custom session ID for Lambda
 app.use((req, res, next) => {
   console.log(`[SESSION] ${req.method} ${req.path}`);
-  console.log(`[SESSION] Session ID: ${req.sessionID}`);
+  console.log(`[SESSION] Express Session ID: ${req.sessionID}`);
+
+  // In Lambda, use a custom session identifier that persists across requests
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    // Get or create custom session ID from cookie
+    let customSessionId = req.cookies['custom-session-id'];
+
+    if (!customSessionId) {
+      // Generate a new custom session ID
+      customSessionId = crypto.randomBytes(32).toString('hex');
+      console.log(`[SESSION] Created new custom session ID: ${customSessionId}`);
+
+      // Set cookie that will persist across requests
+      res.cookie('custom-session-id', customSessionId, {
+        httpOnly: true,
+        secure: false, // Set to true in production with HTTPS
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      });
+    } else {
+      console.log(`[SESSION] Using existing custom session ID: ${customSessionId}`);
+    }
+
+    // Store custom session ID on request for use by other middleware
+    req.customSessionId = customSessionId;
+  }
+
   console.log(`[SESSION] Session exists: ${req.session ? 'YES' : 'NO'}`);
   console.log(`[SESSION] Session authenticated: ${req.session?.isAuthenticated || false}`);
   console.log(`[SESSION] CSRF secret in session: ${req.session?.csrfSecret ? 'EXISTS' : 'MISSING'}`);
+  console.log(`[SESSION] Custom Session ID: ${req.customSessionId || 'N/A'}`);
   next();
 });
 
@@ -128,7 +162,8 @@ const rateLimiter = rateLimit({
 // CSRF middleware
 const csrfProtection = async (req: Request, res: Response, next: NextFunction) => {
   console.log(`[CSRF] Processing ${req.method} ${req.path}`);
-  console.log(`[CSRF] Session ID: ${req.sessionID}`);
+  console.log(`[CSRF] Express Session ID: ${req.sessionID}`);
+  console.log(`[CSRF] Custom Session ID: ${req.customSessionId}`);
   console.log(`[CSRF] Session data:`, JSON.stringify(req.session, null, 2));
 
   // Skip CSRF for GET requests and OAuth callback
@@ -137,12 +172,16 @@ const csrfProtection = async (req: Request, res: Response, next: NextFunction) =
     return next();
   }
 
+  // In Lambda, use custom session ID; otherwise use express session ID
+  const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+  console.log(`[CSRF] Using session ID: ${sessionIdToUse}`);
+
   // In Lambda, always use persistent storage first, then session as fallback
   let csrfSecret = null;
 
-  if (process.env.AWS_LAMBDA_FUNCTION_NAME && req.sessionID) {
-    console.log(`[CSRF] Lambda mode: checking persistent storage for session ID: ${req.sessionID}`);
-    csrfSecret = (await storage.getCsrfSecret(req.sessionID)) || undefined;
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME && sessionIdToUse) {
+    console.log(`[CSRF] Lambda mode: checking persistent storage for session ID: ${sessionIdToUse}`);
+    csrfSecret = (await storage.getCsrfSecret(sessionIdToUse)) || undefined;
     console.log(`[CSRF] CSRF secret from storage: ${csrfSecret ? 'EXISTS' : 'MISSING'}`);
   }
 
@@ -506,15 +545,20 @@ app.post('/api/auth/logout', rateLimiter, csrfProtection, async (req: Request, r
 // CSRF token endpoint
 app.get('/api/auth/csrf-token', rateLimiter, async (req: Request, res: Response) => {
   console.log('[CSRF-TOKEN] GET /api/auth/csrf-token called');
-  console.log(`[CSRF-TOKEN] Session ID: ${req.sessionID}`);
+  console.log(`[CSRF-TOKEN] Express Session ID: ${req.sessionID}`);
+  console.log(`[CSRF-TOKEN] Custom Session ID: ${req.customSessionId}`);
   console.log(`[CSRF-TOKEN] Session data:`, JSON.stringify(req.session, null, 2));
+
+  // In Lambda, use custom session ID; otherwise use express session ID
+  const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+  console.log(`[CSRF-TOKEN] Using session ID: ${sessionIdToUse}`);
 
   // In Lambda, always check persistent storage first, then session as fallback
   let csrfSecret = null;
 
-  if (process.env.AWS_LAMBDA_FUNCTION_NAME && req.sessionID) {
-    console.log(`[CSRF-TOKEN] Lambda mode: checking persistent storage for session ID: ${req.sessionID}`);
-    csrfSecret = (await storage.getCsrfSecret(req.sessionID)) || undefined;
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME && sessionIdToUse) {
+    console.log(`[CSRF-TOKEN] Lambda mode: checking persistent storage for session ID: ${sessionIdToUse}`);
+    csrfSecret = (await storage.getCsrfSecret(sessionIdToUse)) || undefined;
     console.log(`[CSRF-TOKEN] CSRF secret from storage: ${csrfSecret ? 'EXISTS' : 'MISSING'}`);
   }
 
@@ -532,9 +576,9 @@ app.get('/api/auth/csrf-token', rateLimiter, async (req: Request, res: Response)
     console.log(`[CSRF-TOKEN] Stored CSRF secret in session`);
 
     // Always store in persistent storage for Lambda
-    if (req.sessionID) {
-      console.log(`[CSRF-TOKEN] Storing CSRF secret in persistent storage for session: ${req.sessionID}`);
-      await storage.setCsrfSecret(req.sessionID, csrfSecret);
+    if (sessionIdToUse) {
+      console.log(`[CSRF-TOKEN] Storing CSRF secret in persistent storage for session: ${sessionIdToUse}`);
+      await storage.setCsrfSecret(sessionIdToUse, csrfSecret);
     }
   }
 

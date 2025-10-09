@@ -688,17 +688,28 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
 
   // Try to get token data from memory first, then persistent storage
   const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
-  if (!tokenData && sessionIdToUse) {
-    tokenData = await storage.getTokenData(sessionIdToUse);
+  console.log(`[SDK-PROXY] Using session ID for token lookup: ${sessionIdToUse}`);
+  console.log(`[SDK-PROXY] Global tokenData exists: ${!!tokenData}`);
+
+  let currentTokenData = tokenData;
+  if (!currentTokenData && sessionIdToUse) {
+    console.log(`[SDK-PROXY] Fetching token data from storage for session: ${sessionIdToUse}`);
+    currentTokenData = await storage.getTokenData(sessionIdToUse);
+    console.log(`[SDK-PROXY] Token data retrieved from storage: ${!!currentTokenData}`);
+    if (currentTokenData) {
+      tokenData = currentTokenData; // Update global for local development
+    }
   }
 
-  if (!tokenData) {
+  if (!currentTokenData) {
+    console.log(`[SDK-PROXY] No token data found for session: ${sessionIdToUse}`);
     return res.status(401).json({ error: 'No token data found' });
   }
 
   // Check if access token is valid
   const now = new Date();
-  if (tokenData.accessExpiry <= now) {
+  if (currentTokenData.accessExpiry <= now) {
+    console.log(`[SDK-PROXY] Access token expired for session: ${sessionIdToUse}`);
     return res.status(401).json({ error: 'Access token expired' });
   }
 
@@ -716,12 +727,14 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
     }
 
     // Execute the SDK method
+    console.log(`[SDK-PROXY] Executing SDK method: ${methodName} with token for session: ${sessionIdToUse}`);
     const result = await executeSdkMethod(
       methodName,
       args || {},
-      tokenData.accessToken,
+      currentTokenData.accessToken,
       basePath
     );
+    console.log(`[SDK-PROXY] SDK method ${methodName} executed successfully`);
     
     // Send the full result (includes data, headers, status, etc.)
     res.json(result);

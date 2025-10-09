@@ -177,10 +177,16 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
    */
   private async apiCall<T>(endpoint: string, method: string = 'GET', body?: unknown): Promise<T> {
     const url = `${this.apiUrl}/${endpoint}`;
-    
+
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
+
+    // Add session ID header for Lambda compatibility
+    const sessionId = localStorage.getItem('custom-session-id');
+    if (sessionId) {
+      headers = headers.set('x-session-id', sessionId);
+    }
 
     // Add CSRF token for non-GET requests
     if (method !== 'GET') {

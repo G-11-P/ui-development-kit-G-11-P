@@ -167,7 +167,7 @@ const csrfProtection = async (req: Request, res: Response, next: NextFunction) =
   console.log(`[CSRF] Session data:`, JSON.stringify(req.session, null, 2));
 
   // Skip CSRF for GET requests and OAuth callback
-  if (req.method === 'GET' || req.path === '/oauth/callback') {
+  if (req.method === 'GET' || req.path === '/api/oauth/callback') {
     console.log(`[CSRF] Skipping CSRF for ${req.method} ${req.path}`);
     return next();
   }
@@ -226,7 +226,7 @@ const SERVER_CONFIG = {
   // Client secret (should be securely stored in production)
   clientSecret: process.env.CLIENT_SECRET || '',
   // Redirect URI registered with the client
-  redirectUri: process.env.REDIRECT_URI || 'http://localhost:3000/oauth/callback',
+  redirectUri: process.env.REDIRECT_URI || 'http://localhost:3000/api/oauth/callback',
   // OAuth scopes to request
   scopes: process.env.OAUTH_SCOPES || 'sp:scopes:all'
 };
@@ -305,7 +305,7 @@ app.post('/api/auth/web-login', rateLimiter, csrfProtection, async (req: Request
 });
 
 // OAuth callback handler
-app.get('/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
+app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) => {
   const { code, state, error } = req.query;
 
   
@@ -670,7 +670,7 @@ if (require.main === module) {
     console.log(`OAuth client configured for: ${SERVER_CONFIG.tenantUrl}`);
     console.log('Available endpoints:');
     console.log('  POST /api/auth/web-login (CSRF protected)');
-    console.log('  GET  /oauth/callback');
+    console.log('  GET  /api/oauth/callback');
     console.log('  GET  /api/auth/login-status');
     console.log('  GET  /api/auth/status/access/');
     console.log('  GET  /api/auth/csrf-token');

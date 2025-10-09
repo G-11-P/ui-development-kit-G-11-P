@@ -19,6 +19,11 @@ interface OAuthState {
   redirectUrl: string;
 }
 
+interface SessionAuth {
+  isAuthenticated: boolean;
+  username: string;
+}
+
 // Storage interface for session data that needs persistence in Lambda
 interface SessionStorage {
   getTokenData(sessionId: string): Promise<TokenData | null>;
@@ -30,6 +35,9 @@ interface SessionStorage {
   getCsrfSecret(sessionId: string): Promise<string | null>;
   setCsrfSecret(sessionId: string, secret: string): Promise<void>;
   deleteCsrfSecret(sessionId: string): Promise<void>;
+  getSessionAuth(sessionId: string): Promise<SessionAuth | null>;
+  setSessionAuth(sessionId: string, authData: SessionAuth): Promise<void>;
+  deleteSessionAuth(sessionId: string): Promise<void>;
 }
 
 // Memory-based storage for local development
@@ -37,6 +45,7 @@ class MemoryStorage implements SessionStorage {
   private tokens = new Map<string, TokenData>();
   private oauthStates = new Map<string, { data: OAuthState; expires: number }>();
   private csrfSecrets = new Map<string, string>();
+  private sessionAuth = new Map<string, SessionAuth>();
 
   async getTokenData(sessionId: string): Promise<TokenData | null> {
     return this.tokens.get(sessionId) || null;
@@ -82,6 +91,18 @@ class MemoryStorage implements SessionStorage {
 
   async deleteCsrfSecret(sessionId: string): Promise<void> {
     this.csrfSecrets.delete(sessionId);
+  }
+
+  async getSessionAuth(sessionId: string): Promise<SessionAuth | null> {
+    return this.sessionAuth.get(sessionId) || null;
+  }
+
+  async setSessionAuth(sessionId: string, authData: SessionAuth): Promise<void> {
+    this.sessionAuth.set(sessionId, authData);
+  }
+
+  async deleteSessionAuth(sessionId: string): Promise<void> {
+    this.sessionAuth.delete(sessionId);
   }
 }
 
@@ -236,6 +257,53 @@ class DynamoStorage implements SessionStorage {
       console.error('Error deleting CSRF secret from DynamoDB:', error);
     }
   }
+
+  async getSessionAuth(sessionId: string): Promise<SessionAuth | null> {
+    try {
+      const result = await this.client.send(new GetCommand({
+        TableName: this.tableName,
+        Key: { pk: `auth#${sessionId}`, sk: 'session' }
+      }));
+
+      if (!result.Item) return null;
+
+      return {
+        isAuthenticated: result.Item.isAuthenticated,
+        username: result.Item.username
+      };
+    } catch (error) {
+      console.error('Error getting session auth from DynamoDB:', error);
+      return null;
+    }
+  }
+
+  async setSessionAuth(sessionId: string, authData: SessionAuth): Promise<void> {
+    try {
+      await this.client.send(new PutCommand({
+        TableName: this.tableName,
+        Item: {
+          pk: `auth#${sessionId}`,
+          sk: 'session',
+          isAuthenticated: authData.isAuthenticated,
+          username: authData.username,
+          ttl: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+        }
+      }));
+    } catch (error) {
+      console.error('Error setting session auth in DynamoDB:', error);
+    }
+  }
+
+  async deleteSessionAuth(sessionId: string): Promise<void> {
+    try {
+      await this.client.send(new DeleteCommand({
+        TableName: this.tableName,
+        Key: { pk: `auth#${sessionId}`, sk: 'session' }
+      }));
+    } catch (error) {
+      console.error('Error deleting session auth from DynamoDB:', error);
+    }
+  }
 }
 
 // Storage factory
@@ -253,4 +321,4 @@ export const createStorage = (): SessionStorage => {
 };
 
 // Export types for use in main application
-export { SessionStorage, TokenData, OAuthState };
+export { SessionStorage, TokenData, OAuthState, SessionAuth };

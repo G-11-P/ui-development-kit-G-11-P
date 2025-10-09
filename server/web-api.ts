@@ -14,7 +14,7 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 import Tokens = require("csrf")
 import rateLimit from 'express-rate-limit';
-import { createStorage } from './session-storage';
+import { createStorage, SessionAuth } from './session-storage';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -377,10 +377,19 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
       // Parse JWT to get user info
       const decodedToken = parseJWT(access_token);
       const username = decodedToken.user_name || 'User';
-      
+
       // Update session
       req.session.isAuthenticated = true;
       req.session.username = username;
+
+      // Store session auth in persistent storage for Lambda
+      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      if (sessionIdToUse) {
+        await storage.setSessionAuth(sessionIdToUse, {
+          isAuthenticated: true,
+          username: username
+        });
+      }
       
     } catch (tokenError) {
       console.error('Error exchanging code for token, using mock data:', tokenError);
@@ -401,6 +410,15 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
       // Use mock session data
       req.session.isAuthenticated = true;
       req.session.username = 'Test User';
+
+      // Store session auth in persistent storage for Lambda
+      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      if (sessionIdToUse) {
+        await storage.setSessionAuth(sessionIdToUse, {
+          isAuthenticated: true,
+          username: 'Test User'
+        });
+      }
     }
     
     // Clear OAuth state from both session and persistent storage
@@ -424,22 +442,57 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
 });
 
 // Check login status
-app.get('/api/auth/login-status', rateLimiter, (req: Request, res: Response) => {
+app.get('/api/auth/login-status', rateLimiter, async (req: Request, res: Response) => {
   console.log('GET /api/auth/login-status called');
-  
-  // Return current authentication status from session
+
+  // Check session first, then persistent storage for Lambda
+  let isAuthenticated: boolean = req.session.isAuthenticated === true;
+  let username: string | undefined = req.session.username;
+
+  // In Lambda, check persistent storage if session is not authenticated
+  if (!isAuthenticated && process.env.AWS_LAMBDA_FUNCTION_NAME && req.customSessionId) {
+    console.log(`[LOGIN-STATUS] Checking persistent storage for session: ${req.customSessionId}`);
+    const authData = await storage.getSessionAuth(req.customSessionId);
+    if (authData) {
+      console.log(`[LOGIN-STATUS] Found auth data in storage: ${JSON.stringify(authData)}`);
+      isAuthenticated = authData.isAuthenticated;
+      username = authData.username;
+
+      // Update Express session with persistent data
+      req.session.isAuthenticated = authData.isAuthenticated;
+      req.session.username = authData.username;
+    } else {
+      console.log(`[LOGIN-STATUS] No auth data found in storage`);
+    }
+  }
+
+  console.log(`[LOGIN-STATUS] Final auth state: isAuthenticated=${isAuthenticated}, username=${username}`);
+
+  // Return current authentication status
   res.json({
-    isLoggedIn: req.session.isAuthenticated === true,
-    username: req.session.username
+    isLoggedIn: isAuthenticated,
+    username: username
   });
 });
 
 // Check access token status and auto-refresh if needed
 app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Response) => {
   console.log('GET /api/auth/status/access/ called');
-  
-  // Check if user is authenticated and has token data
-  if (!req.session.isAuthenticated) {
+
+  // Check if user is authenticated (session first, then persistent storage for Lambda)
+  let isAuthenticated: boolean = req.session.isAuthenticated === true;
+
+  if (!isAuthenticated && process.env.AWS_LAMBDA_FUNCTION_NAME && req.customSessionId) {
+    const authData = await storage.getSessionAuth(req.customSessionId);
+    if (authData) {
+      isAuthenticated = authData.isAuthenticated;
+      // Update Express session with persistent data
+      req.session.isAuthenticated = authData.isAuthenticated;
+      req.session.username = authData.username;
+    }
+  }
+
+  if (!isAuthenticated) {
     return res.json({
       authtype: 'oauth' as const,
       accessTokenIsValid: false,
@@ -532,11 +585,13 @@ app.post('/api/auth/logout', rateLimiter, csrfProtection, async (req: Request, r
   delete req.session.username;
   delete req.session.csrfSecret;
 
-  // Clear token data and CSRF secret from memory and persistent storage
+  // Clear token data, CSRF secret, and session auth from memory and persistent storage
   tokenData = null;
-  if (req.sessionID) {
-    await storage.deleteTokenData(req.sessionID);
-    await storage.deleteCsrfSecret(req.sessionID);
+  const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+  if (sessionIdToUse) {
+    await storage.deleteTokenData(sessionIdToUse);
+    await storage.deleteCsrfSecret(sessionIdToUse);
+    await storage.deleteSessionAuth(sessionIdToUse);
   }
 
   res.json({ success: true });
@@ -594,9 +649,21 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
   console.log('POST /api/sdk called', req.params);
   const { methodName } = req.params;
   const { args } = req.body;
-  
-  // Check if user is authenticated
-  if (!req.session.isAuthenticated) {
+
+  // Check if user is authenticated (session first, then persistent storage for Lambda)
+  let isAuthenticated: boolean = req.session.isAuthenticated === true;
+
+  if (!isAuthenticated && process.env.AWS_LAMBDA_FUNCTION_NAME && req.customSessionId) {
+    const authData = await storage.getSessionAuth(req.customSessionId);
+    if (authData) {
+      isAuthenticated = authData.isAuthenticated;
+      // Update Express session with persistent data
+      req.session.isAuthenticated = authData.isAuthenticated;
+      req.session.username = authData.username;
+    }
+  }
+
+  if (!isAuthenticated) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 

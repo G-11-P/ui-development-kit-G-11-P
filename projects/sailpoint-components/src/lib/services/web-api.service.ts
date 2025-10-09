@@ -158,8 +158,17 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
     }
 
     try {
+      // Include session ID header for Lambda compatibility - this ensures
+      // the CSRF token is generated using the correct CSRF secret from storage
+      let headers = new HttpHeaders();
+      const sessionId = localStorage.getItem('custom-session-id');
+      if (sessionId) {
+        headers = headers.set('x-session-id', sessionId);
+      }
+
       const response = await firstValueFrom(
         this.http.get<{ csrfToken: string }>(`${this.apiUrl}/auth/csrf-token`, {
+          headers,
           withCredentials: true
         })
       );

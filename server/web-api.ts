@@ -370,10 +370,11 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
       };
 
       // Store in persistent storage for Lambda
-      if (req.sessionID) {
-        await storage.setTokenData(req.sessionID, tokenData);
+      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      if (sessionIdToUse) {
+        await storage.setTokenData(sessionIdToUse, tokenData);
       }
-      
+
       // Parse JWT to get user info
       const decodedToken = parseJWT(access_token);
       const username = decodedToken.user_name || 'User';
@@ -382,8 +383,7 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
       req.session.isAuthenticated = true;
       req.session.username = username;
 
-      // Store session auth in persistent storage for Lambda
-      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      // Store session auth in persistent storage for Lambda (use same sessionIdToUse as token)
       if (sessionIdToUse) {
         await storage.setSessionAuth(sessionIdToUse, {
           isAuthenticated: true,
@@ -403,16 +403,16 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
       };
 
       // Store in persistent storage for Lambda
-      if (req.sessionID) {
-        await storage.setTokenData(req.sessionID, tokenData);
+      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      if (sessionIdToUse) {
+        await storage.setTokenData(sessionIdToUse, tokenData);
       }
-      
+
       // Use mock session data
       req.session.isAuthenticated = true;
       req.session.username = 'Test User';
 
-      // Store session auth in persistent storage for Lambda
-      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      // Store session auth in persistent storage for Lambda (use same sessionIdToUse as token)
       if (sessionIdToUse) {
         await storage.setSessionAuth(sessionIdToUse, {
           isAuthenticated: true,
@@ -501,8 +501,9 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
   }
 
   // Try to get token data from memory first, then persistent storage
-  if (!tokenData && req.sessionID) {
-    tokenData = await storage.getTokenData(req.sessionID);
+  const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+  if (!tokenData && sessionIdToUse) {
+    tokenData = await storage.getTokenData(sessionIdToUse);
   }
 
   if (!tokenData) {
@@ -550,8 +551,9 @@ app.get('/api/auth/status/access/', rateLimiter, async (req: Request, res: Respo
       };
 
       // Update persistent storage
-      if (req.sessionID) {
-        await storage.setTokenData(req.sessionID, tokenData);
+      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      if (sessionIdToUse) {
+        await storage.setTokenData(sessionIdToUse, tokenData);
       }
 
       // Parse JWT to update user info if needed
@@ -668,8 +670,9 @@ app.post('/api/sdk/:methodName', rateLimiter, csrfProtection, async (req: Reques
   }
 
   // Try to get token data from memory first, then persistent storage
-  if (!tokenData && req.sessionID) {
-    tokenData = await storage.getTokenData(req.sessionID);
+  const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+  if (!tokenData && sessionIdToUse) {
+    tokenData = await storage.getTokenData(sessionIdToUse);
   }
 
   if (!tokenData) {

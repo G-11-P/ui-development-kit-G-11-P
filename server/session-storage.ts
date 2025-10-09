@@ -15,6 +15,7 @@ interface TokenData {
   refreshExpiry?: Date;
 }
 
+// storage for OAuth state during auth flow
 interface OAuthState {
   redirectUrl: string;
   clientSessionId?: string;

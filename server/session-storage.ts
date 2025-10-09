@@ -17,6 +17,7 @@ interface TokenData {
 
 interface OAuthState {
   redirectUrl: string;
+  clientSessionId?: string;
 }
 
 interface SessionAuth {

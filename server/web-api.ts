@@ -45,6 +45,7 @@ interface TokenDetails {
 
 interface OAuthState {
   redirectUrl: string;
+  clientSessionId?: string;
 }
 
 // Session augmentation
@@ -281,8 +282,10 @@ app.post('/api/auth/web-login', rateLimiter, csrfProtection, async (req: Request
   console.log('POST /api/auth/web-login called');
   
   // Generate and store state parameter
+  const clientSessionId = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
   const stateData: OAuthState = {
-    redirectUrl: '/home'
+    redirectUrl: '/home',
+    clientSessionId: clientSessionId
   };
 
   const state = generateStateParam(stateData);
@@ -369,8 +372,15 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
         refreshExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       };
 
-      // Store in persistent storage for Lambda
-      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      // Store in persistent storage for Lambda - use client session ID from OAuth state
+      const sessionIdToUse = (process.env.AWS_LAMBDA_FUNCTION_NAME && stateData.clientSessionId)
+        ? stateData.clientSessionId
+        : req.sessionID;
+
+      console.log(`[OAUTH-CALLBACK] Using session ID for storage: ${sessionIdToUse}`);
+      console.log(`[OAUTH-CALLBACK] State client session ID: ${stateData.clientSessionId}`);
+      console.log(`[OAUTH-CALLBACK] Express session ID: ${req.sessionID}`);
+
       if (sessionIdToUse) {
         await storage.setTokenData(sessionIdToUse, tokenData);
       }
@@ -389,6 +399,7 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
           isAuthenticated: true,
           username: username
         });
+        console.log(`[OAUTH-CALLBACK] Stored auth data for session: ${sessionIdToUse}`);
       }
       
     } catch (tokenError) {
@@ -402,8 +413,13 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
         refreshExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       };
 
-      // Store in persistent storage for Lambda
-      const sessionIdToUse = process.env.AWS_LAMBDA_FUNCTION_NAME ? req.customSessionId : req.sessionID;
+      // Store in persistent storage for Lambda - use client session ID from OAuth state
+      const sessionIdToUse = (process.env.AWS_LAMBDA_FUNCTION_NAME && stateData.clientSessionId)
+        ? stateData.clientSessionId
+        : req.sessionID;
+
+      console.log(`[OAUTH-CALLBACK-MOCK] Using session ID for storage: ${sessionIdToUse}`);
+
       if (sessionIdToUse) {
         await storage.setTokenData(sessionIdToUse, tokenData);
       }
@@ -418,6 +434,7 @@ app.get('/api/oauth/callback', rateLimiter, async (req: Request, res: Response) 
           isAuthenticated: true,
           username: 'Test User'
         });
+        console.log(`[OAUTH-CALLBACK-MOCK] Stored auth data for session: ${sessionIdToUse}`);
       }
     }
     

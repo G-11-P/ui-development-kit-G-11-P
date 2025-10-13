@@ -48,12 +48,21 @@ if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({
-  origin: process.env.AWS_LAMBDA_FUNCTION_NAME
-    ? true // In Lambda, rely on API Gateway CORS configuration
-    : ['http://localhost:4200', 'http://127.0.0.1:4200'], // Local development
-  credentials: true
-}));
+// CORS configuration - only enable in development or Lambda environments
+if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  // In Lambda, rely on API Gateway CORS configuration
+  app.use(cors({
+    origin: true,
+    credentials: true
+  }));
+} else if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+  // Only enable CORS in development (when Angular dev server is separate)
+  app.use(cors({
+    origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+    credentials: true
+  }));
+}
+// In production (Docker), no CORS needed - frontend and backend served from same origin
 
 // Add session ID middleware
 app.use(sessionIdMiddleware);
@@ -106,7 +115,8 @@ if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
   }));
 
   // Serve index.html for any other routes (Angular routing)
-  app.get('*', (req, res) => {
+  // Apply rate limiting for security best practices
+  app.get('*', rateLimiter, (req, res) => {
     // Don't serve index.html for API routes
     if (req.url.startsWith('/api')) {
       return res.status(404).json({ error: 'API endpoint not found' });

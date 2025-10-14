@@ -1951,13 +1951,12 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       }
 
       // Show results
-      let message = `CSV processing completed. Updated ${updatedCount} items`;
-      if (skippedCount > 0) {
-        message += `, skipped ${skippedCount} completed items`;
-      }
-      if (errors.length > 0) {
-        message += `, ${errors.length} errors encountered`;
-        console.warn('CSV processing errors:', errors);
+      if (updatedCount > 0) {
+        let message = `CSV processing completed. Updated ${updatedCount} items`;
+        if (skippedCount > 0) {
+          message += `, skipped ${skippedCount} completed items`;
+        }
+        this.message.success(message);
       }
 
       // Clear any previous errors if processing was successful

@@ -44,6 +44,8 @@ export type UpdateEnvironmentRequest = {
   authtype: AuthMethods;
   clientId?: string;
   clientSecret?: string;
+  bypassTLS?: boolean;
+  caCertPath?: string;
 }
 
 export type Tenant = {

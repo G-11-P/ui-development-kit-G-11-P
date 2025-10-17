@@ -23,6 +23,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // config file management
   readConfig: () => ipcMain.invoke('read-config'),
   writeConfig: (config: any) => ipcMain.invoke('write-config', config),
+  
+  // file browser
+  browseForFile: () => ipcMain.invoke('browse-for-file'),
 
   // SDK functions
   ...sdkPreloader,

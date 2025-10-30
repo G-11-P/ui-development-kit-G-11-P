@@ -7,19 +7,22 @@
   <!-- Dynamic Content Based on Current Navigation Level -->
   <div class="content w-full">
 
-    <div class="content">
-      <nz-breadcrumb nzSeparator=" / ">
-        <nz-breadcrumb-item *ngFor="let item of navigationStack; let i = index; let isLast = last">
-           <a (click)="onBreadcrumbClick(i)" 
-              nz-button 
-              nzType="text" 
-              [class.active]="i === currentLevel"
-              style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-            <nz-icon *ngIf="item.breadcrumb.icon" [nzType]="item.breadcrumb.icon"></nz-icon>
-            <span>{{ item.breadcrumb.label }}</span>
-          </a>
-        </nz-breadcrumb-item>
-      </nz-breadcrumb>
+    <div class="content breadcrumb-nav">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li *ngFor="let item of navigationStack; let i = index; let isLast = last" 
+              class="breadcrumb-item" 
+              [class.active]="i === currentLevel">
+            <a (click)="onBreadcrumbClick(i)" 
+               [class.active]="i === currentLevel"
+               [class.disabled]="i === currentLevel">
+              <mat-icon *ngIf="item.breadcrumb.icon" class="breadcrumb-icon">{{ item.breadcrumb.icon }}</mat-icon>
+              <span>{{ item.breadcrumb.label }}</span>
+            </a>
+            <span *ngIf="!isLast" class="separator"> / </span>
+          </li>
+        </ol>
+      </nav>
     </div>
     
     <ng-container [ngSwitch]="getCurrentComponent()">
@@ -31,134 +34,134 @@
           <div *ngIf="!loading && campaignSummaries.length > 0" class="campaign-summary-section">
             <mat-card-header>
               <mat-card-title>
-                <nz-icon nzType="dashboard"></nz-icon>
+                <mat-icon>dashboard</mat-icon>
                 Campaign Summary
               </mat-card-title>
               <mat-card-subtitle>Overview of all campaigns and their progress</mat-card-subtitle>
             </mat-card-header>
             
             <mat-card-content>
-              
-              <nz-carousel 
-                nzAutoPlay 
-                nzAutoPlaySpeed="5000"
-                nzEffect="fade"
-                nzDots="true"
-                nzDotPosition="bottom"
-                class="campaign-carousel">
-                <div nz-carousel-content *ngFor="let summary of campaignSummaries" class="campaign-slide">
-                  <div class="campaign-header">
-                    <h4 class="campaign-name">{{ summary.campaignName }}</h4>
-                    <nz-tag [nzColor]="getCampaignTypeColor(summary.campaignType)">
-                      {{ summary.campaignType }}
-                    </nz-tag>
-                  </div>
-                  <p class="campaign-description" *ngIf="summary.campaignDescription">
-                    {{ summary.campaignDescription }}
-                  </p>
+              <div class="campaign-carousel">
+                <!-- Navigation Controls -->
+                <div class="carousel-controls">
+                  <button mat-icon-button 
+                          (click)="previousCampaign()" 
+                          [disabled]="currentCampaignIndex === 0"
+                          matTooltip="Previous Campaign">
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
                   
-                  <div class="statistics-grid">
-                    <!-- Certifications Statistics -->
-                    <div class="stat-group">
-                      <h5 class="stat-group-title">Certifications</h5>
-                      <div class="stat-row">
-                        <nz-statistic 
-                          nzTitle="Total" 
-                          [nzValue]="summary.totalCertifications"
-                          nzPrefix="📋">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Completed" 
-                          [nzValue]="summary.completedCertifications"
-                          nzPrefix="✅"
-                          [nzValueStyle]="{ color: '#52c41a' }">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Incomplete" 
-                          [nzValue]="summary.incompleteCertifications"
-                          nzPrefix="⏳"
-                          [nzValueStyle]="{ color: '#faad14' }">
-                        </nz-statistic>
-                      </div>
-                    </div>
-
-                    <!-- Identities Statistics -->
-                    <div class="stat-group">
-                      <h5 class="stat-group-title">Identities</h5>
-                      <div class="stat-row">
-                        <nz-statistic 
-                          nzTitle="Total" 
-                          [nzValue]="summary.totalIdentities"
-                          nzPrefix="👥">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Completed" 
-                          [nzValue]="summary.completedIdentities"
-                          nzPrefix="✅"
-                          [nzValueStyle]="{ color: '#52c41a' }">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Progress" 
-                          [nzValue]="getProgressPercentage(summary.completedIdentities, summary.totalIdentities)"
-                          nzSuffix="%"
-                          nzPrefix="📊"
-                          [nzValueStyle]="{ color: '#1890ff' }">
-                        </nz-statistic>
-                      </div>
-                    </div>
-
-                    <!-- Decisions Statistics -->
-                    <div class="stat-group">
-                      <h5 class="stat-group-title">Decisions</h5>
-                      <div class="stat-row">
-                        <nz-statistic 
-                          nzTitle="Total" 
-                          [nzValue]="summary.totalDecisions"
-                          nzPrefix="⚖️">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Made" 
-                          [nzValue]="summary.madeDecisions"
-                          nzPrefix="✅"
-                          [nzValueStyle]="{ color: '#52c41a' }">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Progress" 
-                          [nzValue]="getProgressPercentage(summary.madeDecisions, summary.totalDecisions)"
-                          nzSuffix="%"
-                          nzPrefix="📊"
-                          [nzValueStyle]="{ color: '#1890ff' }">
-                        </nz-statistic>
-                      </div>
-                    </div>
-
-                    <!-- Phase Statistics -->
-                    <div class="stat-group">
-                      <h5 class="stat-group-title">Phases</h5>
-                      <div class="stat-row">
-                        <nz-statistic 
-                          nzTitle="Staged" 
-                          [nzValue]="summary.phaseCounts.staged"
-                          nzPrefix="📋"
-                          [nzValueStyle]="{ color: '#722ed1' }">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Active" 
-                          [nzValue]="summary.phaseCounts.active"
-                          nzPrefix="🔄"
-                          [nzValueStyle]="{ color: '#fa8c16' }">
-                        </nz-statistic>
-                        <nz-statistic 
-                          nzTitle="Signed" 
-                          [nzValue]="summary.phaseCounts.signed"
-                          nzPrefix="✍️"
-                          [nzValueStyle]="{ color: '#52c41a' }">
-                        </nz-statistic>
-                      </div>
-                    </div>
+                  <div class="carousel-indicators">
+                    <span *ngFor="let summary of campaignSummaries; let i = index"
+                          class="indicator"
+                          [class.active]="i === currentCampaignIndex"
+                          (click)="goToCampaign(i)"
+                          [matTooltip]="summary.campaignName">
+                    </span>
+                    <span class="indicator-text">{{ currentCampaignIndex + 1 }} / {{ campaignSummaries.length }}</span>
                   </div>
+                  
+                  <button mat-icon-button 
+                          (click)="nextCampaign()" 
+                          [disabled]="currentCampaignIndex === campaignSummaries.length - 1"
+                          matTooltip="Next Campaign">
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
                 </div>
-              </nz-carousel>
+
+                <!-- Campaign Card -->
+                <mat-card class="campaign-card" *ngIf="getCurrentCampaign() as summary">
+                  <mat-card-header>
+                    <mat-card-title class="campaign-name">{{ summary.campaignName }}</mat-card-title>
+                    <mat-chip [style.background-color]="getCampaignTypeColor(summary.campaignType)">
+                      {{ summary.campaignType }}
+                    </mat-chip>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p class="campaign-description" *ngIf="summary.campaignDescription">
+                      {{ summary.campaignDescription }}
+                    </p>
+                    
+                    <div class="statistics-grid">
+                      <!-- Certifications Statistics -->
+                      <div class="stat-group">
+                        <h5 class="stat-group-title">Certifications</h5>
+                        <div class="stat-row">
+                          <div class="stat-item">
+                            <div class="stat-label">Total</div>
+                            <div class="stat-value">📋 {{ summary.totalCertifications }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Completed</div>
+                            <div class="stat-value" style="color: #52c41a">✅ {{ summary.completedCertifications }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Incomplete</div>
+                            <div class="stat-value" style="color: #faad14">⏳ {{ summary.incompleteCertifications }}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Identities Statistics -->
+                      <div class="stat-group">
+                        <h5 class="stat-group-title">Identities</h5>
+                        <div class="stat-row">
+                          <div class="stat-item">
+                            <div class="stat-label">Total</div>
+                            <div class="stat-value">👥 {{ summary.totalIdentities }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Completed</div>
+                            <div class="stat-value" style="color: #52c41a">✅ {{ summary.completedIdentities }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Progress</div>
+                            <div class="stat-value" style="color: #1890ff">📊 {{ getProgressPercentage(summary.completedIdentities, summary.totalIdentities) }}%</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Decisions Statistics -->
+                      <div class="stat-group">
+                        <h5 class="stat-group-title">Decisions</h5>
+                        <div class="stat-row">
+                          <div class="stat-item">
+                            <div class="stat-label">Total</div>
+                            <div class="stat-value">⚖️ {{ summary.totalDecisions }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Made</div>
+                            <div class="stat-value" style="color: #52c41a">✅ {{ summary.madeDecisions }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Progress</div>
+                            <div class="stat-value" style="color: #1890ff">📊 {{ getProgressPercentage(summary.madeDecisions, summary.totalDecisions) }}%</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Phase Statistics -->
+                      <div class="stat-group">
+                        <h5 class="stat-group-title">Phases</h5>
+                        <div class="stat-row">
+                          <div class="stat-item">
+                            <div class="stat-label">Staged</div>
+                            <div class="stat-value" style="color: #722ed1">📋 {{ summary.phaseCounts.staged }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Active</div>
+                            <div class="stat-value" style="color: #fa8c16">🔄 {{ summary.phaseCounts.active }}</div>
+                          </div>
+                          <div class="stat-item">
+                            <div class="stat-label">Signed</div>
+                            <div class="stat-value" style="color: #52c41a">✍️ {{ summary.phaseCounts.signed }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
             </mat-card-content>
           </div>
 
@@ -177,15 +180,13 @@
             <div class="table-controls-row" *ngIf="!loading && filteredCertifications.length">
               <!-- Refresh Button (Left) -->
               <button 
-                nz-button 
-                nzType="default" 
+                mat-raised-button 
                 (click)="refreshCertifications()"
                 [disabled]="loading"
-                nz-tooltip
-                nzTooltipTitle="Refresh certifications"
-                nzTooltipPlacement="bottom"
+                matTooltip="Refresh certifications"
+                matTooltipPosition="below"
                 class="refresh-button">
-                <span nz-icon nzType="reload" [class.spinning]="loading"></span>
+                <mat-icon [class.spinning]="loading">refresh</mat-icon>
                 Refresh
               </button>
               
@@ -194,130 +195,83 @@
               
               <!-- Column Controls (Right) -->
               <div class="column-controls">
-                <nz-button-group>
-                  <button 
-                    nz-button 
-                    nzType="default"
-                    nz-dropdown 
-                    [nzDropdownMenu]="columnMenu" 
-                    [nzVisible]="columnDropdownVisible"
-                    (nzVisibleChange)="columnDropdownVisible = $event"
-                    nzPlacement="bottomRight">
-                    <nz-icon nzType="setting"></nz-icon>
-                    Columns
-                    <nz-icon nzType="down"></nz-icon>
-                  </button>
-                </nz-button-group>
+                <button 
+                  mat-raised-button 
+                  [matMenuTriggerFor]="columnMenu"
+                  class="column-menu-button">
+                  <mat-icon>settings</mat-icon>
+                  Columns
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #columnMenu="matMenu" xPosition="before">
+                  <div class="column-menu-content" (click)="$event.stopPropagation()">
+                    <div class="column-dropdown-header">
+                      <button mat-button (click)="selectAllColumns()">Select All</button>
+                      <button mat-button (click)="deselectAllColumns()">Deselect All</button>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="column-list">
+                      <mat-checkbox
+                        *ngFor="let column of listOfColumns"
+                        class="column-item"
+                        [checked]="isColumnVisible(column.name)"
+                        (change)="toggleColumnVisibility(column.name)">
+                        {{ column.name }}
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                </mat-menu>
               </div>
             </div>
 
-            <nz-table 
-              #certificationTable
-              nzShowPagination
-              nzShowSizeChanger
-              [nzData]="filteredCertifications" 
-              [nzLoading]="loading"
-              nzSize="middle"
-              [nzPageSize]="10"
-              [nzPageSizeOptions]="[5, 10, 20, 50]"
-              [nzTotal]="filteredCertifications.length"
-              [nzShowTotal]="totalTemplate"
-              [nzScroll]="{ x: 'max-content' }"
-              class="certification-table w-full"
-              *ngIf="!loading && filteredCertifications.length">
-              
-              <thead>
-                <tr>
-                  <ng-container *ngFor="let column of getVisibleColumns()">
-                    <!-- Custom filter for Name column -->
-                    <th 
-                      *ngIf="column.name === 'Name'"
-                      [nzShowSort]="column.sortFn !== null"
-                      [nzSortOrder]="column.sortOrder"
-                      [nzSortFn]="column.sortFn"
-                      [nzSortDirections]="column.sortDirections"
-                      nzCustomFilter>
-                      Name
-                      <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="nameSearchValue.length > 0" [nzDropdownMenu]="menu">
-                        <nz-icon nzType="search" />
-                      </nz-filter-trigger>
-                    </th>
-                    
-                    <!-- Default headers for other columns -->
-                    <th 
-                      *ngIf="column.name !== 'Name'"
-                      [nzShowSort]="column.sortFn !== null"
-                      [nzSortOrder]="column.sortOrder"
-                      [nzSortFn]="column.sortFn"
-                      [nzSortDirections]="column.sortDirections"
-                      [nzShowFilter]="column.filterFn !== null"
-                      [nzFilters]="column.listOfFilter"
-                      [nzFilterMultiple]="column.filterMultiple"
-                      [nzFilterFn]="column.filterFn">
-                      {{ column.name }}
-                    </th>
-                  </ng-container>
-                  <th nzRight>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let certification of certificationTable.data; trackBy: trackByCertificationId">
-                  <td *ngFor="let column of getVisibleColumns()">
+            <!-- Search Bar -->
+            <mat-form-field class="w-full" *ngIf="!loading && filteredCertifications.length">
+              <mat-label>Search certifications</mat-label>
+              <input matInput 
+                     [(ngModel)]="nameSearchValue" 
+                     (ngModelChange)="nameSearchSubmit()"
+                     placeholder="Search by name">
+              <button mat-icon-button matSuffix *ngIf="nameSearchValue" (click)="nameSearchReset()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <!-- Material Table -->
+            <div class="table-container" *ngIf="!loading && filteredCertifications.length">
+              <table mat-table [dataSource]="filteredCertifications" class="certification-table w-full">
+                
+                <!-- Dynamic Columns -->
+                <ng-container *ngFor="let column of getVisibleColumns()" [matColumnDef]="column.name">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.name }}</th>
+                  <td mat-cell *matCellDef="let certification">
                     <span [class]="column.cssClass && column.dataAccessor ? column.cssClass(column.dataAccessor(certification)) : ''">
                       {{ column.formatter && column.dataAccessor ? column.formatter(column.dataAccessor(certification)) : (column.dataAccessor ? column.dataAccessor(certification) : '') }}
                     </span>
                   </td>
-                  <td nzRight>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let certification">
                     <button
-                      id="viewCertification"
-                      nz-button
-                      nzType="default"
-                      nzSize="small"
-                      (click)="navigateToDetail(certification)"
-                    >
+                      mat-raised-button
+                      color="primary"
+                      (click)="navigateToDetail(certification)">
                       View Details
                     </button>
                   </td>
-                </tr>
-              </tbody>
-            </nz-table>
+                </ng-container>
 
-            <ng-template #totalTemplate let-total>
-              Total {{ total }} items
-            </ng-template>
-
-            <!-- Search Bar -->
-            <nz-dropdown-menu #menu="nzDropdownMenu">
-              <div class="ant-table-filter-dropdown">
-                <div class="search-box">
-                  <input type="text" nz-input placeholder="Search name" [(ngModel)]="nameSearchValue" />
-                  <button nz-button nzSize="small" nzType="primary" (click)="nameSearchSubmit()" class="search-button">Search</button>
-                  <button nz-button nzSize="small" (click)="nameSearchReset()">Reset</button>
-                </div>
+                <tr mat-header-row *matHeaderRowDef="getVisibleColumnNames()"></tr>
+                <tr mat-row *matRowDef="let row; columns: getVisibleColumnNames();"></tr>
+              </table>
+              
+              <div class="table-footer">
+                <span class="total-items">Total {{ filteredCertifications.length }} items</span>
               </div>
-            </nz-dropdown-menu>
-
-            <!-- Column Visibility Menu -->
-            <nz-dropdown-menu #columnMenu="nzDropdownMenu">
-              <div class="ant-table-filter-dropdown">
-                <div class="column-dropdown-header">
-                  <button nz-button nzSize="small" nzType="link" (click)="selectAllColumns()">Select All</button>
-                  <button nz-button nzSize="small" nzType="link" (click)="deselectAllColumns()">Deselect All</button>
-                </div>
-                <nz-divider nzPlain nzVariant="solid"></nz-divider>
-                <div class="column-list">
-                  <label
-                    *ngFor="let column of listOfColumns"
-                    class="column-item"
-                    nz-checkbox
-                    [ngModel]="isColumnVisible(column.name)"
-                    (ngModelChange)="toggleColumnVisibility(column.name)"
-                  >
-                    {{ column.name }}
-                  </label>
-                </div>
-              </div>
-            </nz-dropdown-menu>
+            </div>
 
             <!-- No data message -->
             <div *ngIf="!loading && filteredCertifications.length === 0" class="no-data-message">

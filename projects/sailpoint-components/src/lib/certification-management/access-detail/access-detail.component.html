@@ -4,7 +4,7 @@
     <div class="header-content">
       <div class="access-info">
         <div class="access-type-badge">
-          <i [class]="'anticon anticon-' + getAccessTypeIcon()"></i>
+          <mat-icon>{{ getAccessTypeIcon() }}</mat-icon>
           <span>{{ getAccessTypeDisplay() }}</span>
         </div>
         <h2 class="access-name">{{ accessReviewItem.accessSummary.access.name }}</h2>
@@ -17,7 +17,7 @@
       </div>
       <div class="header-actions">
         <button class="btn btn-outline-secondary" (click)="goBack()">
-          <i class="anticon anticon-arrow-left"></i>
+          <mat-icon>arrow_back</mat-icon>
           Back
         </button>
       </div>
@@ -28,7 +28,7 @@
   <!-- Review Information Section -->
   <div class="review-info-section">
     <h3 class="section-title">
-      <i class="anticon anticon-file-text"></i>
+      <mat-icon>description</mat-icon>
       Review Information
     </h3>
     <div class="review-info">
@@ -58,7 +58,7 @@
   <!-- Entitlement Details Section -->
   <div class="entitlement-section" *ngIf="hasEntitlement()">
     <h3 class="section-title">
-      <i class="anticon anticon-key"></i>
+      <mat-icon>vpn_key</mat-icon>
       Entitlement Details
     </h3>
     <div class="entitlement-details">
@@ -195,7 +195,7 @@
       <!-- Access Profile Details Section -->
       <div class="access-profile-section" *ngIf="hasAccessProfile()">
         <h3 class="section-title">
-          <i class="anticon anticon-user"></i>
+          <mat-icon>person</mat-icon>
           Access Profile Details
         </h3>
     <div class="access-profile-details">
@@ -258,7 +258,7 @@
   <!-- Role Details Section -->
   <div class="role-section" *ngIf="hasRole()">
     <h3 class="section-title">
-      <i class="anticon anticon-team"></i>
+      <mat-icon>people</mat-icon>
       Role Details
     </h3>
     <div class="role-details">
@@ -318,11 +318,11 @@
 <!-- No Data State -->
 <div class="no-data-state" *ngIf="!accessReviewItem">
   <div class="no-data-content">
-    <i class="anticon anticon-exclamation-circle"></i>
+      <mat-icon>error</mat-icon>
     <h3>No Access Details Available</h3>
     <p>No access review item data was provided to display.</p>
     <button class="btn btn-primary" (click)="goBack()">
-      <i class="anticon anticon-arrow-left"></i>
+      <mat-icon>arrow_back</mat-icon>
       Go Back
     </button>
   </div>

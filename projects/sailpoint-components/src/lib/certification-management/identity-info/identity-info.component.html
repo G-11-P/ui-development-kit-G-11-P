@@ -1,23 +1,27 @@
 <!-- Loading State -->
 <div *ngIf="loading" class="loading-container">
-  <nz-spin nzSize="large" nzTip="Loading identity information...">
-    <div class="loading-content"></div>
-  </nz-spin>
+  <mat-spinner diameter="75"></mat-spinner>
+  <p>Loading identity information...</p>
 </div>
 
 <!-- Error State -->
-<nz-result
-  *ngIf="error && !loading"
-  nzStatus="error"
-  nzTitle="Error Loading Identity"
-  [nzSubTitle]="error"
-  nzExtra="
-    <button nz-button nzType='primary' (click)='loadIdentity()'>
-      <span nz-icon nzType='reload'></span>
+<mat-card *ngIf="error && !loading" class="error-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon color="warn">error</mat-icon>
+      Error Loading Identity
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ error }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="loadIdentity()">
+      <mat-icon>refresh</mat-icon>
       Retry
     </button>
-  ">
-</nz-result>
+  </mat-card-actions>
+</mat-card>
 
 <!-- Main Content -->
 <div *ngIf="!loading && !error && identity" class="identity-info-container">
@@ -25,26 +29,30 @@
   <div class="identity-header">
     <div class="header-content">
       <div class="identity-avatar">
-        <nz-avatar nzSize="large" nzIcon="user" [nzSrc]="identity.attributes?.['photo']"></nz-avatar>
+        <mat-icon class="large-avatar">person</mat-icon>
       </div>
       <div class="identity-details">
         <h1 class="identity-name">{{ getAttributeValue('displayName') || identity.name }}</h1>
         <div class="identity-meta">
-          <nz-tag [nzColor]="getStatusColor(identity.identityStatus || '')">{{ identity.identityStatus }}</nz-tag>
-          <nz-tag [nzColor]="getProcessingStateColor(identity.processingState || '')">{{ identity.processingState }}</nz-tag>
+          <mat-chip [style.background-color]="getStatusColor(identity.identityStatus || '')">
+            {{ identity.identityStatus }}
+          </mat-chip>
+          <mat-chip [style.background-color]="getProcessingStateColor(identity.processingState || '')">
+            {{ identity.processingState }}
+          </mat-chip>
           <span class="identity-id">ID: {{ identity.id }}</span>
         </div>
         <div class="identity-contact">
           <span *ngIf="identity.emailAddress" class="contact-item">
-            <nz-icon nzType="mail"></nz-icon>
+            <mat-icon>mail</mat-icon>
             {{ identity.emailAddress }}
           </span>
           <span *ngIf="identity.alias" class="contact-item">
-            <nz-icon nzType="user"></nz-icon>
+            <mat-icon>person</mat-icon>
             {{ identity.alias }}
           </span>
           <span *ngIf="identity.managerRef?.name" class="contact-item">
-            <nz-icon nzType="team"></nz-icon>
+            <mat-icon>people</mat-icon>
             Manager: {{ identity.managerRef?.name || 'N/A' }}
           </span>
         </div>
@@ -53,79 +61,99 @@
     
     <!-- Action Buttons -->
     <div class="header-actions">
-      <button nz-button nzType="default" (click)="goBack()">
-        <span nz-icon nzType="left"></span>
+      <button mat-raised-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
         Back
       </button>
     </div>
   </div>
 
-  <nz-divider></nz-divider>
+  <mat-divider></mat-divider>
 
   <!-- Identity Information Grid -->
   <div class="identity-content">
-    <nz-row [nzGutter]="[24, 24]">
+    <div class="info-grid">
       <!-- Basic Information -->
-      <nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-        <nz-card nzTitle="Basic Information" [nzBordered]="false">
-          <nz-descriptions nzBordered [nzColumn]="1" nzSize="small">
-            <nz-descriptions-item nzTitle="First Name">
-              {{ getAttributeValue('firstname') }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Last Name">
-              {{ getAttributeValue('lastname') }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Display Name">
-              {{ getAttributeValue('displayName') }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="UID">
-              {{ getAttributeValue('uid') }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Identification Number">
-              {{ getAttributeValue('identificationNumber') }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Manager">
-              {{ identity.managerRef?.name || 'N/A' }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Is Manager">
-              {{ identity.isManager ? 'Yes' : 'No' }}
-            </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Cloud Status">
-              {{ getAttributeValue('cloudStatus') }}
-            </nz-descriptions-item>
-          </nz-descriptions>
-        </nz-card>
-      </nz-col>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Basic Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <strong>First Name:</strong> <span>{{ getAttributeValue('firstname') }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Last Name:</strong> <span>{{ getAttributeValue('lastname') }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Display Name:</strong> <span>{{ getAttributeValue('displayName') }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>UID:</strong> <span>{{ getAttributeValue('uid') }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Identification Number:</strong> <span>{{ getAttributeValue('identificationNumber') }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Manager:</strong> <span>{{ identity.managerRef?.name || 'N/A' }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Is Manager:</strong> <span>{{ identity.isManager ? 'Yes' : 'No' }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <strong>Cloud Status:</strong> <span>{{ getAttributeValue('cloudStatus') }}</span>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
 
       <!-- Status & Timeline -->
-      <nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-        <nz-card nzTitle="Status & Timeline" [nzBordered]="false">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Status & Timeline</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <div class="status-section">
-            <div class="status-indicator">
-              <nz-badge [nzStatus]="identity.identityStatus === 'ACTIVE' ? 'success' : 'error'" [nzText]="identity.identityStatus"></nz-badge>
-            </div>
+            <mat-chip [style.background-color]="identity.identityStatus === 'ACTIVE' ? '#52c41a' : '#ff4d4f'">
+              {{ identity.identityStatus }}
+            </mat-chip>
           </div>
           
-          <nz-timeline class="timeline-section">
-            <nz-timeline-item nzColor="blue">
-              <strong>Created:</strong> {{ formatDate(identity.created) }}
-            </nz-timeline-item>
-            <nz-timeline-item nzColor="green">
-              <strong>Last Modified:</strong> {{ formatDate(identity.modified) }}
-            </nz-timeline-item>
-            <nz-timeline-item nzColor="orange">
-              <strong>Last Refresh:</strong> {{ formatDate(identity.lastRefresh) }}
-            </nz-timeline-item>
-            <nz-timeline-item nzColor="purple">
-              <strong>Lifecycle State:</strong> {{ identity.lifecycleState?.stateName || 'N/A' }}
-            </nz-timeline-item>
-          </nz-timeline>
-        </nz-card>
-      </nz-col>
+          <div class="timeline">
+            <div class="timeline-item">
+              <mat-icon style="color: #1890ff">schedule</mat-icon>
+              <div><strong>Created:</strong> {{ formatDate(identity.created) }}</div>
+            </div>
+            <div class="timeline-item">
+              <mat-icon style="color: #52c41a">update</mat-icon>
+              <div><strong>Last Modified:</strong> {{ formatDate(identity.modified) }}</div>
+            </div>
+            <div class="timeline-item">
+              <mat-icon style="color: #faad14">refresh</mat-icon>
+              <div><strong>Last Refresh:</strong> {{ formatDate(identity.lastRefresh) }}</div>
+            </div>
+            <div class="timeline-item">
+              <mat-icon style="color: #722ed1">info</mat-icon>
+              <div><strong>Lifecycle State:</strong> {{ identity.lifecycleState?.stateName || 'N/A' }}</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
       <!-- Additional Attributes -->
-      <nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8">
-        <nz-card nzTitle="Additional Attributes" [nzBordered]="false">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Additional Attributes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <div class="attributes-section">
             <div *ngIf="identity?.attributes && getAttributeKeys().length > 0; else noAttributes">
               <div class="attribute-item" *ngFor="let attr of getAttributeKeys()">
@@ -134,14 +162,11 @@
               </div>
             </div>
             <ng-template #noAttributes>
-              <nz-empty nzNotFoundContent="No additional attributes available"></nz-empty>
+              <p>No additional attributes available</p>
             </ng-template>
           </div>
-        </nz-card>
-      </nz-col>
-    </nz-row>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
-
-  <!-- Back to Top -->
-  <nz-back-top></nz-back-top>
 </div>

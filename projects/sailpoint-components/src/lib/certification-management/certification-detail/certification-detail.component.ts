@@ -6,6 +6,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SailPointSDKService } from '../../sailpoint-sdk.service';
 import { NavigationStackService, NavigationItem } from '../navigation-stack';
 import {
@@ -14,24 +24,6 @@ import {
   AccessReviewItemV2025,
   CertificationDecisionV2025,
 } from 'sailpoint-api-client';
-import {
-  NzTableModule,
-  NzTableSortFn,
-  NzTableSortOrder,
-  NzTableFilterFn,
-} from 'ng-zorro-antd/table';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzProgressModule } from 'ng-zorro-antd/progress';
-import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { NzTimelineModule } from 'ng-zorro-antd/timeline';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzInputModule } from 'ng-zorro-antd/input';
 
 // Polyfill for Promise.allSettled for older environments
 if (!(Promise as any).allSettled) {
@@ -58,15 +50,22 @@ interface CertificationDetails {
 // Interface for access review item column configuration
 interface AccessReviewColumnItem {
   name: string;
-  sortOrder: NzTableSortOrder | null;
-  sortFn: NzTableSortFn<any> | null;
-  sortDirections: NzTableSortOrder[];
+  sortOrder: 'asc' | 'desc' | null;
+  sortFn: ((a: any, b: any) => number) | null;
+  sortDirections: ('asc' | 'desc')[];
   filterMultiple: boolean;
   listOfFilter: Array<{ text: string; value: string; byDefault?: boolean }>;
-  filterFn: NzTableFilterFn<any> | null;
+  filterFn: ((list: string[], item: any) => boolean) | null;
   dataAccessor?: (item: any) => any;
   formatter?: (value: any) => string;
   cssClass?: (value: any) => string;
+}
+
+// Interface for uploadable files (replacement for NzUploadFile)
+interface UploadFile {
+  name: string;
+  size?: number;
+  type?: string;
 }
 
 // Interface for decision changes with optional comment
@@ -85,18 +84,16 @@ interface DecisionChange {
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    NzTableModule,
-    NzButtonModule,
-    NzIconModule,
-    NzTagModule,
-    NzToolTipModule,
-    NzProgressModule,
-    NzStatisticModule,
-    NzTimelineModule,
-    NzSelectModule,
-    NzUploadModule,
-    NzModalModule,
-    NzInputModule,
+    MatTableModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatSnackBarModule,
   ],
   templateUrl: './certification-detail.component.html',
   styleUrl: './certification-detail.component.scss',
@@ -157,7 +154,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
         const nameB = b.identitySummary?.name || '';
         return nameA.localeCompare(nameB);
       },
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: AccessReviewItemV2025) =>
@@ -186,7 +183,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
         const typeB = getAccessType(b);
         return typeA.localeCompare(typeB);
       },
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: false,
       listOfFilter: [
         { text: 'Entitlement', value: 'Entitlement' },
@@ -218,7 +215,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
         const nameB = getName(b);
         return nameA.localeCompare(nameB);
       },
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: false,
       listOfFilter: [],
       filterFn: null,
@@ -249,7 +246,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
         const sourceB = getSource(b);
         return sourceA.localeCompare(sourceB);
       },
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: AccessReviewItemV2025) =>
@@ -275,7 +272,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       name: 'Completed',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: false,
       listOfFilter: [
         { text: 'Yes', value: 'Yes' },
@@ -295,7 +292,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       name: 'New Access',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: false,
       listOfFilter: [
         { text: 'Yes', value: 'Yes' },
@@ -315,7 +312,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       name: 'Comments',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -327,7 +324,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       name: 'Decision',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [
         { text: 'APPROVE', value: 'APPROVE' },
@@ -373,7 +370,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
   constructor(
     private sdk: SailPointSDKService,
     private navStack: NavigationStackService,
-    private message: NzMessageService
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -700,6 +697,17 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
    */
   trackByAccessReviewId(index: number, item: any): string {
     return String(item.id) || index.toString();
+  }
+
+  /**
+   * Get access review columns for Material table
+   */
+  getAccessReviewColumns(): string[] {
+    const columns = ['identity', 'accessType', 'accessName', 'comments', 'decision', 'actions'];
+    if (this.bulkActionMode) {
+      return ['select', ...columns];
+    }
+    return columns;
   }
 
   /**
@@ -1156,7 +1164,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       }
 
       console.log('Decision changes saved successfully');
-      this.message.success('Decision changes saved successfully');
+      this.snackBar.open('Decision changes saved successfully', 'Close', { duration: 3000 });
 
       // Clear NavigationStack cache after successful save to force reload of fresh data
       this.clearNavigationStackCache();
@@ -1167,9 +1175,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
       // Reload the certification details to get updated data only on successful save
       await this.loadCertificationDetails();
     } catch (error) {
-      this.message.error(`Failed to save decisions: ${String(error)}`, {
-        nzDuration: 6000,
-      });
+      this.snackBar.open(`Failed to save decisions: ${String(error)}`, 'Close', { duration: 6000 });
       // Don't clear decisionChanges or reload data on error - keep the changes for retry
     } finally {
       this.saveChangesLoading = false;
@@ -1827,13 +1833,20 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Load CSV file using nz-upload component
+   * Load CSV file
    */
-  loadCSV = (file: NzUploadFile): boolean => {
+  loadCSV = (event: Event): void => {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+    
     // Validate file type
     if (!file.name.toLowerCase().endsWith('.csv')) {
       this.error = 'Please select a valid CSV file';
-      return false;
+      return;
     }
 
     // Read and process the CSV file
@@ -1845,10 +1858,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
     reader.onerror = () => {
       this.error = 'Error reading CSV file';
     };
-    reader.readAsText(file as any as Blob);
-
-    // Return false to prevent automatic upload
-    return false;
+    reader.readAsText(file);
   };
 
   /**
@@ -1956,7 +1966,7 @@ export class CertificationDetailComponent implements OnInit, OnDestroy {
         if (skippedCount > 0) {
           message += `, skipped ${skippedCount} completed items`;
         }
-        this.message.success(message);
+        this.snackBar.open(message, 'Close', { duration: 3000 });
       }
 
       // Clear any previous errors if processing was successful

@@ -9,49 +9,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { SailPointSDKService } from '../sailpoint-sdk.service';
 import { IdentityCertificationDtoV2025 } from 'sailpoint-api-client';
 import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import {
-  NzTableFilterFn,
-  NzTableModule,
-  NzTableSortFn,
-  NzTableSortOrder,
-} from 'ng-zorro-antd/table';
-import { NzIconModule, provideNzIconsPatch } from 'ng-zorro-antd/icon';
-import {
-  HomeOutline,
-  UserOutline,
-  SettingOutline,
-  FormOutline,
-  KeyOutline,
-  TeamOutline,
-  FileTextOutline,
-  ArrowLeftOutline,
-  ExclamationCircleOutline,
-  QuestionCircleOutline,
-  LockOutline,
-  CheckSquareOutline,
-  DownloadOutline,
-  SmileOutline,
-  GiftOutline,
-  ReloadOutline,
-  BellOutline,
-  MessageOutline,
-  DashboardOutline,
-} from '@ant-design/icons-angular/icons';
 import { NavigationItem, NavigationStackService } from './navigation-stack';
-import { NZ_I18N, NzI18nService, en_US } from 'ng-zorro-antd/i18n';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
-import { NzTagModule } from 'ng-zorro-antd/tag';
 import { CertificationDetailComponent } from './certification-detail/certification-detail.component';
 import { IdentityInfoComponent } from './identity-info/identity-info.component';
 import { AccessDetailComponent } from './access-detail/access-detail.component';
@@ -59,12 +29,12 @@ import { AccessDetailComponent } from './access-detail/access-detail.component';
 // Interface for column configuration with sort and filter
 interface ColumnItem {
   name: string;
-  sortOrder: NzTableSortOrder | null;
-  sortFn: NzTableSortFn<IdentityCertificationDtoV2025> | null;
-  sortDirections: NzTableSortOrder[];
+  sortOrder: 'asc' | 'desc' | null;
+  sortFn: ((a: IdentityCertificationDtoV2025, b: IdentityCertificationDtoV2025) => number) | null;
+  sortDirections: ('asc' | 'desc')[];
   filterMultiple: boolean;
   listOfFilter: Array<{ text: string; value: string; byDefault?: boolean }>;
-  filterFn: NzTableFilterFn<IdentityCertificationDtoV2025> | null;
+  filterFn: ((list: string[], item: IdentityCertificationDtoV2025) => boolean) | null;
   // New properties for dynamic data access and display
   dataAccessor?: (item: IdentityCertificationDtoV2025) => any;
   formatter?: (value: any) => string;
@@ -103,45 +73,18 @@ interface CampaignSummary {
     MatTableModule,
     MatToolbarModule,
     MatDialogModule,
-    NzBreadCrumbModule,
-    NzIconModule,
-    NzButtonModule,
-    NzTableModule,
-    NzDropDownModule,
-    NzInputModule,
-    NzCheckboxModule,
-    NzDividerModule,
-    NzToolTipModule,
-    NzStatisticModule,
-    NzCarouselModule,
-    NzTagModule,
+    MatMenuModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatDividerModule,
+    MatTooltipModule,
+    MatChipsModule,
+    MatSortModule,
+    MatPaginatorModule,
     CertificationDetailComponent,
     IdentityInfoComponent,
     AccessDetailComponent,
-  ],
-  providers: [
-    provideNzIconsPatch([
-      HomeOutline,
-      UserOutline,
-      SettingOutline,
-      FormOutline,
-      KeyOutline,
-      TeamOutline,
-      FileTextOutline,
-      ArrowLeftOutline,
-      ExclamationCircleOutline,
-      QuestionCircleOutline,
-      LockOutline,
-      CheckSquareOutline,
-      DownloadOutline,
-      SmileOutline,
-      GiftOutline,
-      ReloadOutline,
-      BellOutline,
-      MessageOutline,
-      DashboardOutline,
-    ]),
-    { provide: NZ_I18N, useValue: en_US },
   ],
   templateUrl: './certification-management.component.html',
   styleUrl: './certification-management.component.scss',
@@ -176,6 +119,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
 
   // Campaign summary properties
   campaignSummaries: CampaignSummary[] = [];
+  currentCampaignIndex = 0;
 
   // Table sort and filter configuration
   listOfColumns: ColumnItem[] = [
@@ -183,7 +127,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Name',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -194,7 +138,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Campaign Name',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: IdentityCertificationDtoV2025) =>
@@ -211,7 +155,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Campaign Type',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: IdentityCertificationDtoV2025) =>
@@ -228,7 +172,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Campaign Description',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -239,7 +183,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Completed',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: false,
       listOfFilter: [
         { text: 'Yes', value: 'Yes' },
@@ -262,7 +206,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         a: IdentityCertificationDtoV2025,
         b: IdentityCertificationDtoV2025
       ) => (a.identitiesCompleted || 0) - (b.identitiesCompleted || 0),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -276,7 +220,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         a: IdentityCertificationDtoV2025,
         b: IdentityCertificationDtoV2025
       ) => (a.identitiesTotal || 0) - (b.identitiesTotal || 0),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -292,7 +236,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       ) =>
         new Date(a.created || '').getTime() -
         new Date(b.created || '').getTime(),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -307,7 +251,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         a: IdentityCertificationDtoV2025,
         b: IdentityCertificationDtoV2025
       ) => (a.decisionsMade || 0) - (b.decisionsMade || 0),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -321,7 +265,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         a: IdentityCertificationDtoV2025,
         b: IdentityCertificationDtoV2025
       ) => (a.decisionsTotal || 0) - (b.decisionsTotal || 0),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -335,7 +279,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         a: IdentityCertificationDtoV2025,
         b: IdentityCertificationDtoV2025
       ) => new Date(a.due || '').getTime() - new Date(b.due || '').getTime(),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -351,7 +295,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         b: IdentityCertificationDtoV2025
       ) =>
         new Date(a.signed || '').getTime() - new Date(b.signed || '').getTime(),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: null,
@@ -363,7 +307,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Reviewer Name',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: IdentityCertificationDtoV2025) =>
@@ -380,7 +324,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
       name: 'Phase',
       sortOrder: null,
       sortFn: null,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['asc', 'desc'],
       filterMultiple: true,
       listOfFilter: [],
       filterFn: (list: string[], item: IdentityCertificationDtoV2025) =>
@@ -396,8 +340,7 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
   constructor(
     private sdk: SailPointSDKService,
     private dialog: MatDialog,
-    private navStack: NavigationStackService,
-    private i18n: NzI18nService
+    private navStack: NavigationStackService
   ) {
     // Subscribe to stack state changes
     this.navStack.getStackState().subscribe((state) => {
@@ -407,8 +350,6 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.i18n.setLocale(en_US);
-
     // Initialize with root level
     this.initializeRootLevel();
 
@@ -661,6 +602,14 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get visible column names for Material table
+   */
+  getVisibleColumnNames(): string[] {
+    const visibleNames = this.getVisibleColumns().map(col => col.name);
+    return [...visibleNames, 'actions'];
+  }
+
+  /**
    * Select all columns
    */
   selectAllColumns(): void {
@@ -760,5 +709,40 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
   getProgressPercentage(completed: number, total: number): number {
     if (total === 0) return 0;
     return Math.round((completed / total) * 100);
+  }
+
+  /**
+   * Get current campaign from carousel
+   */
+  getCurrentCampaign(): CampaignSummary | null {
+    if (this.campaignSummaries.length === 0) return null;
+    return this.campaignSummaries[this.currentCampaignIndex];
+  }
+
+  /**
+   * Navigate to next campaign
+   */
+  nextCampaign(): void {
+    if (this.currentCampaignIndex < this.campaignSummaries.length - 1) {
+      this.currentCampaignIndex++;
+    }
+  }
+
+  /**
+   * Navigate to previous campaign
+   */
+  previousCampaign(): void {
+    if (this.currentCampaignIndex > 0) {
+      this.currentCampaignIndex--;
+    }
+  }
+
+  /**
+   * Go to specific campaign by index
+   */
+  goToCampaign(index: number): void {
+    if (index >= 0 && index < this.campaignSummaries.length) {
+      this.currentCampaignIndex = index;
+    }
   }
 }

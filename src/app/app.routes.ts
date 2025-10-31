@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AttachRuleComponent, IdentitiesComponent, REPORT_EXAMPLE_ROUTES, ThemePickerComponent, TransformBuilderComponent, TransformsComponent , AccountsComponent } from 'sailpoint-components';
+import { AttachRuleComponent, IdentitiesComponent, REPORT_EXAMPLE_ROUTES, ThemePickerComponent, TransformBuilderComponent, TransformsComponent , CertificationManagementComponent, AccountsComponent } from 'sailpoint-components';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './shared/components';
  
@@ -47,6 +47,10 @@ export const appRoutes: Routes = [
     component: IdentitiesComponent
   },
 
+  {
+    path: 'certification-management',
+    component: CertificationManagementComponent
+  },
   {
     path: 'accounts',
     component: AccountsComponent

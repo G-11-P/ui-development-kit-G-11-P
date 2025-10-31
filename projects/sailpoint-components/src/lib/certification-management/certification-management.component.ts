@@ -593,12 +593,26 @@ export class CertificationManagementComponent implements OnInit, OnDestroy, Afte
   }
 
   /**
-   * Initialize column visibility - show all columns by default
+   * Initialize column visibility - show default columns
    */
   private initializeColumnVisibility(): void {
     this.visibleColumns.clear();
-    this.listOfColumns.forEach((column) => {
-      this.visibleColumns.add(column.name);
+    
+    // Default visible columns
+    const defaultColumns = [
+      'Campaign Name',
+      'Campaign Type',
+      'Completed',
+      'Identities Total',
+      'Decisions Made',
+      'Decisions Total',
+      'Due',
+      'Reviewer Name',
+      'Phase'
+    ];
+    
+    defaultColumns.forEach((columnName) => {
+      this.visibleColumns.add(columnName);
     });
   }
 

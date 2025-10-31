@@ -385,12 +385,14 @@
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let item">
                 <button mat-icon-button
+                        class="picture-action-button"
                         (click)="viewIdentity(item.identitySummary.identityId, item.identitySummary.name)"
                         [disabled]="!item.identitySummary?.identityId"
                         matTooltip="View Identity">
                   <mat-icon>person</mat-icon>
                 </button>
                 <button mat-icon-button
+                        class="picture-action-button"
                         (click)="viewAccessDetail(item)"
                         matTooltip="View Access">
                   <mat-icon>visibility</mat-icon>

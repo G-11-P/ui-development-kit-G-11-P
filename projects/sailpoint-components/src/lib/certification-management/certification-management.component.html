@@ -177,7 +177,7 @@
             </div>
 
             <!-- Table Controls Row -->
-            <div class="table-controls-row" *ngIf="!loading && filteredCertifications.length">
+            <div class="table-controls-row" *ngIf="!loading">
               <!-- Refresh Button (Left) -->
               <button 
                 mat-raised-button 
@@ -225,7 +225,7 @@
             </div>
 
             <!-- Search Bar -->
-            <mat-form-field class="w-full" *ngIf="!loading && filteredCertifications.length">
+            <mat-form-field class="w-full" *ngIf="!loading">
               <mat-label>Search certifications</mat-label>
               <input matInput 
                      [(ngModel)]="nameSearchValue" 

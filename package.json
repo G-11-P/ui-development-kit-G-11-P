@@ -82,7 +82,6 @@
     "jsonpointer": "5.0.1",
     "keytar": "7.9.0",
     "lodash-es": "4.17.21",
-    "ng-zorro-antd": "19.3.1",
     "prismjs": "1.30.0",
     "rxjs": "7.8.2",
     "sailpoint-api-client": "1.6.9",

@@ -327,61 +327,9 @@ export class ConfigService {
     document.body.classList.remove('light-theme', 'dark-theme');
     document.body.classList.add(`${mode}-theme`);
 
-    // Load appropriate ng-zorro theme CSS
-    this.loadNgZorroTheme(mode);
-
     // Emit updated theme config
     this.isDarkSubject.next(mode === 'dark');
     this.themeSubject.next(config);
-  }
-
-  /**
-   * Dynamically loads the appropriate ng-zorro theme CSS based on the current theme mode.
-   */
-  private loadNgZorroTheme(mode: 'light' | 'dark') {
-    const lightThemeId = 'ng-zorro-light-theme';
-    const darkThemeId = 'ng-zorro-dark-theme';
-
-    // Remove existing ng-zorro theme links
-    const existingLightLink = document.getElementById(lightThemeId);
-    const existingDarkLink = document.getElementById(darkThemeId);
-
-    if (existingLightLink) {
-      existingLightLink.remove();
-    }
-    if (existingDarkLink) {
-      existingDarkLink.remove();
-    }
-
-    // Create and load the appropriate theme CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-
-    if (mode === 'dark') {
-      link.id = darkThemeId;
-      link.href = 'assets/ng-zorro-antd/ng-zorro-antd.dark.min.css';
-      console.log('Loading ng-zorro dark theme CSS');
-    } else {
-      link.id = lightThemeId;
-      link.href = 'assets/ng-zorro-antd/ng-zorro-antd.min.css';
-      console.log('Loading ng-zorro light theme CSS');
-    }
-
-    // Add error handling for CSS loading
-    link.onerror = () => {
-      console.error(
-        `Failed to load ng-zorro ${mode} theme CSS from:`,
-        link.href
-      );
-    };
-
-    link.onload = () => {
-      console.log(`Successfully loaded ng-zorro ${mode} theme CSS`);
-    };
-
-    // Add the link to the document head
-    document.head.appendChild(link);
   }
 
   // COMPONENT MANAGEMENT METHODS

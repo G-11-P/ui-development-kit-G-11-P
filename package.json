@@ -150,5 +150,8 @@
   },
   "browserslist": [
     "chrome 114"
-  ]
+  ],
+  "optionalDependencies": {
+    "dmg-license": "^1.0.11"
+  }
 }

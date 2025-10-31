@@ -103,15 +103,23 @@ export class ConfigService {
       description: 'Manage accounts in SailPoint.',
       enabled: false,
     },
-        {
-            name: 'cronicle',
-            displayName: 'Cronicle',
-            route: '/cronicle',
-            icon: 'dashboard',
-            description: 'Manage cronicle in SailPoint.',
-            enabled: false
-        }
-    ];
+    {
+      name: 'cronicle',
+      displayName: 'Cronicle',
+      route: '/cronicle',
+      icon: 'dashboard',
+      description: 'Manage cronicle in SailPoint.',
+      enabled: false
+    },
+    {
+      name: 'certification-management',
+      displayName: 'Certification Management',
+      route: '/certification-management',
+      icon: 'rate_review',
+      description: 'Manage certification management in SailPoint.',
+      enabled: false,
+    },
+  ];
 
   // Default theme configurations
   private defaultLightTheme: ThemeConfig = {
@@ -152,17 +160,20 @@ export class ConfigService {
   // Last raw configuration read from disk
   private config: AppConfig = {
     components: {
-      enabled: ['component-selector']
+      enabled: ['component-selector'],
     },
     themes: {
       light: this.defaultLightTheme,
-      dark: this.defaultDarkTheme
+      dark: this.defaultDarkTheme,
     },
     version: '1.0.0',
-    currentTheme: 'light'
+    currentTheme: 'light',
   };
 
-  constructor(private electronAPIService: ElectronApiFactoryService, private electronService: ElectronService) {
+  constructor(
+    private electronAPIService: ElectronApiFactoryService,
+    private electronService: ElectronService
+  ) {
     // Check if we're running in Electron
     this.isElectron = this.electronService.isElectron;
     // Initialize the configuration
@@ -183,23 +194,23 @@ export class ConfigService {
     try {
       if (this.isElectron) {
         this.config = await this.electronAPIService.getApi().readConfig();
-        
+
         // Ensure structure is complete
         if (!this.config.themes) {
           this.config.themes = {
             light: this.defaultLightTheme,
-            dark: this.defaultDarkTheme
+            dark: this.defaultDarkTheme,
           };
         }
-        
+
         if (!this.config.themes.light) {
           this.config.themes.light = this.defaultLightTheme;
         }
-        
+
         if (!this.config.themes.dark) {
           this.config.themes.dark = this.defaultDarkTheme;
         }
-        
+
         if (!this.config.currentTheme) {
           this.config.currentTheme = 'light';
         }
@@ -212,7 +223,7 @@ export class ConfigService {
     } catch (error) {
       console.error('Failed to load configuration:', error);
     }
-    
+
     return this.config;
   }
 
@@ -233,23 +244,23 @@ export class ConfigService {
   private initializeTheme(): void {
     const currentMode = this.config.currentTheme || 'light';
     this.isDarkSubject.next(currentMode === 'dark');
-    
-    const themeConfig = currentMode === 'dark' 
-      ? this.config.themes?.dark || this.defaultDarkTheme
-      : this.config.themes?.light || this.defaultLightTheme;
-    
+
+    const themeConfig =
+      currentMode === 'dark'
+        ? this.config.themes?.dark || this.defaultDarkTheme
+        : this.config.themes?.light || this.defaultLightTheme;
+
     this.applyTheme(themeConfig, currentMode);
   }
 
   // Initialize components based on loaded configuration
   private initializeComponents(): void {
-    
     const enabledNames = this.config.components?.enabled || [];
-    
+
     this.availableComponents.forEach((component) => {
       component.enabled = enabledNames.includes(component.name);
     });
-    
+
     void this.updateEnabledComponents();
   }
 
@@ -283,14 +294,17 @@ export class ConfigService {
   /**
    * Saves a theme configuration
    */
-  async saveThemeConfig(config: ThemeConfig, mode: 'light' | 'dark'): Promise<void> {
+  async saveThemeConfig(
+    config: ThemeConfig,
+    mode: 'light' | 'dark'
+  ): Promise<void> {
     if (!this.config.themes) {
       this.config.themes = {};
     }
-    
+
     this.config.themes[mode] = config;
     await this.saveConfig();
-    
+
     if (this.config.currentTheme === mode) {
       this.applyTheme(config, mode);
     }
@@ -325,7 +339,6 @@ export class ConfigService {
     this.isDarkSubject.next(mode === 'dark');
     this.themeSubject.next(config);
   }
-
 
   // COMPONENT MANAGEMENT METHODS
 
@@ -375,14 +388,14 @@ export class ConfigService {
   private async updateEnabledComponents(): Promise<void> {
     const enabledComponents = this.availableComponents;
     this.enabledComponentsSubject.next(enabledComponents);
-    
+
     // Update config
     const enabledNames = this.availableComponents
       .filter((component) => component.enabled)
       .map((component) => component.name);
-    
+
     this.config.components.enabled = enabledNames;
-    
+
     // Save to storage
     await this.saveConfig();
   }
@@ -394,8 +407,11 @@ export class ConfigService {
    */
   getLogoUrl(isDark: boolean): string {
     const mode = isDark ? 'dark' : 'light';
-    
+
     const themeConfig = this.getThemeConfig(mode);
-    return themeConfig['logo'] || (isDark ? 'assets/icons/logo-dark.png' : 'assets/icons/logo.png');
+    return (
+      themeConfig['logo'] ||
+      (isDark ? 'assets/icons/logo-dark.png' : 'assets/icons/logo.png')
+    );
   }
 }

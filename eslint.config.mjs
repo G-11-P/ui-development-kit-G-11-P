@@ -83,6 +83,8 @@ export default [
         afterEach: 'readonly',
         expect: 'readonly',
         jest: 'readonly',
+        jasmine: 'readonly',
+        spyOn: 'readonly',
         console: 'readonly'
       },
       parserOptions: {

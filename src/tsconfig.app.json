@@ -12,8 +12,6 @@
    "polyfills.ts"
  ],
  "include": [
-   "app/**/*.ts",
-   "environments/**/*.ts",
    "**/*.d.ts"
  ],
  "exclude": [

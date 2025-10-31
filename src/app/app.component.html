@@ -137,6 +137,19 @@
         <mat-icon class="card-icon">settings</mat-icon>
         Component Selector
       </a>
+      <!-- Certification Management -->
+      <a 
+        *ngIf="isComponentEnabled('certification-management')" 
+        mat-list-item class="sidebar-link" 
+        routerLink="/certification-management" 
+        routerLinkActive="active-link"
+        [class.disabled]="!isConnected"
+        (click)="onNavItemClick($event)"
+      >
+        <mat-icon class="card-icon">rate_review</mat-icon>
+        Certification Management
+      </a>
+      <!-- Accounts -->
       <a *ngIf="isComponentEnabled('accounts')" mat-list-item class="sidebar-link" routerLink="/accounts" routerLinkActive="active-link"
         [class.disabled]="!isConnected" (click)="onNavItemClick($event)">
         <mat-icon class="card-icon">dashboard</mat-icon>
@@ -148,7 +161,6 @@
         Cronicle
       </a>
 
-      
     </mat-nav-list>
   </mat-sidenav>
 

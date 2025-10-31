@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -17,7 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { SailPointSDKService } from '../sailpoint-sdk.service';
 import { IdentityCertificationDtoV2025 } from 'sailpoint-api-client';
 import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
@@ -89,12 +89,14 @@ interface CampaignSummary {
   templateUrl: './certification-management.component.html',
   styleUrl: './certification-management.component.scss',
 })
-export class CertificationManagementComponent implements OnInit, OnDestroy {
+export class CertificationManagementComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscriptions = new Subscription();
   title = 'Certification Management';
   certifications: IdentityCertificationDtoV2025[] = []; // Original data from API
-  filteredCertifications: IdentityCertificationDtoV2025[] = []; // Filtered data for display
+  filteredCertifications = new MatTableDataSource<IdentityCertificationDtoV2025>([]); // Filtered data for display
   loading = false;
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = [
     'name',
     'campaignName',
@@ -360,6 +362,14 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
     void this.getCertificationManagement();
   }
 
+  ngAfterViewInit() {
+    // Connect paginator to data source after view initialization
+    // Use setTimeout to ensure this happens after Angular's change detection
+    setTimeout(() => {
+      this.filteredCertifications.paginator = this.paginator;
+    });
+  }
+
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
@@ -394,15 +404,20 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
 
     // If search value is empty, show all certifications
     if (!this.nameSearchValue.trim()) {
-      this.filteredCertifications = [...this.certifications];
+      this.filteredCertifications.data = [...this.certifications];
     } else {
       // Filter certifications by name (case-insensitive)
-      this.filteredCertifications = this.certifications.filter(
+      this.filteredCertifications.data = this.certifications.filter(
         (item: IdentityCertificationDtoV2025) =>
           item.name
             ?.toLowerCase()
             .indexOf(this.nameSearchValue.toLowerCase()) !== -1
       );
+    }
+    
+    // Reset paginator to first page after filtering
+    if (this.paginator) {
+      this.paginator.firstPage();
     }
   }
 
@@ -468,12 +483,20 @@ export class CertificationManagementComponent implements OnInit, OnDestroy {
         // Store original data from API
         this.certifications = res.data || [];
         // Initialize filtered data with all certifications
-        this.filteredCertifications = [...this.certifications];
+        this.filteredCertifications.data = [...this.certifications];
+        
         // console.log('Certifications set to:', this.certifications);
         // Generate campaign summaries
         this.generateCampaignSummaries();
         // Populate filter options after loading data
         this.populateFilterOptions();
+        
+        // Reconnect paginator after data is set and other operations complete
+        setTimeout(() => {
+          if (this.paginator) {
+            this.filteredCertifications.paginator = this.paginator;
+          }
+        });
       } else {
         console.error('Error loading certifications:', res.statusText);
       }

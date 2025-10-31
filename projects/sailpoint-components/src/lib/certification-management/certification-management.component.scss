@@ -35,7 +35,6 @@
 .content {
   padding: 16px 0 0 0;
   flex: 1;
-  overflow-y: auto;
 }
 
 .content:first-of-type {
@@ -899,6 +898,26 @@ body.dark-theme {
 
     .breadcrumb-item a:hover:not(.disabled) {
       background-color: rgba(84, 192, 232, 0.15);
+    }
+  }
+}
+
+// Table styles with horizontal scrolling
+.table-wrapper {
+  width: 100%;
+  
+  .table-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+  }
+  
+  .certification-table {
+    min-width: 100%;
+    
+    th, td {
+      white-space: nowrap;
+      padding: 12px 16px;
     }
   }
 }

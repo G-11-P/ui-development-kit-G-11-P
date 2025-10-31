@@ -783,8 +783,12 @@ mat-card-header {
 
       mat-chip {
         margin-left: 16px;
-        color: white;
         font-weight: 500;
+        
+        // Use theme colors with proper contrast
+        --mdc-chip-label-text-color: var(--theme-primary) !important;
+        --mdc-chip-elevated-container-color: var(--theme-background) !important;
+        border: 1px solid var(--theme-primary) !important;
       }
     }
 
@@ -792,6 +796,13 @@ mat-card-header {
       padding-top: 0;
     }
   }
+}
+
+// General chip styling
+mat-chip {
+  --mdc-chip-label-text-color: var(--theme-primary) !important;
+  --mdc-chip-elevated-container-color: var(--theme-background) !important;
+  border: 1px solid var(--theme-primary) !important;
 }
 
 // Dark theme support

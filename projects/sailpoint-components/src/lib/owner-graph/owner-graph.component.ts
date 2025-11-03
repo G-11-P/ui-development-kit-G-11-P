@@ -759,6 +759,14 @@ export class OwnerGraphComponent {
     return this.highlightedApEntitlements.some((ent: any) => (ent.id as string) === entId);
   }
 
+  /** Get role composition summary for display */
+  getRoleCompositionSummary(_role: any): string {
+    console.log('getRoleCompositionSummary called with role:', _role);
+    // This would ideally come from cached composition data
+    // For now, return a simple summary
+    return '';
+  }
+
   /** Fetch role composition data */
   private async fetchRoleComposition(role: any) {
     try {
@@ -944,10 +952,20 @@ export class OwnerGraphComponent {
     const currentPageObjects = allObjects.slice(startIndex, endIndex);
 
     // Separate back into types for display
+    const roles: any[] = [];
+    const accessProfiles: any[] = [];
+    const entitlements: any[] = [];
+    
+    for (const item of currentPageObjects) {
+      if (item._type === 'role') roles.push(item.obj);
+      else if (item._type === 'accessProfile') accessProfiles.push(item.obj);
+      else if (item._type === 'entitlement') entitlements.push(item.obj);
+    }
+    
     const result = {
-      roles: currentPageObjects.filter(item => item._type === 'role').map(item => item.obj),
-      accessProfiles: currentPageObjects.filter(item => item._type === 'accessProfile').map(item => item.obj),
-      entitlements: currentPageObjects.filter(item => item._type === 'entitlement').map(item => item.obj),
+      roles,
+      accessProfiles,
+      entitlements,
       hasMore: totalCount > this.transferPageSize,
       totalCount,
       currentPage: this.transferCurrentPage,

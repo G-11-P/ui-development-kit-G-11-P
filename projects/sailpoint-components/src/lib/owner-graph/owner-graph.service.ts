@@ -214,20 +214,20 @@ async findIdentityByAlias(alias: string) {
       const entitlements = roleDetails.entitlements || [];
 
       // Enrich access profiles with full details to get source information
-      const enrichedAccessProfiles = await Promise.all(
-        accessProfiles.map(async (ap: any) => {
-          try {
-            if (ap.id) {
-              const fullDetails = await this.getAccessProfileDetails(String(ap.id));
-              return { ...ap, ...fullDetails };
-            }
-            return ap;
-          } catch (error) {
-            console.warn(`Could not fetch details for access profile ${String(ap.name)}:`, error);
-            return ap;
+      const enrichedAccessProfiles: any[] = [];
+      for (const ap of accessProfiles) {
+        try {
+          if (ap.id) {
+            const fullDetails = await this.getAccessProfileDetails(String(ap.id));
+            enrichedAccessProfiles.push({ ...ap, ...fullDetails });
+          } else {
+            enrichedAccessProfiles.push(ap);
           }
-        })
-      );
+        } catch (error) {
+          console.warn(`Could not fetch details for access profile ${String(ap.name)}:`, error);
+          enrichedAccessProfiles.push(ap);
+        }
+      }
 
       return {
         accessProfiles: enrichedAccessProfiles,

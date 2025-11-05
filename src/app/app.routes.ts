@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AttachRuleComponent, IdentitiesComponent, REPORT_EXAMPLE_ROUTES, ThemePickerComponent, TransformBuilderComponent, TransformsComponent , AccountsComponent , CronicleComponent, CertificationManagementComponent } from 'sailpoint-components';
+import { AttachRuleComponent, IdentitiesComponent, REPORT_EXAMPLE_ROUTES, ThemePickerComponent, TransformBuilderComponent, TransformsComponent , AccountsComponent , CronicleComponent, CertificationManagementComponent, OwnerGraphComponent } from 'sailpoint-components';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './shared/components';
  
@@ -61,6 +61,11 @@ export const appRoutes: Routes = [
     component: CronicleComponent
   },
 
+  {
+  path: 'owner-graph',
+  component: OwnerGraphComponent
+  },
+  
   {
     path: '**',
     component: PageNotFoundComponent

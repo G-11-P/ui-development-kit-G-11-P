@@ -25,3 +25,4 @@ export * from './lib/accounts/accounts.component';
 export * from './lib/cronicle/cronicle.component';
 export * from './lib/certification-management/certification-management.component';
 export * from './lib/accounts/accounts.component';
+export * from './lib/owner-graph/owner-graph.component';

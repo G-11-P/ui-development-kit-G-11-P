@@ -119,6 +119,14 @@ export class ConfigService {
       description: 'Manage certification management in SailPoint.',
       enabled: false,
     },
+    {
+      name: 'owner-graph',
+      displayName: 'Owner Graph',
+      route: '/owner-graph',
+      icon: 'dashboard',
+      description: 'Manage owner graph in SailPoint.',
+      enabled: false
+    }
   ];
 
   // Default theme configurations

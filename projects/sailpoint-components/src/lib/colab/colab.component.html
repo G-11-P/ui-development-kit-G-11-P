@@ -1,0 +1,79 @@
+<div class="colab-container">
+  <!-- Hero Banner Section -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-text">
+        <span class="hero-eyebrow">CoLab Marketplace</span>
+        <h1 class="hero-title">What is the CoLab?</h1>
+        <p class="hero-description">
+          The community CoLab is a place where members of our community can build 
+          fully-featured solutions on our platform and share those solutions with 
+          each other. Users collaborate on these solutions to benefit both themselves 
+          and the community at large.
+        </p>
+        <button mat-raised-button color="primary" class="hero-cta" (click)="openGettingStarted()">
+          Get started with the CoLab
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+
+      <div class="hero-video">
+        <iframe
+          src="https://www.youtube.com/embed/J-Z1b654Vtk?si=YKK-tvGxL5N1WjNi"
+          title="CoLab Introduction Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deploy Info Banner -->
+  <section class="deploy-info-banner">
+    <mat-icon class="deploy-info-icon">rocket_launch</mat-icon>
+    <div class="deploy-info-content">
+      <h3 class="deploy-info-title">One-Click Deployment</h3>
+      <p class="deploy-info-text">
+        Deploy Workflows, SaaS Connectors, SaaS Connector Customizers, and Transforms 
+        directly to your environment with a single click. Look for the 
+        <strong>Deploy</strong> button on supported items.
+      </p>
+    </div>
+  </section>
+
+  <!-- Category Sections -->
+  <main class="categories-container">
+    <app-colab-section
+      *ngFor="let category of categories; trackBy: trackByCategory"
+      [category]="category"
+      [limit]="getLimitFor(category.id)"
+      [expanded]="isExpanded(category.id)"
+      (viewAll)="onViewAll($event)"
+      (deploy)="onDeploy($event)"
+    ></app-colab-section>
+  </main>
+
+  <!-- Footer CTA -->
+  <section class="footer-cta">
+    <div class="footer-cta-content">
+      <mat-icon class="footer-cta-icon">groups</mat-icon>
+      <h2 class="footer-cta-title">Want to Contribute?</h2>
+      <p class="footer-cta-text">
+        Share your own solutions with the SailPoint developer community. 
+        Your contributions help others build better identity solutions.
+      </p>
+      <a 
+        href="https://developer.sailpoint.com/discuss/t/about-the-sailpoint-developer-community-colab/11230" 
+        target="_blank"
+        mat-raised-button 
+        color="accent"
+        class="footer-cta-button"
+      >
+        Learn How to Contribute
+        <mat-icon>open_in_new</mat-icon>
+      </a>
+    </div>
+  </section>
+</div>

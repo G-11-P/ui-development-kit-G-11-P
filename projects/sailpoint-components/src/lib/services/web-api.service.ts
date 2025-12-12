@@ -30,6 +30,12 @@ export interface ElectronAPIInterface {
   readConfig: () => Promise<any>;
   writeConfig: (config: any) => Promise<any>;
 
+  // Discourse/CoLab marketplace
+  getColabPosts: (filter: FilterConfig, limit?: number) => Promise<ColabPostsResponse>;
+  getColabPostsByCategory: (category: ColabCategory, limit?: number) => Promise<ColabPostsResponse>;
+  getColabTopicRaw: (topicId: number) => Promise<ColabTopicRawResponse>;
+  getColabTopic: (topicId: number) => Promise<ColabTopicResponse>;
+  getDiscourseUserTitle: (primaryGroupName: string) => Promise<DiscourseUserTitleResponse>;
   
   // SailPoint SDK functions
   // These are dynamically added and would need to be proxied through the web service
@@ -101,6 +107,63 @@ export type TokenDetails = {
 
 // Auth Methods
 export type AuthMethods = "oauth" | "pat";
+
+// Discourse/CoLab Types
+export interface FilterConfig {
+  category: string;
+  tags: string[];
+}
+
+export interface ColabPost {
+  id: number;
+  creatorName: string;
+  excerpt: string;
+  creatorImage: string;
+  creatorTitle: string;
+  tags: string[];
+  image: string;
+  link: string;
+  title: string;
+  views: number;
+  liked: number;
+  replies: number;
+  solution: boolean;
+  readTime: number;
+  slug: string;
+}
+
+export type ColabCategory = 
+  | 'workflows'
+  | 'saas-connectors'
+  | 'saas-connector-customizers'
+  | 'community-tools'
+  | 'rules'
+  | 'transforms'
+  | 'iiq-plugins';
+
+export type ColabPostsResponse = {
+  success: boolean;
+  data?: ColabPost[];
+  error?: string;
+};
+
+export type ColabTopicRawResponse = {
+  success: boolean;
+  data?: string;
+  error?: string;
+};
+
+export type ColabTopicResponse = {
+  success: boolean;
+  data?: any;
+  error?: string;
+};
+
+export type DiscourseUserTitleResponse = {
+  success: boolean;
+  data?: string;
+  error?: string;
+};
 
 @Injectable({
   providedIn: 'root'
@@ -325,6 +388,171 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
 
   async writeConfig(config: any): Promise<any> {
     return this.apiCall('config', 'POST', { config });
+  }
+
+  // Discourse/CoLab Marketplace methods
+  // These make direct calls to Discourse in web mode (no proxy needed - public API)
+  
+  private readonly discourseBaseUrl = 'https://developer.sailpoint.com/discuss/';
+  private readonly developerDomain = 'developer.sailpoint.com';
+  private discourseTitleCache = new Map<string, string>();
+
+  private readonly categoryConfigs: Record<ColabCategory, FilterConfig> = {
+    'workflows': { category: 'colab', tags: ['workflows'] },
+    'saas-connectors': { category: 'colab-saas-connectors', tags: [] },
+    'saas-connector-customizers': { category: 'saas-connector-customizers', tags: [] },
+    'community-tools': { category: 'colab-community-tools', tags: [] },
+    'rules': { category: 'colab-rules', tags: ['identity-security-cloud'] },
+    'transforms': { category: 'colab-transforms', tags: [] },
+    'iiq-plugins': { category: 'colab-iiq-plugins', tags: [] }
+  };
+
+  async getColabPosts(filter: FilterConfig, limit?: number): Promise<ColabPostsResponse> {
+    try {
+      let filterCategory = 'colab';
+      if (filter.category && filter.category !== 'colab') {
+        filterCategory += `/${filter.category}`;
+      }
+
+      const tagsQuery = filter.tags.length > 0 ? `?tags=${filter.tags.join('+')}` : '';
+      const url = `${this.discourseBaseUrl}c/${filterCategory}/l/latest.json${tagsQuery}`;
+
+      const response = await firstValueFrom(this.http.get<any>(url));
+      const posts = this.processDiscourseTopics(response, limit);
+      return { success: true, data: posts };
+    } catch (error) {
+      console.error('Error fetching CoLab posts:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to fetch CoLab posts' 
+      };
+    }
+  }
+
+  async getColabPostsByCategory(category: ColabCategory, limit?: number): Promise<ColabPostsResponse> {
+    const config = this.categoryConfigs[category];
+    if (!config) {
+      return { success: false, error: `Unknown category: ${category}` };
+    }
+    return this.getColabPosts(config, limit);
+  }
+
+  async getColabTopicRaw(topicId: number): Promise<ColabTopicRawResponse> {
+    try {
+      const url = `${this.discourseBaseUrl}raw/${topicId}.json`;
+      const response = await firstValueFrom(this.http.get(url, { responseType: 'text' }));
+      return { success: true, data: response };
+    } catch (error) {
+      console.error('Error fetching topic raw:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to fetch topic content' 
+      };
+    }
+  }
+
+  async getColabTopic(topicId: number): Promise<ColabTopicResponse> {
+    try {
+      const url = `${this.discourseBaseUrl}t/${topicId}.json`;
+      const response = await firstValueFrom(this.http.get<any>(url));
+      return { success: true, data: response };
+    } catch (error) {
+      console.error('Error fetching topic:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to fetch topic' 
+      };
+    }
+  }
+
+  async getDiscourseUserTitle(primaryGroupName: string): Promise<DiscourseUserTitleResponse> {
+    // Check cache first
+    if (this.discourseTitleCache.has(primaryGroupName)) {
+      return { success: true, data: this.discourseTitleCache.get(primaryGroupName) };
+    }
+
+    try {
+      const url = `${this.discourseBaseUrl}g/${primaryGroupName}.json`;
+      const response = await firstValueFrom(this.http.get<any>(url));
+      const title = response.group?.title || '';
+      this.discourseTitleCache.set(primaryGroupName, title);
+      return { success: true, data: title };
+    } catch (error) {
+      console.error('Error fetching user title:', error);
+      this.discourseTitleCache.set(primaryGroupName, '');
+      return { success: true, data: '' }; // Return empty string on error
+    }
+  }
+
+  // Helper methods for Discourse processing
+  private processDiscourseTopics(data: any, limit?: number): ColabPost[] {
+    if (!data?.topic_list?.topics) {
+      return [];
+    }
+
+    const posts: ColabPost[] = [];
+    const topics = limit ? data.topic_list.topics.slice(0, limit) : data.topic_list.topics;
+
+    for (const topic of topics) {
+      if (topic.tags && topic.tags.length > 0) {
+        const poster = this.findOriginalPoster(topic, data.users || []);
+        posts.push(this.createColabPost(topic, poster));
+      }
+    }
+
+    return posts;
+  }
+
+  private findOriginalPoster(topic: any, users: any[]): any {
+    for (const poster of topic.posters || []) {
+      if (poster.description?.includes('Original Poster')) {
+        return users.find((user: any) => user.id === poster.user_id);
+      }
+    }
+    return users[0];
+  }
+
+  private createColabPost(topic: any, user?: any): ColabPost {
+    return {
+      id: topic.id,
+      creatorName: user?.name || user?.username || 'Unknown',
+      excerpt: this.styleExcerpt(topic.excerpt),
+      creatorImage: this.getAvatarUrl(user?.avatar_template || ''),
+      creatorTitle: user?.title || '',
+      tags: topic.tags || [],
+      image: topic.image_url || '',
+      link: `${this.discourseBaseUrl}t/${topic.slug}/${topic.id}`,
+      title: this.shortenTitle(topic.title),
+      views: topic.views || 0,
+      liked: topic.like_count || 0,
+      replies: topic.posts_count || 0,
+      solution: topic.has_accepted_answer || false,
+      readTime: 5,
+      slug: topic.slug
+    };
+  }
+
+  private shortenTitle(title: string): string {
+    return title.length > 63 ? title.substring(0, 62) + '...' : title;
+  }
+
+  private styleExcerpt(excerpt: string | undefined): string {
+    if (!excerpt) return '';
+    let cleaned = excerpt.replace(/:[^:]*:/g, '');
+    const match = cleaned.match(/Description([\s\S]*?)Legal Agreement/);
+    if (match) {
+      cleaned = match[1].trim();
+    }
+    cleaned = cleaned.replace('&hellip;', '');
+    return cleaned.length > 150 ? cleaned.slice(0, 100) + '...' : cleaned;
+  }
+
+  private getAvatarUrl(avatarTemplate: string): string {
+    if (!avatarTemplate) return '';
+    if (avatarTemplate.includes(this.developerDomain)) {
+      return `https://${this.developerDomain}${avatarTemplate.replace('{size}', '120')}`;
+    }
+    return avatarTemplate.replace('{size}', '120');
   }
 
   // Generic method to handle any SailPoint SDK API calls

@@ -1,4 +1,5 @@
 import { UpdateEnvironmentRequest } from "./authentication/config";
+import { FilterConfig, ColabCategory } from "./discourse/discourse";
 
 const { contextBridge, ipcRenderer: ipcMain } = require('electron');
 const sdkPreloader = require('./sailpoint-sdk/sdk-preload');
@@ -26,6 +27,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // file browser
   browseForFile: () => ipcMain.invoke('browse-for-file'),
+
+  // Discourse/CoLab marketplace
+  getColabPosts: (filter: FilterConfig, limit?: number) => ipcMain.invoke('get-colab-posts', filter, limit),
+  getColabPostsByCategory: (category: ColabCategory, limit?: number) => ipcMain.invoke('get-colab-posts-by-category', category, limit),
+  getColabTopicRaw: (topicId: number) => ipcMain.invoke('get-colab-topic-raw', topicId),
+  getColabTopic: (topicId: number) => ipcMain.invoke('get-colab-topic', topicId),
+  getDiscourseUserTitle: (primaryGroupName: string) => ipcMain.invoke('get-discourse-user-title', primaryGroupName),
 
   // SDK functions
   ...sdkPreloader,

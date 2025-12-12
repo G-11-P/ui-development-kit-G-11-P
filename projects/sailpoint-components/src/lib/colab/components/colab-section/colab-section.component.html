@@ -1,0 +1,56 @@
+<section class="colab-section">
+  <div class="section-header">
+    <h2 class="section-title">{{ category.title }}</h2>
+    <button mat-button class="view-all-link" (click)="onViewAll()">
+      {{ expanded ? 'Show Less' : 'View All' }}
+      <mat-icon>{{ expanded ? 'expand_less' : 'arrow_forward' }}</mat-icon>
+    </button>
+  </div>
+
+  <div class="section-content">
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="loading-text">Loading {{ category.title }}...</span>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error && !loading">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error-text">Failed to load {{ category.title }}</p>
+      <button mat-stroked-button (click)="loadPosts()">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-container" *ngIf="!loading && !error && posts.length === 0">
+      <mat-icon class="empty-icon">inventory_2</mat-icon>
+      <p class="empty-text">No {{ category.title }} available yet</p>
+      <a 
+        href="https://developer.sailpoint.com/discuss/t/about-the-sailpoint-developer-community-colab/11230" 
+        target="_blank"
+        class="contribute-link"
+      >
+        Be the first to contribute! →
+      </a>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" *ngIf="!loading && !error && posts.length > 0">
+      <app-colab-card
+        *ngFor="let post of posts; trackBy: trackByPostId"
+        [post]="post"
+        [category]="category.id"
+        [showDeployButton]="isDeployable"
+        [isDeploying]="isPostDeploying(post.id)"
+        (deploy)="onDeploy($event)"
+      ></app-colab-card>
+    </div>
+  </div>
+</section>
+
+
+
+

@@ -1,0 +1,230 @@
+.colab-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  min-height: 380px;
+  background: var(--mat-card-background-color, #fff);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    border-color: var(--mat-primary-color, #0033a1);
+
+    .card-image {
+      transform: scale(1.05);
+    }
+
+    .deploy-button {
+      background: var(--mat-accent-darker, #00a3e0);
+    }
+  }
+
+  &.deploying {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+}
+
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card-gradient-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    #0033a1 0%,
+    #004fb5 50%,
+    #0071ce 100%
+  );
+}
+
+.badge-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+
+  &.sailpoint-developed {
+    background: rgba(0, 51, 161, 0.9);
+    color: white;
+  }
+
+  &.sailpoint-certified {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0033a1;
+    padding: 6px;
+  }
+
+  .badge-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--mat-primary-color, #0033a1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 42px;
+}
+
+.card-excerpt {
+  margin: 0 0 auto 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--mat-foreground-secondary-text, #666);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-creator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.creator-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 51, 161, 0.1);
+}
+
+.creator-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.creator-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mat-foreground-text, #333);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.creator-title {
+  font-size: 11px;
+  color: var(--mat-foreground-secondary-text, #888);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-actions {
+  padding: 0 16px 16px 16px;
+}
+
+.deploy-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .deploy-spinner {
+    margin-right: 4px;
+  }
+}
+
+// Dark theme support
+:host-context(.dark-theme) {
+  .colab-card {
+    background: var(--mat-card-background-color, #1e1e1e);
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      border-color: var(--mat-primary-color, #5c8ae6);
+    }
+  }
+
+  .card-title {
+    color: var(--mat-primary-color, #5c8ae6);
+  }
+
+  .card-excerpt {
+    color: var(--mat-foreground-secondary-text, #aaa);
+  }
+
+  .creator-name {
+    color: var(--mat-foreground-text, #eee);
+  }
+
+  .card-creator {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .creator-avatar {
+    border-color: rgba(92, 138, 230, 0.2);
+  }
+}
+
+
+
+

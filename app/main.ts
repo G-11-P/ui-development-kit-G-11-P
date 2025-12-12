@@ -5,6 +5,7 @@ import * as url from 'url';
 import { setupSailPointSDKHandlers } from './sailpoint-sdk/ipc-handlers';
 import { disconnectFromISC, refreshTokens, unifiedLogin, validateTokens, checkAccessTokenStatus, getCurrentTokenDetails, checkOauthCodeFlowComplete } from './authentication/auth';
 import { deleteEnvironment, getTenants, setActiveEnvironment, updateEnvironment, UpdateEnvironmentRequest } from './authentication/config';
+import { getMarketplacePosts, getColabPostsByCategory, getTopicRaw, getTopic, getUserTitle, FilterConfig, ColabCategory } from './discourse/discourse';
 // Global variables
 let win: BrowserWindow | undefined;
 
@@ -280,6 +281,30 @@ try {
       return { success: false, error: 'Failed to open file dialog' };
     }
   });
+
+  //#region Discourse/CoLab IPC handlers
+
+  ipcMain.handle('get-colab-posts', async (event, filter: FilterConfig, limit?: number) => {
+    return getMarketplacePosts(filter, limit);
+  });
+
+  ipcMain.handle('get-colab-posts-by-category', async (event, category: ColabCategory, limit?: number) => {
+    return getColabPostsByCategory(category, limit);
+  });
+
+  ipcMain.handle('get-colab-topic-raw', async (event, topicId: number) => {
+    return getTopicRaw(topicId);
+  });
+
+  ipcMain.handle('get-colab-topic', async (event, topicId: number) => {
+    return getTopic(topicId);
+  });
+
+  ipcMain.handle('get-discourse-user-title', async (event, primaryGroupName: string) => {
+    return getUserTitle(primaryGroupName);
+  });
+
+  //#endregion
 
   //#endregion
 

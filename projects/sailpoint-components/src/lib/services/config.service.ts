@@ -126,8 +126,16 @@ export class ConfigService {
       icon: 'dashboard',
       description: 'Manage owner graph in SailPoint.',
       enabled: false
-    }
-  ];
+    },
+        {
+            name: 'colab',
+            displayName: 'Colab',
+            route: '/colab',
+            icon: 'dashboard',
+            description: 'Manage colab in SailPoint.',
+            enabled: false
+        }
+    ];
 
   // Default theme configurations
   private defaultLightTheme: ThemeConfig = {

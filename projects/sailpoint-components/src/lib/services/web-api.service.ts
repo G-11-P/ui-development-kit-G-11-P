@@ -36,6 +36,14 @@ export interface ElectronAPIInterface {
   getColabTopicRaw: (topicId: number) => Promise<ColabTopicRawResponse>;
   getColabTopic: (topicId: number) => Promise<ColabTopicResponse>;
   getDiscourseUserTitle: (primaryGroupName: string) => Promise<DiscourseUserTitleResponse>;
+
+  // GitHub operations
+  getGitHubReleaseArtifact: (githubRepoUrl: string) => Promise<GitHubReleaseArtifactResponse>;
+
+  // Connector deployment
+  createConnector: (connectorAlias: string) => Promise<ConnectorDeploymentResponse>;
+  uploadConnector: (connectorId: string, zipFilePath: string) => Promise<ConnectorDeploymentResponse>;
+  downloadFile: (url: string, outputPath: string) => Promise<{ success: boolean; error?: string }>;
   
   // SailPoint SDK functions
   // These are dynamically added and would need to be proxied through the web service
@@ -162,6 +170,21 @@ export type ColabTopicResponse = {
 export type DiscourseUserTitleResponse = {
   success: boolean;
   data?: string;
+  error?: string;
+};
+
+export type GitHubReleaseArtifactResponse = {
+  success: boolean;
+  downloadUrl?: string;
+  filename?: string;
+  tagName?: string;
+  error?: string;
+};
+
+export type ConnectorDeploymentResponse = {
+  success: boolean;
+  connectorId?: string;
+  version?: number;
   error?: string;
 };
 
@@ -484,6 +507,86 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
     }
   }
 
+  // GitHub operations
+  async getGitHubReleaseArtifact(githubRepoUrl: string): Promise<GitHubReleaseArtifactResponse> {
+    try {
+      // Parse GitHub URL to extract owner and repo
+      const normalized = githubRepoUrl.trim().replace(/\/$/, '');
+      const patterns = [
+        /github\.com\/([^\/]+)\/([^\/]+)/i,
+        /^([^\/]+)\/([^\/]+)$/
+      ];
+
+      let owner: string | null = null;
+      let repo: string | null = null;
+
+      for (const pattern of patterns) {
+        const match = normalized.match(pattern);
+        if (match && match[1] && match[2]) {
+          owner = match[1];
+          repo = match[2].replace(/\.git$/, '');
+          break;
+        }
+      }
+
+      if (!owner || !repo) {
+        return {
+          success: false,
+          error: `Invalid GitHub repository URL: ${githubRepoUrl}`
+        };
+      }
+
+      // Fetch latest release from GitHub API
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
+      const response = await firstValueFrom(
+        this.http.get<any>(apiUrl, {
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'SailPoint-UI-Development-Kit'
+          }
+        })
+      );
+
+      if (!response.assets || response.assets.length === 0) {
+        return {
+          success: false,
+          error: `No assets found in release ${response.tag_name}`
+        };
+      }
+
+      // Find the .zip file
+      const zipAsset = response.assets.find((asset: any) => 
+        asset.name.toLowerCase().endsWith('.zip')
+      );
+
+      if (!zipAsset) {
+        return {
+          success: false,
+          error: `No .zip file found in release ${response.tag_name}`
+        };
+      }
+
+      return {
+        success: true,
+        downloadUrl: zipAsset.browser_download_url,
+        filename: zipAsset.name,
+        tagName: response.tag_name
+      };
+    } catch (error: any) {
+      console.error('Error fetching GitHub release artifact:', error);
+      if (error.status === 404) {
+        return {
+          success: false,
+          error: `No releases found for repository`
+        };
+      }
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error fetching GitHub release'
+      };
+    }
+  }
+
   // Helper methods for Discourse processing
   private processDiscourseTopics(data: any, limit?: number): ColabPost[] {
     if (!data?.topic_list?.topics) {
@@ -553,6 +656,34 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
       return `https://${this.developerDomain}${avatarTemplate.replace('{size}', '120')}`;
     }
     return avatarTemplate.replace('{size}', '120');
+  }
+
+  // Connector deployment
+  async createConnector(connectorAlias: string): Promise<ConnectorDeploymentResponse> {
+    // Note: This would need to be proxied through the backend server
+    // For now, return an error indicating this is not available in web mode
+    return {
+      success: false,
+      error: 'Connector deployment is only available in Electron mode'
+    };
+  }
+
+  async uploadConnector(connectorId: string, zipFilePath: string): Promise<ConnectorDeploymentResponse> {
+    // Note: This would need to be proxied through the backend server
+    // For now, return an error indicating this is not available in web mode
+    return {
+      success: false,
+      error: 'Connector deployment is only available in Electron mode'
+    };
+  }
+
+  async downloadFile(url: string, outputPath: string): Promise<{ success: boolean; error?: string }> {
+    // Note: File system access is not available in web mode
+    // For now, return an error indicating this is not available in web mode
+    return {
+      success: false,
+      error: 'File download is only available in Electron mode'
+    };
   }
 
   // Generic method to handle any SailPoint SDK API calls

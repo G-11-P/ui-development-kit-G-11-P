@@ -22,6 +22,13 @@ export let apiConfig: Configuration;
 let activeEnvironment: string | null = null;
 let refreshActive = false;
 
+/**
+ * Get the currently active environment that was set during login
+ */
+export function getActiveEnvironment(): string | null {
+  return activeEnvironment;
+}
+
 export const disconnectFromISC = () => {
   try {
     // Simply clear the API configuration

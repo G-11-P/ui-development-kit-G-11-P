@@ -6,6 +6,8 @@ import { setupSailPointSDKHandlers } from './sailpoint-sdk/ipc-handlers';
 import { disconnectFromISC, refreshTokens, unifiedLogin, validateTokens, checkAccessTokenStatus, getCurrentTokenDetails, checkOauthCodeFlowComplete } from './authentication/auth';
 import { deleteEnvironment, getTenants, setActiveEnvironment, updateEnvironment, UpdateEnvironmentRequest } from './authentication/config';
 import { getMarketplacePosts, getColabPostsByCategory, getTopicRaw, getTopic, getUserTitle, FilterConfig, ColabCategory } from './discourse/discourse';
+import { getGitHubReleaseArtifact } from './github/github';
+import { createConnector, uploadConnector, downloadFile } from './connector/connector';
 // Global variables
 let win: BrowserWindow | undefined;
 
@@ -303,6 +305,30 @@ try {
   ipcMain.handle('get-discourse-user-title', async (event, primaryGroupName: string) => {
     return getUserTitle(primaryGroupName);
   });
+
+  //#region GitHub IPC handlers
+
+  ipcMain.handle('get-github-release-artifact', async (event, githubRepoUrl: string) => {
+    return getGitHubReleaseArtifact(githubRepoUrl);
+  });
+
+  //#endregion
+
+  //#region Connector Deployment IPC handlers
+
+  ipcMain.handle('create-connector', async (event, connectorAlias: string) => {
+    return createConnector(connectorAlias);
+  });
+
+  ipcMain.handle('upload-connector', async (event, connectorId: string, zipFilePath: string) => {
+    return uploadConnector(connectorId, zipFilePath);
+  });
+
+  ipcMain.handle('download-file', async (event, url: string, outputPath: string) => {
+    return downloadFile(url, outputPath);
+  });
+
+  //#endregion
 
   //#endregion
 

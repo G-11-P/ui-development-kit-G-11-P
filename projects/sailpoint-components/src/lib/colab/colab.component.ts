@@ -16,6 +16,7 @@ import { firstValueFrom } from 'rxjs';
 import { ColabSectionComponent, CategoryDisplay } from './components/colab-section/colab-section.component';
 import { ColabCardComponent } from './components/colab-card/colab-card.component';
 import { ColabPost, ColabCategory, DiscourseService } from './services/discourse.service';
+import { ElectronApiFactoryService } from '../services/electron-api-factory.service';
 
 // Define the categories to display
 const COLAB_CATEGORIES: CategoryDisplay[] = [
@@ -68,7 +69,8 @@ export class ColabComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private discourseService: DiscourseService
+    private discourseService: DiscourseService,
+    private apiFactory: ElectronApiFactoryService
   ) {
     // Set up debounced search
     this.searchSubject.pipe(
@@ -111,7 +113,7 @@ export class ColabComponent implements OnInit, OnDestroy {
 
     try {
       // Get the raw content to extract deployment information
-      const rawContent = await this.discourseService.getTopicRaw(post.id).toPromise();
+      const rawContent = await firstValueFrom(this.discourseService.getTopicRaw(post.id));
       
       // Route to appropriate deployment handler based on category
       switch (category) {
@@ -149,14 +151,145 @@ export class ColabComponent implements OnInit, OnDestroy {
     this.showMessage(`Workflow deployment for "${post.title}" - Coming soon!`, 'info');
   }
 
+
+  /**
+   * Sanitize connector name to be a valid alias
+   */
+  private sanitizeConnectorName(name: string): string {
+    // Remove special characters, replace spaces with hyphens, convert to lowercase
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .substring(0, 50); // Limit length
+  }
+
+  /**
+   * Extract GitHub repository URL from raw Discourse topic content
+   * Looks for the "Repository Link" row in the markdown table
+   */
+  private extractGitHubRepoUrl(rawContent: string): string | null {
+    if (!rawContent) {
+      return null;
+    }
+
+    // Pattern to match the Repository Link row in the markdown table
+    // Format: :hammer_and_wrench: | **Repository Link** | https://github.com/...
+    // Note: The row may or may not start with a pipe, so we make it optional
+    const repositoryLinkPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*(https?:\/\/github\.com\/[^\s|\n\r]+)/i;
+    
+    const match = rawContent.match(repositoryLinkPattern);
+    
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+
+    // Fallback: Try to find any GitHub URL in a table row that mentions "Repository"
+    // This pattern doesn't require a leading pipe either
+    const fallbackPattern = /[^\|]*Repository[^\|]*\|\s*(https?:\/\/github\.com\/[^\s|\n\r]+)/i;
+    const fallbackMatch = rawContent.match(fallbackPattern);
+    
+    if (fallbackMatch && fallbackMatch[1]) {
+      return fallbackMatch[1].trim();
+    }
+
+    return null;
+  }
+
   /**
    * Deploy a SaaS Connector to the environment
    */
   private async deploySaaSConnector(post: ColabPost, rawContent?: string): Promise<void> {
-    // TODO: Implement SaaS Connector deployment
-    // This will be implemented based on the deployment approach provided later
-    console.log('Deploying SaaS Connector:', post.title);
-    this.showMessage(`SaaS Connector deployment for "${post.title}" - Coming soon!`, 'info');
+    try {
+      // Fetch raw topic content from Discourse to extract GitHub location
+      let topicRawContent = rawContent;
+      
+      if (!topicRawContent) {
+        console.log(`Fetching raw content for SaaS Connector: ${post.title} (ID: ${post.id})`);
+        topicRawContent = await firstValueFrom(this.discourseService.getTopicRaw(post.id));
+      }
+
+      if (!topicRawContent) {
+        throw new Error('Failed to fetch topic content from Discourse');
+      }
+
+      // Extract GitHub repository URL from raw content
+      const githubRepoUrl = this.extractGitHubRepoUrl(topicRawContent);
+      
+      if (!githubRepoUrl) {
+        throw new Error('Could not find GitHub repository link in topic content. Please ensure the topic contains a "Repository Link" field.');
+      }
+
+      console.log(`GitHub repository URL extracted: ${githubRepoUrl}`);
+      
+      // Fetch the latest release artifact from GitHub
+      const artifactResponse = await this.apiFactory.getApi().getGitHubReleaseArtifact(githubRepoUrl);
+      
+      if (!artifactResponse.success || !artifactResponse.downloadUrl) {
+        throw new Error(artifactResponse.error || 'Failed to fetch GitHub release artifact');
+      }
+
+      console.log(`GitHub release artifact found: ${artifactResponse.filename} (${artifactResponse.tagName})`);
+      console.log(`Download URL: ${artifactResponse.downloadUrl}`);
+      
+      // Generate a temporary file path for the downloaded zip
+      const path = require('path');
+      const os = require('os');
+      const tempDir = os.tmpdir();
+      const tempFilePath = path.join(tempDir, artifactResponse.filename || 'connector.zip');
+
+      // Download the zip file
+      this.showMessage(`Downloading connector artifact: ${artifactResponse.filename}...`, 'info');
+      const downloadResult = await this.apiFactory.getApi().downloadFile(artifactResponse.downloadUrl, tempFilePath);
+      
+      if (!downloadResult.success) {
+        throw new Error(downloadResult.error || 'Failed to download connector artifact');
+      }
+
+      // Generate connector alias from post title (sanitize it)
+      const connectorAlias = this.sanitizeConnectorName(post.title);
+
+      // Create the connector (environment is fetched internally)
+      this.showMessage(`Creating connector "${connectorAlias}"...`, 'info');
+      const createResult = await this.apiFactory.getApi().createConnector(connectorAlias);
+      
+      if (!createResult.success || !createResult.connectorId) {
+        throw new Error(createResult.error || 'Failed to create connector');
+      }
+
+      // Upload the connector zip file (environment is fetched internally)
+      this.showMessage(`Uploading connector version...`, 'info');
+      const uploadResult = await this.apiFactory.getApi().uploadConnector(
+        createResult.connectorId,
+        tempFilePath
+      );
+
+      if (!uploadResult.success) {
+        throw new Error(uploadResult.error || 'Failed to upload connector');
+      }
+
+      // Clean up temporary file
+      try {
+        const fs = require('fs');
+        if (fs.existsSync(tempFilePath)) {
+          fs.unlinkSync(tempFilePath);
+        }
+      } catch (cleanupError) {
+        console.warn('Failed to clean up temporary file:', cleanupError);
+      }
+
+      this.showMessage(
+        `Successfully deployed "${post.title}" as connector "${connectorAlias}" (Version ${uploadResult.version})`, 
+        'success'
+      );
+    } catch (error) {
+      console.error('Error deploying SaaS Connector:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      this.showMessage(`Failed to deploy SaaS Connector: ${errorMessage}`, 'error');
+      throw error;
+    }
   }
 
   /**

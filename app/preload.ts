@@ -1,5 +1,7 @@
 import { UpdateEnvironmentRequest } from "./authentication/config";
 import { FilterConfig, ColabCategory } from "./discourse/discourse";
+import { GitHubReleaseArtifactResponse } from "./github/github";
+import { ConnectorDeploymentResponse } from "./connector/connector";
 
 const { contextBridge, ipcRenderer: ipcMain } = require('electron');
 const sdkPreloader = require('./sailpoint-sdk/sdk-preload');
@@ -34,6 +36,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getColabTopicRaw: (topicId: number) => ipcMain.invoke('get-colab-topic-raw', topicId),
   getColabTopic: (topicId: number) => ipcMain.invoke('get-colab-topic', topicId),
   getDiscourseUserTitle: (primaryGroupName: string) => ipcMain.invoke('get-discourse-user-title', primaryGroupName),
+
+  // GitHub operations
+  getGitHubReleaseArtifact: (githubRepoUrl: string) => ipcMain.invoke('get-github-release-artifact', githubRepoUrl),
+
+  // Connector deployment
+  createConnector: (connectorAlias: string) => ipcMain.invoke('create-connector', connectorAlias),
+  uploadConnector: (connectorId: string, zipFilePath: string) => ipcMain.invoke('upload-connector', connectorId, zipFilePath),
+  downloadFile: (url: string, outputPath: string) => ipcMain.invoke('download-file', url, outputPath),
 
   // SDK functions
   ...sdkPreloader,

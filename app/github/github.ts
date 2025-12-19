@@ -138,3 +138,123 @@ export async function getGitHubReleaseArtifact(
   }
 }
 
+export interface GitHubRepoFile {
+  name: string;
+  path: string;
+  type: 'file' | 'dir';
+  download_url: string | null;
+  size: number;
+}
+
+export interface GitHubFilesResponse {
+  success: boolean;
+  files?: GitHubRepoFile[];
+  error?: string;
+}
+
+export interface GitHubFileContentResponse {
+  success: boolean;
+  content?: string;
+  filename?: string;
+  error?: string;
+}
+
+/**
+ * List all JSON files in a GitHub repository
+ * Supports both root directory and subdirectory paths
+ * @param githubRepoUrl - Can be:
+ *   - https://github.com/owner/repo
+ *   - https://github.com/owner/repo/tree/branch/path/to/dir
+ */
+export async function listGitHubJsonFiles(githubRepoUrl: string): Promise<GitHubFilesResponse> {
+  try {
+    // Parse the URL to extract owner, repo, and path
+    const urlMatch = githubRepoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/tree\/[^\/]+\/(.+))?/);
+    
+    if (!urlMatch) {
+      return {
+        success: false,
+        error: 'Invalid GitHub repository URL format'
+      };
+    }
+
+    const owner = urlMatch[1];
+    const repo = urlMatch[2].replace(/\.git$/, ''); // Remove .git suffix if present
+    const dirPath = urlMatch[3] || ''; // Optional directory path
+
+    console.log(`Listing contents of ${owner}/${repo}${dirPath ? `/${dirPath}` : ''}`);
+
+    // GitHub API endpoint to get repository contents
+    const apiUrl = dirPath 
+      ? `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}`
+      : `https://api.github.com/repos/${owner}/${repo}/contents`;
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'SailPoint-UI-Development-Kit'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub API returned status ${response.status}: ${response.statusText}`);
+    }
+
+    const contents: GitHubRepoFile[] = await response.json();
+
+    // Filter for JSON files only
+    const jsonFiles = contents.filter(file => 
+      file.type === 'file' && file.name.endsWith('.json')
+    );
+
+    console.log(`Found ${jsonFiles.length} JSON files in ${dirPath || 'root directory'}`);
+
+    return {
+      success: true,
+      files: jsonFiles
+    };
+  } catch (error) {
+    console.error('Error listing GitHub repository files:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error listing repository files'
+    };
+  }
+}
+
+/**
+ * Get the content of a file from GitHub
+ */
+export async function getGitHubFileContent(downloadUrl: string, filename: string): Promise<GitHubFileContentResponse> {
+  try {
+    console.log(`Fetching content from: ${downloadUrl}`);
+
+    const response = await fetch(downloadUrl, {
+      headers: {
+        'Accept': 'application/vnd.github.v3.raw',
+        'User-Agent': 'SailPoint-UI-Development-Kit'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file content: ${response.status} ${response.statusText}`);
+    }
+
+    const content = await response.text();
+
+    console.log(`Successfully fetched ${filename} (${content.length} bytes)`);
+
+    return {
+      success: true,
+      content,
+      filename
+    };
+  } catch (error) {
+    console.error('Error fetching GitHub file content:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error fetching file content'
+    };
+  }
+}
+

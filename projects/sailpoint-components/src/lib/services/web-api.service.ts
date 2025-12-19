@@ -39,6 +39,8 @@ export interface ElectronAPIInterface {
 
   // GitHub operations
   getGitHubReleaseArtifact: (githubRepoUrl: string) => Promise<GitHubReleaseArtifactResponse>;
+  listGitHubJsonFiles: (githubRepoUrl: string) => Promise<GitHubFilesResponse>;
+  getGitHubFileContent: (downloadUrl: string, filename: string) => Promise<GitHubFileContentResponse>;
 
   // Connector deployment
   uploadConnector: (githubRepoUrl: string, connectorAlias?: string) => Promise<ConnectorDeploymentResponse>;
@@ -176,6 +178,27 @@ export type GitHubReleaseArtifactResponse = {
   downloadUrl?: string;
   filename?: string;
   tagName?: string;
+  error?: string;
+};
+
+export type GitHubRepoFile = {
+  name: string;
+  path: string;
+  type: 'file' | 'dir';
+  download_url: string | null;
+  size: number;
+};
+
+export type GitHubFilesResponse = {
+  success: boolean;
+  files?: GitHubRepoFile[];
+  error?: string;
+};
+
+export type GitHubFileContentResponse = {
+  success: boolean;
+  content?: string;
+  filename?: string;
   error?: string;
 };
 
@@ -580,9 +603,17 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
       }
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error fetching GitHub release'
-      };
-    }
+      error: error instanceof Error ? error.message : 'Unknown error fetching GitHub release'
+    };
+  }
+  }
+
+  async listGitHubJsonFiles(githubRepoUrl: string): Promise<GitHubFilesResponse> {
+    return this.apiCall<GitHubFilesResponse>('github/list-json-files', 'POST', { githubRepoUrl });
+  }
+
+  async getGitHubFileContent(downloadUrl: string, filename: string): Promise<GitHubFileContentResponse> {
+    return this.apiCall<GitHubFileContentResponse>('github/file-content', 'POST', { downloadUrl, filename });
   }
 
   // Helper methods for Discourse processing

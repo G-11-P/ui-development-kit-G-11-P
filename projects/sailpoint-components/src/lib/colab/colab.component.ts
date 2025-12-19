@@ -18,6 +18,7 @@ import { ColabCardComponent } from './components/colab-card/colab-card.component
 import { ColabPost, ColabCategory, DiscourseService } from './services/discourse.service';
 import { ElectronApiFactoryService } from '../services/electron-api-factory.service';
 import { DeploymentSuccessDialogComponent, DeploymentSuccessData } from './components/deployment-success-dialog/deployment-success-dialog.component';
+import { SailPointSDKService } from '../sailpoint-sdk.service';
 
 // Define the categories to display
 const COLAB_CATEGORIES: CategoryDisplay[] = [
@@ -71,7 +72,8 @@ export class ColabComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private discourseService: DiscourseService,
-    private apiFactory: ElectronApiFactoryService
+    private apiFactory: ElectronApiFactoryService,
+    private sdkService: SailPointSDKService
   ) {
     // Set up debounced search
     this.searchSubject.pipe(
@@ -146,10 +148,128 @@ export class ColabComponent implements OnInit, OnDestroy {
    * Deploy a workflow to the environment
    */
   private async deployWorkflow(post: ColabPost, rawContent?: string): Promise<void> {
-    // TODO: Implement workflow deployment
-    // This will be implemented based on the deployment approach provided later
-    console.log('Deploying workflow:', post.title);
-    this.showMessage(`Workflow deployment for "${post.title}" - Coming soon!`, 'info');
+    try {
+      let topicRawContent = rawContent;
+
+      if (!topicRawContent) {
+        console.log(`Fetching raw content for Workflow: ${post.title} (ID: ${post.id})`);
+        topicRawContent = await firstValueFrom(this.discourseService.getTopicRaw(post.id));
+      }
+
+      if (!topicRawContent) {
+        throw new Error('Failed to fetch topic content from Discourse');
+      }
+
+      const githubRepoUrl = this.extractGitHubRepoUrl(topicRawContent);
+      if (!githubRepoUrl) {
+        throw new Error('Could not find GitHub repository link in topic content. Please ensure the topic contains a "Repository Link" field.');
+      }
+
+      console.log(`GitHub repository URL extracted: ${githubRepoUrl}`);
+
+      this.showMessage(`Fetching workflow files from GitHub...`, 'info');
+
+      // List all JSON files in the repository
+      const filesResult = await this.apiFactory.getApi().listGitHubJsonFiles(githubRepoUrl);
+
+      if (!filesResult.success || !filesResult.files || filesResult.files.length === 0) {
+        throw new Error(filesResult.error || 'No JSON workflow files found in repository');
+      }
+
+      console.log(`Found ${filesResult.files.length} JSON file(s) in repository`);
+
+      const createdWorkflows: string[] = [];
+      const errors: string[] = [];
+
+      // Process each JSON file
+      for (const file of filesResult.files) {
+        try {
+          if (!file.download_url) {
+            console.warn(`Skipping ${file.name}: no download URL available`);
+            continue;
+          }
+
+          this.showMessage(`Processing workflow: ${file.name}...`, 'info');
+          console.log(`Fetching content for ${file.name}`);
+
+          // Get the file content
+          const contentResult = await this.apiFactory.getApi().getGitHubFileContent(
+            file.download_url,
+            file.name
+          );
+
+          if (!contentResult.success || !contentResult.content) {
+            console.error(`Failed to fetch ${file.name}: ${contentResult.error}`);
+            errors.push(`${file.name}: ${contentResult.error || 'Failed to fetch content'}`);
+            continue;
+          }
+
+          // Parse the JSON content
+          let workflowData;
+          try {
+            workflowData = JSON.parse(contentResult.content);
+          } catch (parseError) {
+            console.error(`Failed to parse ${file.name}:`, parseError);
+            errors.push(`${file.name}: Invalid JSON format`);
+            continue;
+          }
+
+          // Create the workflow using the SDK
+          console.log(`Creating workflow from ${file.name}`);
+          const response = await this.sdkService.createWorkflow({
+            createWorkflowRequestV2025: workflowData
+          });
+
+          if (response.data) {
+            const workflowName = response.data.name || file.name;
+            console.log(`Successfully created workflow: ${workflowName}`);
+            createdWorkflows.push(workflowName);
+          }
+        } catch (fileError: any) {
+          console.error(`Error processing ${file.name}:`, fileError);
+          errors.push(`${file.name}: ${fileError.message || 'Unknown error'}`);
+        }
+      }
+
+      // Show results
+      if (createdWorkflows.length > 0) {
+        const workflowNames = createdWorkflows.join(', ');
+        
+        // Show success dialog
+        this.dialog.open(DeploymentSuccessDialogComponent, {
+          width: '500px',
+          data: {
+            connectorName: `${createdWorkflows.length} Workflow${createdWorkflows.length > 1 ? 's' : ''}`,
+            connectorId: workflowNames,
+            version: undefined
+          } as DeploymentSuccessData
+        });
+
+        this.showMessage(
+          `Successfully deployed ${createdWorkflows.length} workflow${createdWorkflows.length > 1 ? 's' : ''} from "${post.title}"`,
+          'success'
+        );
+      }
+
+      if (errors.length > 0) {
+        const errorMessage = `Some workflows failed to deploy:\n${errors.join('\n')}`;
+        console.error(errorMessage);
+        if (createdWorkflows.length === 0) {
+          throw new Error(errorMessage);
+        } else {
+          this.showMessage(`Deployed ${createdWorkflows.length} workflow(s), but ${errors.length} failed`, 'warning');
+        }
+      }
+
+      if (createdWorkflows.length === 0 && errors.length === 0) {
+        throw new Error('No workflows were deployed');
+      }
+
+    } catch (error: any) {
+      console.error('Error deploying Workflow:', error);
+      this.showMessage(`Failed to deploy Workflow: ${error.message || error}`, 'error');
+      throw error;
+    }
   }
 
 
@@ -170,6 +290,7 @@ export class ColabComponent implements OnInit, OnDestroy {
   /**
    * Extract GitHub repository URL from raw Discourse topic content
    * Looks for the "Repository Link" row in the markdown table
+   * Supports both direct URLs and markdown link format [text](url)
    */
   private extractGitHubRepoUrl(rawContent: string): string | null {
     if (!rawContent) {
@@ -177,19 +298,28 @@ export class ColabComponent implements OnInit, OnDestroy {
     }
 
     // Pattern to match the Repository Link row in the markdown table
-    // Format: :hammer_and_wrench: | **Repository Link** | https://github.com/...
-    // Note: The row may or may not start with a pipe, so we make it optional
-    const repositoryLinkPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*(https?:\/\/github\.com\/[^\s|\n\r]+)/i;
+    // Format can be:
+    // 1. Direct URL: :hammer_and_wrench: | **Repository Link** | https://github.com/...
+    // 2. Markdown link: :hammer_and_wrench: | **Repository Link** | [text](https://github.com/...)
     
-    const match = rawContent.match(repositoryLinkPattern);
+    // First, try to match markdown link format with URL in parentheses
+    const markdownLinkPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*\[[^\]]+\]\((https?:\/\/github\.com\/[^\)]+)\)/i;
+    const markdownMatch = rawContent.match(markdownLinkPattern);
     
-    if (match && match[1]) {
-      return match[1].trim();
+    if (markdownMatch && markdownMatch[1]) {
+      return markdownMatch[1].trim();
+    }
+
+    // Then try direct URL format (original pattern)
+    const directUrlPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*(https?:\/\/github\.com\/[^\s|\n\r]+)/i;
+    const directMatch = rawContent.match(directUrlPattern);
+    
+    if (directMatch && directMatch[1]) {
+      return directMatch[1].trim();
     }
 
     // Fallback: Try to find any GitHub URL in a table row that mentions "Repository"
-    // This pattern doesn't require a leading pipe either
-    const fallbackPattern = /[^\|]*Repository[^\|]*\|\s*(https?:\/\/github\.com\/[^\s|\n\r]+)/i;
+    const fallbackPattern = /[^\|]*Repository[^\|]*\|\s*(?:\[[^\]]+\]\()?(https?:\/\/github\.com\/[^\s|\)\n\r]+)/i;
     const fallbackMatch = rawContent.match(fallbackPattern);
     
     if (fallbackMatch && fallbackMatch[1]) {

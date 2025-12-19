@@ -6,7 +6,7 @@ import { setupSailPointSDKHandlers } from './sailpoint-sdk/ipc-handlers';
 import { disconnectFromISC, refreshTokens, unifiedLogin, validateTokens, checkAccessTokenStatus, getCurrentTokenDetails, checkOauthCodeFlowComplete } from './authentication/auth';
 import { deleteEnvironment, getTenants, setActiveEnvironment, updateEnvironment, UpdateEnvironmentRequest } from './authentication/config';
 import { getMarketplacePosts, getColabPostsByCategory, getTopicRaw, getTopic, getUserTitle, FilterConfig, ColabCategory } from './discourse/discourse';
-import { getGitHubReleaseArtifact } from './github/github';
+import { getGitHubReleaseArtifact, listGitHubJsonFiles, getGitHubFileContent } from './github/github';
 import { uploadConnectorFromGitHub } from './connector/connector';
 // Global variables
 let win: BrowserWindow | undefined;
@@ -310,6 +310,14 @@ try {
 
   ipcMain.handle('get-github-release-artifact', async (event, githubRepoUrl: string) => {
     return getGitHubReleaseArtifact(githubRepoUrl);
+  });
+
+  ipcMain.handle('list-github-json-files', async (event, githubRepoUrl: string) => {
+    return listGitHubJsonFiles(githubRepoUrl);
+  });
+
+  ipcMain.handle('get-github-file-content', async (event, downloadUrl: string, filename: string) => {
+    return getGitHubFileContent(downloadUrl, filename);
   });
 
   //#endregion

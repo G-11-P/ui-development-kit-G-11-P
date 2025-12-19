@@ -187,6 +187,96 @@ export async function uploadConnectorFromGitHub(
 }
 
 /**
+ * Get an existing connector by alias
+ */
+async function getConnectorByAlias(
+  connectorAlias: string
+): Promise<ConnectorDeploymentResponse> {
+  try {
+    // Get the active environment that was set during login
+    const environment = getActiveEnvironment();
+    if (!environment) {
+      return {
+        success: false,
+        error: 'No active environment found. Please log in to an environment first.'
+      };
+    }
+
+    // Get environment configuration
+    const envConfig = getConfigEnvironment(environment);
+    if (!envConfig.baseurl) {
+      return {
+        success: false,
+        error: `Environment configuration not found for: ${environment}`
+      };
+    }
+
+    // Get access token based on auth type
+    let accessToken: string | undefined;
+    if (envConfig.authtype === 'oauth') {
+      const oauthTokens = getStoredOAuthTokens(environment);
+      if (!oauthTokens || !oauthTokens.accessToken) {
+        return {
+          success: false,
+          error: 'No OAuth tokens found. Please ensure you are authenticated.'
+        };
+      }
+      accessToken = oauthTokens.accessToken;
+    } else if (envConfig.authtype === 'pat') {
+      const patTokens = getStoredPATTokens(environment);
+      if (!patTokens || !patTokens.accessToken) {
+        return {
+          success: false,
+          error: 'No PAT tokens found. Please ensure you are authenticated.'
+        };
+      }
+      accessToken = patTokens.accessToken;
+    } else {
+      return {
+        success: false,
+        error: `Unknown authentication type: ${envConfig.authtype}`
+      };
+    }
+
+    // Build the API URL
+    const baseUrl = envConfig.baseurl;
+    const apiUrl = `${baseUrl}/beta/platform-connectors/${encodeURIComponent(connectorAlias)}`;
+
+    console.log(`Getting connector "${connectorAlias}" from environment ${environment}`);
+
+    // Make the API call
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      return {
+        success: false,
+        error: `Failed to get connector. Status: ${response.status} ${response.statusText}. ${errorBody}`
+      };
+    }
+
+    const connectorData: CreateConnectorResponse = await response.json();
+    console.log(`Connector found: ${connectorData.id}`);
+
+    return {
+      success: true,
+      connectorId: connectorData.id || connectorData.alias
+    };
+  } catch (error) {
+    console.error('Error getting connector:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error getting connector'
+    };
+  }
+}
+
+/**
  * Create a new connector in the environment
  */
 export async function createConnector(
@@ -261,6 +351,26 @@ export async function createConnector(
 
     if (!response.ok) {
       const errorBody = await response.text();
+      
+      // Check if the error is because the connector already exists
+      if (response.status === 400 && errorBody.includes('connector alias already exist')) {
+        console.log(`Connector "${connectorAlias}" already exists. Fetching existing connector...`);
+        
+        // Get the existing connector by alias
+        const existingConnector = await getConnectorByAlias(connectorAlias);
+        
+        if (existingConnector.success) {
+          console.log(`Using existing connector: ${existingConnector.connectorId}`);
+          return existingConnector;
+        } else {
+          return {
+            success: false,
+            error: `Connector already exists but failed to retrieve it: ${existingConnector.error}`
+          };
+        }
+      }
+      
+      // For other errors, return the error
       return {
         success: false,
         error: `Failed to create connector. Status: ${response.status} ${response.statusText}. ${errorBody}`

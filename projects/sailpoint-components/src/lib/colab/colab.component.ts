@@ -17,6 +17,7 @@ import { ColabSectionComponent, CategoryDisplay } from './components/colab-secti
 import { ColabCardComponent } from './components/colab-card/colab-card.component';
 import { ColabPost, ColabCategory, DiscourseService } from './services/discourse.service';
 import { ElectronApiFactoryService } from '../services/electron-api-factory.service';
+import { DeploymentSuccessDialogComponent, DeploymentSuccessData } from './components/deployment-success-dialog/deployment-success-dialog.component';
 
 // Define the categories to display
 const COLAB_CATEGORIES: CategoryDisplay[] = [
@@ -235,8 +236,19 @@ export class ColabComponent implements OnInit, OnDestroy {
         throw new Error(uploadResult.error || 'Failed to deploy connector');
       }
 
+      // Show success dialog
+      this.dialog.open(DeploymentSuccessDialogComponent, {
+        width: '500px',
+        data: {
+          connectorName: connectorAlias,
+          version: uploadResult.version,
+          connectorId: uploadResult.connectorId
+        } as DeploymentSuccessData
+      });
+
+      // Also show a snackbar for quick feedback
       this.showMessage(
-        `Successfully deployed "${post.title}" as connector "${connectorAlias}" (Version ${uploadResult.version})`, 
+        `Successfully deployed "${post.title}"`, 
         'success'
       );
     } catch (error) {

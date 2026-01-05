@@ -241,7 +241,8 @@ export class ColabComponent implements OnInit, OnDestroy {
           data: {
             connectorName: `${createdWorkflows.length} Workflow${createdWorkflows.length > 1 ? 's' : ''}`,
             connectorId: workflowNames,
-            version: undefined
+            version: undefined,
+            deploymentType: 'workflow'
           } as DeploymentSuccessData
         });
 
@@ -372,7 +373,8 @@ export class ColabComponent implements OnInit, OnDestroy {
         data: {
           connectorName: connectorAlias,
           version: uploadResult.version,
-          connectorId: uploadResult.connectorId
+          connectorId: uploadResult.connectorId,
+          deploymentType: 'connector'
         } as DeploymentSuccessData
       });
 
@@ -403,10 +405,129 @@ export class ColabComponent implements OnInit, OnDestroy {
    * Deploy a Transform to the environment
    */
   private async deployTransform(post: ColabPost, rawContent?: string): Promise<void> {
-    // TODO: Implement Transform deployment
-    // This will be implemented based on the deployment approach provided later
-    console.log('Deploying Transform:', post.title);
-    this.showMessage(`Transform deployment for "${post.title}" - Coming soon!`, 'info');
+    try {
+      let topicRawContent = rawContent;
+
+      if (!topicRawContent) {
+        console.log(`Fetching raw content for Transform: ${post.title} (ID: ${post.id})`);
+        topicRawContent = await firstValueFrom(this.discourseService.getTopicRaw(post.id));
+      }
+
+      if (!topicRawContent) {
+        throw new Error('Failed to fetch topic content from Discourse');
+      }
+
+      const githubRepoUrl = this.extractGitHubRepoUrl(topicRawContent);
+      if (!githubRepoUrl) {
+        throw new Error('Could not find GitHub repository link in topic content. Please ensure the topic contains a "Repository Link" field.');
+      }
+
+      console.log(`GitHub repository URL extracted: ${githubRepoUrl}`);
+
+      this.showMessage(`Fetching transform files from GitHub...`, 'info');
+
+      // List all JSON files in the repository
+      const filesResult = await this.apiFactory.getApi().listGitHubJsonFiles(githubRepoUrl);
+
+      if (!filesResult.success || !filesResult.files || filesResult.files.length === 0) {
+        throw new Error(filesResult.error || 'No JSON transform files found in repository');
+      }
+
+      console.log(`Found ${filesResult.files.length} JSON file(s) in repository`);
+
+      const createdTransforms: string[] = [];
+      const errors: string[] = [];
+
+      // Process each JSON file
+      for (const file of filesResult.files) {
+        try {
+          if (!file.download_url) {
+            console.warn(`Skipping ${file.name}: no download URL available`);
+            continue;
+          }
+
+          this.showMessage(`Processing transform: ${file.name}...`, 'info');
+          console.log(`Fetching content for ${file.name}`);
+
+          // Get the file content
+          const contentResult = await this.apiFactory.getApi().getGitHubFileContent(
+            file.download_url,
+            file.name
+          );
+
+          if (!contentResult.success || !contentResult.content) {
+            console.error(`Failed to fetch ${file.name}: ${contentResult.error}`);
+            errors.push(`${file.name}: ${contentResult.error || 'Failed to fetch content'}`);
+            continue;
+          }
+
+          // Parse the JSON content
+          let transformData;
+          try {
+            transformData = JSON.parse(contentResult.content);
+          } catch (parseError) {
+            console.error(`Failed to parse ${file.name}:`, parseError);
+            errors.push(`${file.name}: Invalid JSON format`);
+            continue;
+          }
+
+          // Create the transform using the SDK
+          console.log(`Creating transform from ${file.name}`);
+          const response = await this.sdkService.createTransform({
+            transformV2025: transformData
+          });
+
+          if (response.data) {
+            const transformName = response.data.name || file.name;
+            console.log(`Successfully created transform: ${transformName}`);
+            createdTransforms.push(transformName);
+          }
+        } catch (fileError: any) {
+          console.error(`Error processing ${file.name}:`, fileError);
+          errors.push(`${file.name}: ${fileError.message || 'Unknown error'}`);
+        }
+      }
+
+      // Show results
+      if (createdTransforms.length > 0) {
+        const transformNames = createdTransforms.join(', ');
+        
+        // Show success dialog
+        this.dialog.open(DeploymentSuccessDialogComponent, {
+          width: '500px',
+          data: {
+            connectorName: `${createdTransforms.length} Transform${createdTransforms.length > 1 ? 's' : ''}`,
+            connectorId: transformNames,
+            version: undefined,
+            deploymentType: 'transform'
+          } as DeploymentSuccessData
+        });
+
+        this.showMessage(
+          `Successfully deployed ${createdTransforms.length} transform${createdTransforms.length > 1 ? 's' : ''} from "${post.title}"`,
+          'success'
+        );
+      }
+
+      if (errors.length > 0) {
+        const errorMessage = `Some transforms failed to deploy:\n${errors.join('\n')}`;
+        console.error(errorMessage);
+        if (createdTransforms.length === 0) {
+          throw new Error(errorMessage);
+        } else {
+          this.showMessage(`Deployed ${createdTransforms.length} transform(s), but ${errors.length} failed`, 'warning');
+        }
+      }
+
+      if (createdTransforms.length === 0 && errors.length === 0) {
+        throw new Error('No transforms were deployed');
+      }
+
+    } catch (error: any) {
+      console.error('Error deploying Transform:', error);
+      this.showMessage(`Failed to deploy Transform: ${error.message || error}`, 'error');
+      throw error;
+    }
   }
 
   /**

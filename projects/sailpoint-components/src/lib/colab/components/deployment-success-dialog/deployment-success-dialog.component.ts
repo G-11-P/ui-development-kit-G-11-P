@@ -8,6 +8,7 @@ export interface DeploymentSuccessData {
   connectorName: string;
   version?: number;
   connectorId: string;
+  deploymentType?: 'connector' | 'workflow' | 'transform';
 }
 
 @Component({
@@ -33,7 +34,7 @@ export interface DeploymentSuccessData {
         
         <div class="deployment-details">
           <div class="detail-item">
-            <span class="detail-label">Connector ID:</span>
+            <span class="detail-label">{{ getIdLabel() }}:</span>
             <span class="detail-value">{{ data.connectorId }}</span>
           </div>
           <div class="detail-item" *ngIf="data.version">
@@ -156,6 +157,18 @@ export class DeploymentSuccessDialogComponent {
     public dialogRef: MatDialogRef<DeploymentSuccessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DeploymentSuccessData
   ) {}
+
+  getIdLabel(): string {
+    switch (this.data.deploymentType) {
+      case 'workflow':
+        return 'Workflow ID';
+      case 'transform':
+        return 'Transform ID';
+      case 'connector':
+      default:
+        return 'Connector ID';
+    }
+  }
 
   close(): void {
     this.dialogRef.close();

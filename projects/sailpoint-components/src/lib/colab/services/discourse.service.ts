@@ -152,11 +152,11 @@ export class DiscourseService {
   /**
    * Get topic details
    */
-  getTopic(topicId: number): Observable<any> {
+  getTopic(topicId: number): Observable<Record<string, unknown> | null> {
     return from(this.apiFactory.getApi().getColabTopic(topicId)).pipe(
-      map((response: ColabTopicResponse) => {
+      map((response: ColabTopicResponse): Record<string, unknown> | null => {
         if (response.success && response.data) {
-          return response.data;
+          return response.data as Record<string, unknown>;
         }
         console.error('Error fetching topic:', response.error);
         return null;

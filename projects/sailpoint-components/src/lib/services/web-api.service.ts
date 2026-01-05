@@ -518,7 +518,7 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
     try {
       const url = `${this.discourseBaseUrl}g/${primaryGroupName}.json`;
       const response = await firstValueFrom(this.http.get<any>(url));
-      const title = response.group?.title || '';
+      const title = (response.group?.title as string) || '';
       this.discourseTitleCache.set(primaryGroupName, title);
       return { success: true, data: title };
     } catch (error) {
@@ -534,8 +534,8 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
       // Parse GitHub URL to extract owner and repo
       const normalized = githubRepoUrl.trim().replace(/\/$/, '');
       const patterns = [
-        /github\.com\/([^\/]+)\/([^\/]+)/i,
-        /^([^\/]+)\/([^\/]+)$/
+        /github\.com\/([^/]+)\/([^/]+)/i,
+        /^([^/]+)\/([^/]+)$/
       ];
 
       let owner: string | null = null;
@@ -577,7 +577,7 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
 
       // Find the .zip file
       const zipAsset = response.assets.find((asset: any) => 
-        asset.name.toLowerCase().endsWith('.zip')
+        (asset.name as string).toLowerCase().endsWith('.zip')
       );
 
       if (!zipAsset) {
@@ -589,9 +589,9 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
 
       return {
         success: true,
-        downloadUrl: zipAsset.browser_download_url,
-        filename: zipAsset.name,
-        tagName: response.tag_name
+        downloadUrl: zipAsset.browser_download_url as string,
+        filename: zipAsset.name as string,
+        tagName: response.tag_name as string
       };
     } catch (error: any) {
       console.error('Error fetching GitHub release artifact:', error);
@@ -623,11 +623,13 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
     }
 
     const posts: ColabPost[] = [];
-    const topics = limit ? data.topic_list.topics.slice(0, limit) : data.topic_list.topics;
+    const allTopics = data.topic_list.topics as any[];
+    const topics = limit ? allTopics.slice(0, limit) : allTopics;
 
     for (const topic of topics) {
       if (topic.tags && topic.tags.length > 0) {
-        const poster = this.findOriginalPoster(topic, data.users || []);
+        const users = (data.users || []) as any[];
+        const poster = this.findOriginalPoster(topic, users);
         posts.push(this.createColabPost(topic, poster));
       }
     }
@@ -646,15 +648,15 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
 
   private createColabPost(topic: any, user?: any): ColabPost {
     return {
-      id: topic.id,
-      creatorName: user?.name || user?.username || 'Unknown',
-      excerpt: this.styleExcerpt(topic.excerpt),
-      creatorImage: this.getAvatarUrl(user?.avatar_template || ''),
-      creatorTitle: user?.title || '',
+      id: topic.id as number,
+      creatorName: (user?.name || user?.username || 'Unknown') as string,
+      excerpt: this.styleExcerpt(topic.excerpt as string | undefined),
+      creatorImage: this.getAvatarUrl((user?.avatar_template || '') as string),
+      creatorTitle: (user?.title || '') as string,
       tags: topic.tags || [],
       image: topic.image_url || '',
       link: `${this.discourseBaseUrl}t/${topic.slug}/${topic.id}`,
-      title: this.shortenTitle(topic.title),
+      title: this.shortenTitle(topic.title as string),
       views: topic.views || 0,
       liked: topic.like_count || 0,
       replies: topic.posts_count || 0,
@@ -688,13 +690,13 @@ export class WebApiService implements ElectronAPIInterface, OnDestroy {
   }
 
   // Connector deployment
-  async uploadConnector(githubRepoUrl: string, connectorAlias?: string): Promise<ConnectorDeploymentResponse> {
+  uploadConnector(): Promise<ConnectorDeploymentResponse> {
     // Note: This would need to be proxied through the backend server
     // For now, return an error indicating this is not available in web mode
-    return {
+    return Promise.resolve({
       success: false,
       error: 'Connector deployment is only available in Electron mode'
-    };
+    });
   }
 
   // Generic method to handle any SailPoint SDK API calls

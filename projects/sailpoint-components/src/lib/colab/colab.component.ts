@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -52,7 +52,7 @@ const COLAB_CATEGORIES: CategoryDisplay[] = [
   templateUrl: './colab.component.html',
   styleUrl: './colab.component.scss'
 })
-export class ColabComponent implements OnInit, OnDestroy {
+export class ColabComponent implements OnDestroy {
   title = 'CoLab Marketplace';
   categories = COLAB_CATEGORIES;
   private expandedCategories = new Set<ColabCategory>();
@@ -81,13 +81,10 @@ export class ColabComponent implements OnInit, OnDestroy {
       distinctUntilChanged(), // Only trigger if value actually changed
       takeUntil(this.destroy$)
     ).subscribe(term => {
-      this.performSearch(term);
+      void this.performSearch(term);
     });
   }
 
-  ngOnInit(): void {
-    // Component initialization
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -127,7 +124,7 @@ export class ColabComponent implements OnInit, OnDestroy {
           await this.deploySaaSConnector(post, rawContent);
           break;
         case 'saas-connector-customizers':
-          await this.deploySaaSConnectorCustomizer(post, rawContent);
+          await this.deploySaaSConnectorCustomizer(post);
           break;
         case 'transforms':
           await this.deployTransform(post, rawContent);
@@ -137,7 +134,8 @@ export class ColabComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Deployment error:', error);
-      this.showMessage(`Failed to deploy: ${error}`, 'error');
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.showMessage(`Failed to deploy: ${errorMessage}`, 'error');
     } finally {
       // Clear the deploying state on the section
       this.clearDeployingState(category);
@@ -304,7 +302,7 @@ export class ColabComponent implements OnInit, OnDestroy {
     // 2. Markdown link: :hammer_and_wrench: | **Repository Link** | [text](https://github.com/...)
     
     // First, try to match markdown link format with URL in parentheses
-    const markdownLinkPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*\[[^\]]+\]\((https?:\/\/github\.com\/[^\)]+)\)/i;
+    const markdownLinkPattern = /:hammer_and_wrench:\s*\|\s*\*\*Repository\s+Link\*\*\s*\|\s*\[[^\]]+\]\((https?:\/\/github\.com\/[^)]+)\)/i;
     const markdownMatch = rawContent.match(markdownLinkPattern);
     
     if (markdownMatch && markdownMatch[1]) {
@@ -320,7 +318,7 @@ export class ColabComponent implements OnInit, OnDestroy {
     }
 
     // Fallback: Try to find any GitHub URL in a table row that mentions "Repository"
-    const fallbackPattern = /[^\|]*Repository[^\|]*\|\s*(?:\[[^\]]+\]\()?(https?:\/\/github\.com\/[^\s|\)\n\r]+)/i;
+    const fallbackPattern = /[^|]*Repository[^|]*\|\s*(?:\[[^\]]+\]\()?(https?:\/\/github\.com\/[^\s|)\n\r]+)/i;
     const fallbackMatch = rawContent.match(fallbackPattern);
     
     if (fallbackMatch && fallbackMatch[1]) {
@@ -394,11 +392,12 @@ export class ColabComponent implements OnInit, OnDestroy {
   /**
    * Deploy a SaaS Connector Customizer to the environment
    */
-  private async deploySaaSConnectorCustomizer(post: ColabPost, rawContent?: string): Promise<void> {
+  private deploySaaSConnectorCustomizer(post: ColabPost): Promise<void> {
     // TODO: Implement SaaS Connector Customizer deployment
     // This will be implemented based on the deployment approach provided later
     console.log('Deploying SaaS Connector Customizer:', post.title);
     this.showMessage(`SaaS Connector Customizer deployment for "${post.title}" - Coming soon!`, 'info');
+    return Promise.resolve();
   }
 
   /**

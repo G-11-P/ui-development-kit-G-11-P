@@ -34,7 +34,7 @@ export interface CategoryDisplay {
   templateUrl: './colab-section.component.html',
   styleUrl: './colab-section.component.scss'
 })
-export class ColabSectionComponent implements OnInit, OnDestroy {
+export class ColabSectionComponent implements OnInit, OnDestroy, OnChanges {
   @Input() category!: CategoryDisplay;
   @Input() limit = 5;
   @Input() expanded = false;

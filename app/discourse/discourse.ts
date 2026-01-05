@@ -287,10 +287,25 @@ function styleExcerpt(excerpt: string | undefined): string {
 function getAvatarUrl(avatarTemplate: string): string {
   if (!avatarTemplate) return '';
   
-  if (avatarTemplate.includes(DEVELOPER_DOMAIN)) {
+  // Handle relative URLs (starting with /)
+  if (avatarTemplate.startsWith('/')) {
     return `https://${DEVELOPER_DOMAIN}${avatarTemplate.replace('{size}', '120')}`;
   }
-  return avatarTemplate.replace('{size}', '120');
+  
+  // For absolute URLs, validate the domain properly
+  try {
+    const url = new URL(avatarTemplate.replace('{size}', '120'));
+    // Only trust URLs from the exact developer.sailpoint.com domain
+    if (url.hostname === DEVELOPER_DOMAIN) {
+      return url.toString();
+    }
+  } catch (error) {
+    // Invalid URL, return empty string
+    console.warn('Invalid avatar URL:', avatarTemplate);
+  }
+  
+  // If it's not from our trusted domain or invalid, return empty string
+  return '';
 }
 
 

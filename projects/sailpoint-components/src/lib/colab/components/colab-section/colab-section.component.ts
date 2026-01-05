@@ -36,7 +36,7 @@ export interface CategoryDisplay {
 })
 export class ColabSectionComponent implements OnInit, OnDestroy, OnChanges {
   @Input() category!: CategoryDisplay;
-  @Input() limit = 5;
+  @Input() limit: number | undefined = 5;
   @Input() expanded = false;
   
   @Output() viewAll = new EventEmitter<ColabCategory>();

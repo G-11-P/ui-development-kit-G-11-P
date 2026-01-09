@@ -2,15 +2,14 @@
  * Connector Customizer Deployment API Integration
  * 
  * This module handles creating and uploading SaaS Connector Customizers to Identity Security Cloud
- * using the same API endpoints as the SailPoint CLI
+ * using the SDK generic functions for JSON APIs and fetch for binary uploads
  */
 
-import { getConfigEnvironment } from '../authentication/config';
-import { getStoredOAuthTokens } from '../authentication/oauth';
-import { getStoredPATTokens } from '../authentication/pat';
-import { getActiveEnvironment } from '../authentication/auth';
+import { getActiveEnvironment, apiConfig } from '../authentication/auth';
 import { getGitHubReleaseArtifact } from '../github/github';
 import { downloadFile } from './connector';
+import { genericGet, genericPost } from '../sailpoint-sdk/sailpoint-sdk';
+import * as sdk from 'sailpoint-api-client';
 
 export interface CustomizerDeploymentResponse {
   success: boolean;
@@ -156,63 +155,25 @@ async function createCustomizer(
   environment: string
 ): Promise<{ success: boolean; customizerId?: string; error?: string }> {
   try {
-    const envConfig = getConfigEnvironment(environment);
-    
-    if (!envConfig.baseurl) {
-      return { success: false, error: `Environment ${environment} not found in configuration` };
-    }
+    console.log(`Creating customizer: ${name}`);
 
-    // Get the access token based on auth type
-    let accessToken: string | undefined;
-    
-    if (envConfig.authtype === 'oauth') {
-      const oauthTokens = getStoredOAuthTokens(environment);
-      if (!oauthTokens || !oauthTokens.accessToken) {
-        return { success: false, error: 'No OAuth tokens found. Please ensure you are authenticated.' };
-      }
-      accessToken = oauthTokens.accessToken;
-    } else if (envConfig.authtype === 'pat') {
-      const patTokens = getStoredPATTokens(environment);
-      if (!patTokens || !patTokens.accessToken) {
-        return { success: false, error: 'No PAT tokens found. Please ensure you are authenticated.' };
-      }
-      accessToken = patTokens.accessToken;
-    }
-
-    if (!accessToken) {
-      return { success: false, error: 'No valid access token found' };
-    }
-
-    const url = `${envConfig.baseurl}/beta/connector-customizers`;
-    const body = JSON.stringify({ name });
-
-    console.log(`Creating customizer at: ${url}`);
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body
-    });
+    // Use SDK generic POST to create customizer
+    const response = await genericPost({
+      path: '/beta/connector-customizers',
+      requestBody: { name }
+    }, apiConfig);
 
     if (response.status === 400) {
-      const errorBody = await response.text();
       console.log('Customizer creation failed with 400, checking if it already exists...');
       
       // Check if customizer with this name already exists
       try {
-        const listResponse = await fetch(`${envConfig.baseurl}/beta/connector-customizers`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        });
+        const listResponse = await genericGet({
+          path: '/beta/connector-customizers'
+        }, apiConfig);
 
-        if (listResponse.ok) {
-          const customizers = await listResponse.json();
-          const existingCustomizer = customizers.find((c: any) => c.name === name);
+        if (listResponse.status === 200 && Array.isArray(listResponse.data)) {
+          const existingCustomizer = listResponse.data.find((c: any) => c.name === name);
           
           if (existingCustomizer) {
             console.log(`Customizer "${name}" already exists with ID: ${existingCustomizer.id}`);
@@ -228,22 +189,20 @@ async function createCustomizer(
 
       return {
         success: false,
-        error: `Failed to create customizer. Status: ${response.status} ${response.statusText}\nBody: ${errorBody}`
+        error: `Failed to create customizer. Status: ${response.status} ${response.statusText}\nBody: ${JSON.stringify(response.data)}`
       };
     }
 
-    if (!response.ok) {
-      const errorBody = await response.text();
+    if (response.status < 200 || response.status >= 300) {
       return {
         success: false,
-        error: `Failed to create customizer. Status: ${response.status} ${response.statusText}\nBody: ${errorBody}`
+        error: `Failed to create customizer. Status: ${response.status} ${response.statusText}\nBody: ${JSON.stringify(response.data)}`
       };
     }
 
-    const customizer = await response.json();
     return {
       success: true,
-      customizerId: customizer.id
+      customizerId: response.data.id
     };
 
   } catch (error: any) {
@@ -258,6 +217,7 @@ async function createCustomizer(
 /**
  * Upload a customizer zip file
  * API: POST /beta/connector-customizers/{id}/versions
+ * Note: Uses fetch for binary upload since SDK doesn't support binary bodies
  */
 async function uploadCustomizer(
   customizerId: string,
@@ -266,39 +226,25 @@ async function uploadCustomizer(
 ): Promise<{ success: boolean; version?: number; error?: string }> {
   try {
     const fs = require('fs');
-    const envConfig = getConfigEnvironment(environment);
-    
-    if (!envConfig.baseurl) {
-      return { success: false, error: `Environment ${environment} not found in configuration` };
-    }
 
-    // Get the access token based on auth type
-    let accessToken: string | undefined;
-    
-    if (envConfig.authtype === 'oauth') {
-      const oauthTokens = getStoredOAuthTokens(environment);
-      if (!oauthTokens || !oauthTokens.accessToken) {
-        return { success: false, error: 'No OAuth tokens found. Please ensure you are authenticated.' };
-      }
-      accessToken = oauthTokens.accessToken;
-    } else if (envConfig.authtype === 'pat') {
-      const patTokens = getStoredPATTokens(environment);
-      if (!patTokens || !patTokens.accessToken) {
-        return { success: false, error: 'No PAT tokens found. Please ensure you are authenticated.' };
-      }
-      accessToken = patTokens.accessToken;
-    }
-
-    if (!accessToken) {
-      return { success: false, error: 'No valid access token found' };
-    }
-
-    const url = `${envConfig.baseurl}/beta/connector-customizers/${customizerId}/versions`;
-
-    console.log(`Uploading customizer to: ${url}`);
+    console.log(`Uploading customizer to: /beta/connector-customizers/${customizerId}/versions`);
 
     const fileBuffer = fs.readFileSync(filePath);
 
+    // Get base URL and access token from apiConfig
+    const baseUrl = apiConfig.basePath;
+    const accessToken = apiConfig.accessToken;
+
+    if (!baseUrl || !accessToken) {
+      return {
+        success: false,
+        error: 'API configuration is missing base URL or access token'
+      };
+    }
+
+    const url = `${baseUrl}/beta/connector-customizers/${customizerId}/versions`;
+
+    // Use fetch for binary upload with SDK credentials
     const response = await fetch(url, {
       method: 'POST',
       headers: {

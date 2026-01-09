@@ -2,14 +2,13 @@
  * Connector Deployment API Integration
  * 
  * This module handles creating and uploading SaaS Connectors to Identity Security Cloud
- * using the same API endpoints as the SailPoint CLI
+ * using the SDK generic functions for JSON APIs and fetch for binary uploads
  */
 
-import { getConfigEnvironment, getConfig } from '../authentication/config';
-import { getStoredOAuthTokens } from '../authentication/oauth';
-import { getStoredPATTokens } from '../authentication/pat';
-import { getActiveEnvironment } from '../authentication/auth';
+import { getActiveEnvironment, apiConfig } from '../authentication/auth';
 import { getGitHubReleaseArtifact } from '../github/github';
+import { genericGet, genericPost } from '../sailpoint-sdk/sailpoint-sdk';
+import * as sdk from 'sailpoint-api-client';
 
 export interface CreateConnectorRequest {
   alias: string;
@@ -209,65 +208,21 @@ async function getConnectorByAlias(
       };
     }
 
-    // Get environment configuration
-    const envConfig = getConfigEnvironment(environment);
-    if (!envConfig.baseurl) {
-      return {
-        success: false,
-        error: `Environment configuration not found for: ${environment}`
-      };
-    }
-
-    // Get access token based on auth type
-    let accessToken: string | undefined;
-    if (envConfig.authtype === 'oauth') {
-      const oauthTokens = getStoredOAuthTokens(environment);
-      if (!oauthTokens || !oauthTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No OAuth tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = oauthTokens.accessToken;
-    } else if (envConfig.authtype === 'pat') {
-      const patTokens = getStoredPATTokens(environment);
-      if (!patTokens || !patTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No PAT tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = patTokens.accessToken;
-    } else {
-      return {
-        success: false,
-        error: `Unknown authentication type: ${envConfig.authtype}`
-      };
-    }
-
-    // Build the API URL
-    const baseUrl = envConfig.baseurl;
-    const apiUrl = `${baseUrl}/beta/platform-connectors/${encodeURIComponent(connectorAlias)}`;
-
     console.log(`Getting connector "${connectorAlias}" from environment ${environment}`);
 
-    // Make the API call
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
+    // Use SDK generic GET to fetch connector
+    const response = await genericGet({
+      path: `/beta/platform-connectors/${encodeURIComponent(connectorAlias)}`
+    }, apiConfig);
 
-    if (!response.ok) {
-      const errorBody = await response.text();
+    if (response.status < 200 || response.status >= 300) {
       return {
         success: false,
-        error: `Failed to get connector. Status: ${response.status} ${response.statusText}. ${errorBody}`
+        error: `Failed to get connector. Status: ${response.status} ${response.statusText}. ${JSON.stringify(response.data)}`
       };
     }
 
-    const connectorData: CreateConnectorResponse = await response.json();
+    const connectorData: CreateConnectorResponse = response.data;
     console.log(`Connector found: ${connectorData.id}`);
 
     return {
@@ -299,46 +254,6 @@ export async function createConnector(
       };
     }
 
-    // Get environment configuration
-    const envConfig = getConfigEnvironment(environment);
-    if (!envConfig.baseurl) {
-      return {
-        success: false,
-        error: `Environment configuration not found for: ${environment}`
-      };
-    }
-
-    // Get access token based on auth type
-    let accessToken: string | undefined;
-    if (envConfig.authtype === 'oauth') {
-      const oauthTokens = getStoredOAuthTokens(environment);
-      if (!oauthTokens || !oauthTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No OAuth tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = oauthTokens.accessToken;
-    } else if (envConfig.authtype === 'pat') {
-      const patTokens = getStoredPATTokens(environment);
-      if (!patTokens || !patTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No PAT tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = patTokens.accessToken;
-    } else {
-      return {
-        success: false,
-        error: `Unknown authentication type: ${envConfig.authtype}`
-      };
-    }
-
-    // Build the API URL
-    const baseUrl = envConfig.baseurl;
-    const apiUrl = `${baseUrl}/beta/platform-connectors`;
-
     // Create the request body
     const requestBody: CreateConnectorRequest = {
       alias: connectorAlias
@@ -346,21 +261,17 @@ export async function createConnector(
 
     console.log(`Creating connector "${connectorAlias}" in environment ${environment}`);
 
-    // Make the API call
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: JSON.stringify(requestBody)
-    });
+    // Use SDK generic POST to create connector
+    const response = await genericPost({
+      path: '/beta/platform-connectors',
+      requestBody: requestBody
+    }, apiConfig);
 
-    if (!response.ok) {
-      const errorBody = await response.text();
+    if (response.status === 400) {
+      const errorBody = JSON.stringify(response.data);
       
       // Check if the error is because the connector already exists
-      if (response.status === 400 && errorBody.includes('connector alias already exist')) {
+      if (errorBody.includes('connector alias already exist')) {
         console.log(`Connector "${connectorAlias}" already exists. Fetching existing connector...`);
         
         // Get the existing connector by alias
@@ -384,7 +295,14 @@ export async function createConnector(
       };
     }
 
-    const connectorData: CreateConnectorResponse = await response.json();
+    if (response.status < 200 || response.status >= 300) {
+      return {
+        success: false,
+        error: `Failed to create connector. Status: ${response.status} ${response.statusText}. ${JSON.stringify(response.data)}`
+      };
+    }
+
+    const connectorData: CreateConnectorResponse = response.data;
     console.log(`Connector created successfully: ${connectorData.id}`);
 
     return {
@@ -403,6 +321,7 @@ export async function createConnector(
 /**
  * Upload a connector zip file to the environment
  * (Internal function used by uploadConnectorFromGitHub)
+ * Note: Uses fetch for binary upload since SDK doesn't support binary bodies
  */
 async function uploadConnector(
   connectorId: string,
@@ -418,58 +337,31 @@ async function uploadConnector(
       };
     }
 
-    // Get environment configuration
-    const envConfig = getConfigEnvironment(environment);
-    if (!envConfig.baseurl) {
-      return {
-        success: false,
-        error: `Environment configuration not found for: ${environment}`
-      };
-    }
-
-    // Get access token based on auth type
-    let accessToken: string | undefined;
-    if (envConfig.authtype === 'oauth') {
-      const oauthTokens = getStoredOAuthTokens(environment);
-      if (!oauthTokens || !oauthTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No OAuth tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = oauthTokens.accessToken;
-    } else if (envConfig.authtype === 'pat') {
-      const patTokens = getStoredPATTokens(environment);
-      if (!patTokens || !patTokens.accessToken) {
-        return {
-          success: false,
-          error: 'No PAT tokens found. Please ensure you are authenticated.'
-        };
-      }
-      accessToken = patTokens.accessToken;
-    } else {
-      return {
-        success: false,
-        error: `Unknown authentication type: ${envConfig.authtype}`
-      };
-    }
-
     // Read the zip file
     const fs = require('fs');
     const zipFileBuffer = fs.readFileSync(zipFilePath);
 
-    // Build the API URL
-    const baseUrl = envConfig.baseurl;
-    const apiUrl = `${baseUrl}/beta/platform-connectors/${connectorId}/versions`;
-
     console.log(`Uploading connector zip file to ${connectorId} in environment ${environment}`);
 
-    // Make the API call
-    const response = await fetch(apiUrl, {
+    // Get base URL and access token from apiConfig
+    const baseUrl = apiConfig.basePath;
+    const accessToken = apiConfig.accessToken;
+
+    if (!baseUrl || !accessToken) {
+      return {
+        success: false,
+        error: 'API configuration is missing base URL or access token'
+      };
+    }
+
+    const url = `${baseUrl}/beta/platform-connectors/${connectorId}/versions`;
+
+    // Use fetch for binary upload with SDK credentials
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/zip',
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/zip'
       },
       body: zipFileBuffer
     });

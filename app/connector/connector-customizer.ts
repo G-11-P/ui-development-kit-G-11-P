@@ -36,15 +36,6 @@ export async function uploadCustomizerFromGitHub(
   let tempFilePath: string | null = null;
 
   try {
-    // Get the active environment that was set during login
-    const environment = getActiveEnvironment();
-    if (!environment) {
-      return {
-        success: false,
-        error: 'No active environment found. Please log in to an environment first.'
-      };
-    }
-
     // Step 1: Fetch the latest release artifact from GitHub
     console.log(`Fetching release artifact from GitHub: ${githubRepoUrl}`);
     const artifactResponse = await getGitHubReleaseArtifact(githubRepoUrl);
@@ -93,7 +84,7 @@ export async function uploadCustomizerFromGitHub(
 
     // Step 3: Create the customizer
     console.log(`Creating customizer: ${finalCustomizerName}`);
-    const createResult = await createCustomizer(finalCustomizerName, environment);
+    const createResult = await createCustomizer(finalCustomizerName);
     
     if (!createResult.success || !createResult.customizerId) {
       return {
@@ -106,7 +97,7 @@ export async function uploadCustomizerFromGitHub(
 
     // Step 4: Upload the customizer zip file
     console.log(`Uploading customizer from: ${tempFilePath}`);
-    const uploadResult = await uploadCustomizer(createResult.customizerId, tempFilePath, environment);
+    const uploadResult = await uploadCustomizer(createResult.customizerId, tempFilePath);
     
     if (!uploadResult.success) {
       return {
@@ -151,8 +142,7 @@ export async function uploadCustomizerFromGitHub(
  * API: POST /beta/connector-customizers
  */
 async function createCustomizer(
-  name: string,
-  environment: string
+  name: string
 ): Promise<{ success: boolean; customizerId?: string; error?: string }> {
   try {
     console.log(`Creating customizer: ${name}`);
@@ -221,8 +211,7 @@ async function createCustomizer(
  */
 async function uploadCustomizer(
   customizerId: string,
-  filePath: string,
-  environment: string
+  filePath: string
 ): Promise<{ success: boolean; version?: number; error?: string }> {
   try {
     const fs = require('fs');

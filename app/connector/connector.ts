@@ -57,14 +57,7 @@ export async function uploadConnectorFromGitHub(
   let tempFilePath: string | null = null;
 
   try {
-    // Get the active environment that was set during login
-    const environment = getActiveEnvironment();
-    if (!environment) {
-      return {
-        success: false,
-        error: 'No active environment found. Please log in to an environment first.'
-      };
-    }
+
 
     // Step 1: Fetch the latest release artifact from GitHub
     console.log(`Fetching release artifact from GitHub: ${githubRepoUrl}`);
@@ -245,21 +238,12 @@ export async function createConnector(
   connectorAlias: string
 ): Promise<ConnectorDeploymentResponse> {
   try {
-    // Get the active environment that was set during login
-    const environment = getActiveEnvironment();
-    if (!environment) {
-      return {
-        success: false,
-        error: 'No active environment found. Please log in to an environment first.'
-      };
-    }
+
 
     // Create the request body
     const requestBody: CreateConnectorRequest = {
       alias: connectorAlias
     };
-
-    console.log(`Creating connector "${connectorAlias}" in environment ${environment}`);
 
     // Use SDK generic POST to create connector
     const response = await genericPost({
@@ -328,20 +312,10 @@ async function uploadConnector(
   zipFilePath: string
 ): Promise<ConnectorDeploymentResponse> {
   try {
-    // Get the active environment that was set during login
-    const environment = getActiveEnvironment();
-    if (!environment) {
-      return {
-        success: false,
-        error: 'No active environment found. Please log in to an environment first.'
-      };
-    }
 
     // Read the zip file
     const fs = require('fs');
     const zipFileBuffer = fs.readFileSync(zipFilePath);
-
-    console.log(`Uploading connector zip file to ${connectorId} in environment ${environment}`);
 
     // Get base URL and access token from apiConfig
     const baseUrl = apiConfig.basePath;

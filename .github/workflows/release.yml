@@ -212,6 +212,7 @@ jobs:
     if: needs.version.outputs.published == 'true'
     runs-on: ubuntu-22.04
     steps:
+      - uses: actions/checkout@v4
 
       - name: Publish GitHub Release
         env:

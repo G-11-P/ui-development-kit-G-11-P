@@ -67,7 +67,7 @@
     }
     <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid || saving">
       @if (saving) {
-        <mat-spinner diameter="18" class="button-spinner"></mat-spinner>
+        <mat-spinner diameter="18"></mat-spinner>
       } @else {
         <mat-icon>save</mat-icon>
       }

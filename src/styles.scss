@@ -562,6 +562,23 @@ input {
   background-color: transparent !important;
 }
 
+// Angular Material MDC buttons must keep their inline-flex layout so that
+// icons and label text sit side-by-side.  The broad `button {}` rule above
+// can break this, so we restore it here for every Material button variant.
+button.mdc-button,
+button.mdc-icon-button,
+button.mat-mdc-button,
+button.mat-mdc-raised-button,
+button.mat-mdc-flat-button,
+button.mat-mdc-stroked-button,
+button.mat-mdc-icon-button,
+button.mat-mdc-fab,
+button.mat-mdc-mini-fab {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .mat-mdc-paginator-range-actions .mat-mdc-icon-button,
 .mat-mdc-paginator-range-actions .mdc-icon-button {
   border: none !important;

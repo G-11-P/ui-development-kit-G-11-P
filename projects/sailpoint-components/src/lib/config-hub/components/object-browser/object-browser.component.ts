@@ -68,22 +68,47 @@ export class ObjectBrowserComponent implements OnInit {
     this.objects.set(objs);
     this.loadingObjects.set(false);
 
-    // Load last-commit info for each object concurrently (batched)
+    const defaultBranch = this.gitService.settings()?.defaultBranch ?? 'main';
+
+    // Fetch last-commit info AND file content concurrently per object (batched)
+    // so we can show the human-readable name from the JSON instead of the GUID.
     const BATCH = 5;
     for (let i = 0; i < objs.length; i += BATCH) {
       const batch = objs.slice(i, i + BATCH);
       await Promise.all(batch.map(async (obj) => {
-        const history = await this.gitService.getCommitHistory(obj.objectType, obj.objectId, undefined, 1);
-        if (history.length > 0) {
-          const map = new Map(this.historyMap());
-          map.set(obj.objectId, history[0]);
-          this.historyMap.set(map);
-          // Update object name from commit if possible
-          const idx = this.objects().findIndex(o => o.objectId === obj.objectId);
-          if (idx >= 0) {
-            const updated = [...this.objects()];
-            updated[idx] = { ...updated[idx], lastCommit: history[0] };
-            this.objects.set(updated);
+        const [history, rawJson] = await Promise.all([
+          this.gitService.getCommitHistory(obj.objectType, obj.objectId, undefined, 1),
+          this.gitService.getFileAtCommit(obj.objectType, obj.objectId, defaultBranch),
+        ]);
+
+        const idx = this.objects().findIndex(o => o.objectId === obj.objectId);
+        if (idx >= 0) {
+          let displayName = obj.objectId;
+          if (rawJson) {
+            try {
+              const parsed = JSON.parse(rawJson);
+              // SailPoint sp-config exports wrap the object under an "object"
+              // key — check there first, then "self", then top-level "name".
+              displayName =
+                parsed?.object?.name ||
+                parsed?.self?.name ||
+                parsed?.name ||
+                obj.objectId;
+            } catch { /* fall back to objectId */ }
+          }
+
+          const updated = [...this.objects()];
+          updated[idx] = {
+            ...updated[idx],
+            name: displayName,
+            lastCommit: history.length > 0 ? history[0] : updated[idx].lastCommit,
+          };
+          this.objects.set(updated);
+
+          if (history.length > 0) {
+            const map = new Map(this.historyMap());
+            map.set(obj.objectId, history[0]);
+            this.historyMap.set(map);
           }
         }
       }));

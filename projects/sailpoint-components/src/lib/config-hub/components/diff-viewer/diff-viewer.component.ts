@@ -4,12 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
-import { FormsModule } from '@angular/forms';
 import * as Diff from 'diff';
 import { ConfigHubGitService } from '../../services/config-hub-git.service';
 import { BackupObject, DiffLine, GitCommit } from '../../models/config-hub.models';
@@ -18,7 +16,6 @@ export type DiffViewMode = 'unified' | 'split';
 
 interface CommitEntry {
   commit: GitCommit;
-  content?: string;
 }
 
 @Component({
@@ -26,13 +23,11 @@ interface CommitEntry {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
     MatListModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     MatTooltipModule,
     MatDividerModule,
     MatChipsModule,
@@ -46,18 +41,17 @@ export class DiffViewerComponent implements OnChanges {
 
   commits = signal<CommitEntry[]>([]);
   selectedCommitSha = signal<string | null>(null);
-  compareCommitSha = signal<string | null>(null);
   viewMode = signal<DiffViewMode>('unified');
 
   diffLines = signal<DiffLine[]>([]);
+  /** Left pane = HEAD (current deployed state). */
   leftContent = signal('');
+  /** Right pane = selected historical commit. */
   rightContent = signal('');
 
   loading = signal(false);
   loadingDiff = signal(false);
   errorMessage = signal<string | null>(null);
-
-  private branches: string[] = [];
 
   constructor(private gitService: ConfigHubGitService) {}
 
@@ -75,7 +69,6 @@ export class DiffViewerComponent implements OnChanges {
   private reset(): void {
     this.commits.set([]);
     this.selectedCommitSha.set(null);
-    this.compareCommitSha.set(null);
     this.diffLines.set([]);
     this.leftContent.set('');
     this.rightContent.set('');
@@ -97,14 +90,10 @@ export class DiffViewerComponent implements OnChanges {
     this.commits.set(history.map(c => ({ commit: c })));
     this.loading.set(false);
 
-    // Default: show most recent commit diffed against the previous one
-    this.selectedCommitSha.set(history[0].sha);
-    if (history.length > 1) {
-      this.compareCommitSha.set(history[1].sha);
-    } else {
-      this.compareCommitSha.set(history[0].sha);
-    }
-
+    // Default: select the most recent (non-HEAD) commit so the diff is visible immediately.
+    // If there is only one commit the diff will show "identical" which is correct.
+    const defaultSha = history.length > 1 ? history[1].sha : history[0].sha;
+    this.selectedCommitSha.set(defaultSha);
     await this.computeDiff();
   }
 
@@ -113,20 +102,18 @@ export class DiffViewerComponent implements OnChanges {
     await this.computeDiff();
   }
 
-  async onCompareSelect(sha: string): Promise<void> {
-    this.compareCommitSha.set(sha);
-    await this.computeDiff();
-  }
-
+  /** Always diffs HEAD (left) against the selected commit (right). */
   private async computeDiff(): Promise<void> {
     const obj = this.backupObject();
-    const leftSha = this.compareCommitSha();
+    const entries = this.commits();
     const rightSha = this.selectedCommitSha();
-    if (!obj || !leftSha || !rightSha) return;
+    if (!obj || entries.length === 0 || !rightSha) return;
+
+    const headSha = entries[0].commit.sha;
 
     this.loadingDiff.set(true);
     const [leftRaw, rightRaw] = await Promise.all([
-      this.gitService.getFileAtCommit(obj.objectType, obj.objectId, leftSha),
+      this.gitService.getFileAtCommit(obj.objectType, obj.objectId, headSha),
       this.gitService.getFileAtCommit(obj.objectType, obj.objectId, rightSha),
     ]);
 
@@ -172,10 +159,8 @@ export class DiffViewerComponent implements OnChanges {
     return this.diffLines().filter(l => l.type === 'removed').length;
   }
 
-  getCommitLabel(sha: string): string {
-    const entry = this.commits().find(c => c.commit.sha === sha);
-    if (!entry) return sha.slice(0, 7);
-    return `${sha.slice(0, 7)} – ${entry.commit.message.slice(0, 50)}`;
+  get headSha(): string | null {
+    return this.commits()[0]?.commit.sha ?? null;
   }
 
   formatTimestamp(iso: string): string {

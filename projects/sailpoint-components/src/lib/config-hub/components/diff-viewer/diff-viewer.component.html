@@ -62,50 +62,24 @@
       </div>
     } @else {
 
-      <!-- Commit selectors -->
-      <div class="commit-selectors">
-        <mat-form-field appearance="outline" class="commit-select" subscriptSizing="dynamic">
-          <mat-label>Compare from (base)</mat-label>
-          <mat-select [value]="compareCommitSha()"
-                      (selectionChange)="onCompareSelect($event.value)">
-            @for (entry of commits(); track entry.commit.sha) {
-              <mat-option [value]="entry.commit.sha">
-                <span class="opt-sha">{{ entry.commit.sha.slice(0, 7) }}</span>
-                <span class="opt-msg">{{ entry.commit.message | slice:0:55 }}</span>
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-
-        <mat-form-field appearance="outline" class="commit-select" subscriptSizing="dynamic">
-          <mat-label>Compare to (target)</mat-label>
-          <mat-select [value]="selectedCommitSha()"
-                      (selectionChange)="onCommitSelect($event.value)">
-            @for (entry of commits(); track entry.commit.sha) {
-              <mat-option [value]="entry.commit.sha">
-                <span class="opt-sha">{{ entry.commit.sha.slice(0, 7) }}</span>
-                <span class="opt-msg">{{ entry.commit.message | slice:0:55 }}</span>
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Commit timeline as a Material list -->
+      <!-- Commit timeline -->
       <mat-nav-list class="commit-timeline" dense>
         @for (entry of commits(); track entry.commit.sha) {
           <mat-list-item
             [activated]="entry.commit.sha === selectedCommitSha()"
             (click)="onCommitSelect(entry.commit.sha)">
-            <mat-icon matListItemIcon>commit</mat-icon>
-            <span matListItemTitle>{{ entry.commit.message | slice:0:80 }}</span>
+            <mat-icon matListItemIcon>{{ entry.commit.sha === headSha ? 'radio_button_checked' : 'commit' }}</mat-icon>
+            <span matListItemTitle>
+              {{ entry.commit.message | slice:0:80 }}
+              @if (entry.commit.sha === headSha) {
+                <span class="head-badge">HEAD</span>
+              }
+            </span>
             <span matListItemLine class="commit-meta-line">
               <code class="sha-badge">{{ entry.commit.sha.slice(0, 7) }}</code>
               {{ entry.commit.author }}&ensp;&middot;&ensp;{{ formatTimestamp(entry.commit.timestamp) }}
             </span>
-            @if (entry.commit.sha === selectedCommitSha()) {
+            @if (entry.commit.sha === selectedCommitSha() && entry.commit.sha !== headSha) {
               <button matListItemMeta mat-icon-button
                       matTooltip="Restore this version"
                       (click)="$event.stopPropagation(); onRestoreClick()">
@@ -118,7 +92,7 @@
 
       <mat-divider></mat-divider>
 
-      <!-- Diff area -->
+      <!-- Diff area — always HEAD vs selected commit -->
       @if (loadingDiff()) {
         <div class="status-row">
           <mat-spinner diameter="24"></mat-spinner>
@@ -127,12 +101,12 @@
       } @else if (!hasChanges && diffLines().length > 0) {
         <div class="empty-state small">
           <mat-icon>check_circle</mat-icon>
-          <p>Files are identical</p>
+          <p>This version matches HEAD &mdash; no differences</p>
         </div>
       } @else if (diffLines().length === 0) {
         <div class="empty-state small">
           <mat-icon>hourglass_empty</mat-icon>
-          <p>Select two commits above to compare</p>
+          <p>Select a commit above to compare against HEAD</p>
         </div>
       } @else {
 
@@ -159,8 +133,8 @@
           <div class="split-diff">
             <div class="split-pane">
               <div class="split-pane-header">
-                <mat-icon>arrow_back</mat-icon>
-                Base &mdash; <code>{{ compareCommitSha()?.slice(0, 7) }}</code>
+                <mat-icon>radio_button_checked</mat-icon>
+                HEAD &mdash; <code>{{ headSha?.slice(0, 7) }}</code>
               </div>
               <table class="diff-table">
                 <tbody>
@@ -176,8 +150,8 @@
             </div>
             <div class="split-pane">
               <div class="split-pane-header">
-                <mat-icon>arrow_forward</mat-icon>
-                Target &mdash; <code>{{ selectedCommitSha()?.slice(0, 7) }}</code>
+                <mat-icon>commit</mat-icon>
+                This version &mdash; <code>{{ selectedCommitSha()?.slice(0, 7) }}</code>
               </div>
               <table class="diff-table">
                 <tbody>

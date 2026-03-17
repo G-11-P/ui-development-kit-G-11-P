@@ -118,37 +118,6 @@
   color: var(--theme-primary-text);
 }
 
-// ── Commit selectors ──────────────────────────────────────────────────────────
-
-.commit-selectors {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px 4px;
-  flex-shrink: 0;
-}
-
-.commit-select {
-  flex: 1;
-}
-
-.arrow-icon {
-  color: var(--theme-primary-text);
-  opacity: 0.5;
-  flex-shrink: 0;
-}
-
-.opt-sha {
-  font-family: monospace;
-  font-size: 11px;
-  margin-right: 8px;
-  opacity: 0.65;
-}
-
-.opt-msg {
-  font-size: 13px;
-}
-
 // ── Commit timeline ───────────────────────────────────────────────────────────
 
 .commit-timeline {
@@ -167,6 +136,20 @@
   font-size: 11px;
   color: var(--theme-primary-text);
   opacity: 0.7;
+}
+
+.head-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--theme-primary) 20%, var(--theme-background));
+  color: var(--theme-primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
 .sha-badge {

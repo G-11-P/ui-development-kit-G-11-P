@@ -36,14 +36,16 @@ export class RestoreDialogComponent {
   private dialogRef = inject(MatDialogRef<RestoreDialogComponent>);
   private apiService = inject(ConfigHubApiService);
 
-  restoring = signal(false);
+  /** Delegate restoring + status message directly to the service signals so
+   *  polling phase updates are reflected in real time without extra wiring. */
+  readonly restoring = this.apiService.restoring;
+  readonly statusMessage = this.apiService.restoreStatusMessage;
+
   result = signal<RestoreResult | null>(null);
 
   async onConfirm(): Promise<void> {
-    this.restoring.set(true);
     const outcome = await this.apiService.restore(this.data.object, this.data.content);
     this.result.set(outcome);
-    this.restoring.set(false);
   }
 
   onClose(): void {

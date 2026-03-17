@@ -7,7 +7,7 @@
 
   @if (!result()) {
     <p class="confirm-intro">
-      This will send the object to config hub where the restoration can be completed.
+      This will upload the selected version to Config Hub and wait for processing to complete.
     </p>
 
     <div class="detail-grid">
@@ -49,17 +49,17 @@
 
   }
 
+  @if (restoring()) {
+    <div class="restoring-state">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span>{{ statusMessage() || 'Processing restore request…' }}</span>
+    </div>
+  }
+
   @if (result(); as r) {
     <div class="result-state" [class.success]="r.success" [class.failure]="!r.success">
       <mat-icon>{{ r.success ? 'check_circle' : 'error' }}</mat-icon>
       <p>{{ r.success ? r.message : r.error }}</p>
-    </div>
-  }
-
-  @if (restoring()) {
-    <div class="restoring-state">
-      <mat-spinner diameter="32"></mat-spinner>
-      <span>Sending restore request…</span>
     </div>
   }
 

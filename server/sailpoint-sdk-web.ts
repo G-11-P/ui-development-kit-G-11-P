@@ -778,9 +778,74 @@ const sdkFunctionsObject: { [key: string]: (params: any, config: sdk.Configurati
     return handleApiCall(() => configurationhubv2025api.createScheduledAction(requestParameters));
   },
   // This API uploads a JSON configuration file into a tenant.  Configuration files can be managed and deployed via Configuration Hub by uploading a json file which contains configuration data. The JSON file should be the same as the one used by our import endpoints. The object types supported by upload configuration file functionality are the same as the ones supported by our regular backup functionality.  Refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects) for more information about supported objects.
-  createUploadedConfiguration: (requestParameters: sdk.ConfigurationHubV2025ApiCreateUploadedConfigurationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.BackupResponseV2025>> => {
-    const configurationhubv2025api = new sdk.ConfigurationHubV2025Api(apiConfig);
-    return handleApiCall(() => configurationhubv2025api.createUploadedConfiguration(requestParameters));
+  createUploadedConfiguration: async (requestParameters: sdk.ConfigurationHubV2025ApiCreateUploadedConfigurationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.BackupResponseV2025>> => {
+    // The SDK-generated Axios path sets Content-Type without a multipart boundary,
+    // causing 400 errors. Use fetch directly — identical to how restore.mjs works —
+    // so the runtime sets the correct Content-Type boundary automatically.
+    try {
+        const anyConfig = apiConfig as any;
+        const basePath: string = anyConfig.baseurl || anyConfig.basePath || '';
+
+        let accessToken: string;
+        if (anyConfig.accessToken) {
+            const raw = anyConfig.accessToken;
+            accessToken = typeof raw === 'function' ? await raw() : await Promise.resolve(raw);
+        } else if (anyConfig.clientId && anyConfig.clientSecret && anyConfig.tokenUrl) {
+            const tokenRes = await fetch(anyConfig.tokenUrl as string, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    grant_type: 'client_credentials',
+                    client_id: anyConfig.clientId,
+                    client_secret: anyConfig.clientSecret,
+                }).toString(),
+            });
+            if (!tokenRes.ok) {
+                throw new Error(`Token request failed: HTTP ${tokenRes.status}`);
+            }
+            const tokenData = await tokenRes.json() as any;
+            accessToken = tokenData.access_token;
+        } else {
+            throw new Error('No authentication credentials found in apiConfig');
+        }
+
+        // Build a native Blob defensively — the incoming data may be a real File
+        // or a plain { content, name, type } object if the caller couldn't pass a Blob.
+        const anyData = requestParameters.data as any;
+        const fileName: string = anyData.name ?? 'upload.json';
+        const fileType: string = anyData.type ?? 'application/json';
+        let blob: Blob;
+        if (typeof anyData.content === 'string') {
+            blob = new Blob([anyData.content], { type: fileType });
+        } else if (typeof anyData.arrayBuffer === 'function') {
+            blob = new Blob([await anyData.arrayBuffer()], { type: fileType });
+        } else {
+            throw new Error('Cannot read file content: data has no .content string or .arrayBuffer() method');
+        }
+
+        const form = new FormData();
+        form.append('data', blob, fileName);
+        form.append('name', requestParameters.name);
+
+        const response = await fetch(`${basePath}/v2025/configuration-hub/backups/uploads`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+            body: form,
+        });
+
+        const responseData = await response.json().catch(() => ({})) as sdk.BackupResponseV2025;
+        return {
+            data: responseData,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries((response.headers as any).entries()),
+        };
+    } catch (error) {
+        return generateErrorResponse(error);
+    }
   },
   // This API deletes an existing backup for the current tenant.  On success, this endpoint will return an empty response.  The backup id can be obtained from the response after a backup was successfully created, or from the list backups endpoint.
   deleteBackup: (requestParameters: sdk.ConfigurationHubV2025ApiDeleteBackupRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
@@ -2974,7 +3039,9 @@ const sdkFunctionsObject: { [key: string]: (params: any, config: sdk.Configurati
   // This post will import objects from a JSON configuration file into a tenant. By default, every import will first export all existing objects supported by sp-config as a backup before the import is attempted. The backup is provided so that the state of the configuration prior to the import is available for inspection or restore if needed. The backup can be skipped by setting \"excludeBackup\" to true in the import options. If a backup is performed, the id of the backup will be provided in the ImportResult as the \"exportJobId\". This can be downloaded  using the `/sp-config/export/{exportJobId}/download` endpoint.  You cannot currently import from the Non-Employee Lifecycle Management (NELM) source. You cannot use this endpoint to back up or store NELM data.   For more information about the object types that currently support import functionality, refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects). 
   importSpConfig: (requestParameters: sdk.SPConfigV2025ApiImportSpConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SpConfigJobV2025>> => {
     const spconfigv2025api = new sdk.SPConfigV2025Api(apiConfig);
-    return handleApiCall(() => spconfigv2025api.importSpConfig(requestParameters));
+    // The SDK hardcodes 'Content-Type: multipart/form-data' without the boundary token.
+    // Passing null removes that override so Axios can compute and append the boundary itself.
+    return handleApiCall(() => spconfigv2025api.importSpConfig(requestParameters, { headers: { 'Content-Type': null } } as any));
   },
   // Get a list of object configurations that the tenant export/import service knows.
   listSpConfigObjects: (apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.SpConfigObjectV2025>>> => {

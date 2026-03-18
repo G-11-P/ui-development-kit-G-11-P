@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { GitRepoSettings, GitCommit, BackupObject, BackupObjectType } from '../models/config-hub.models';
+import { GitRepoSettings, GitCommit, BackupObject, BackupObjectType, CommitFile } from '../models/config-hub.models';
 
 const SETTINGS_KEY = 'config-hub-git-settings';
 
@@ -128,6 +128,68 @@ export class ConfigHubGitService {
       return atob((data.content as string).replace(/\n/g, ''));
     } catch {
       return '';
+    }
+  }
+
+  /**
+   * Return the most recent commits that touch the configured backups path,
+   * sorted newest-first.  Used by the "By Commit" view.
+   */
+  async getRecentCommits(limit = 50): Promise<GitCommit[]> {
+    const s = this.settings();
+    if (!s) return [];
+    const { owner, repo } = this.parseRepoUrl(s.repoUrl);
+    if (!owner || !repo) return [];
+    try {
+      const basePath = s.backupsPath.replace(/^\/|\/$/g, '');
+      const params = new URLSearchParams({ sha: s.defaultBranch, path: basePath, per_page: String(limit) });
+      const url = `https://api.github.com/repos/${owner}/${repo}/commits?${params}`;
+      const res = await fetch(url, { headers: this.githubHeaders(s) });
+      if (!res.ok) return [];
+      const data = await res.json() as any[];
+      return (data || []).map((c: any) => ({
+        sha: c.sha as string,
+        message: ((c.commit?.message as string) || '').split('\n')[0],
+        author: (c.commit?.author?.name || c.author?.login || 'Unknown') as string,
+        timestamp: (c.commit?.author?.date || '') as string,
+      }));
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Return the list of backup objects changed by a specific commit.
+   * Parses file paths of the form `{backupsPath}/{OBJECT_TYPE}/{objectId}.json`.
+   */
+  async getCommitFiles(sha: string): Promise<CommitFile[]> {
+    const s = this.settings();
+    if (!s) return [];
+    const { owner, repo } = this.parseRepoUrl(s.repoUrl);
+    if (!owner || !repo) return [];
+    try {
+      const basePath = s.backupsPath.replace(/^\/|\/$/g, '');
+      const url = `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`;
+      const res = await fetch(url, { headers: this.githubHeaders(s) });
+      if (!res.ok) return [];
+      const data = await res.json() as any;
+      const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(`^${escapedBase}/([^/]+)/([^/]+)\\.json$`);
+      const files: CommitFile[] = [];
+      for (const f of (data.files ?? [])) {
+        const match = (f.filename as string).match(pattern);
+        if (match) {
+          files.push({
+            objectType: match[1],
+            objectId: match[2],
+            filePath: f.filename as string,
+            status: f.status as CommitFile['status'],
+          });
+        }
+      }
+      return files;
+    } catch {
+      return [];
     }
   }
 

@@ -1,28 +1,50 @@
 <h2 mat-dialog-title>
   <mat-icon class="title-icon">restore</mat-icon>
-  Restore Object
+  Restore {{ isBundle ? 'Objects' : 'Object' }}
 </h2>
 
 <mat-dialog-content>
 
   @if (!result()) {
     <p class="confirm-intro">
-      This will upload the selected version to Config Hub and wait for processing to complete.
+      @if (isBundle) {
+        This will upload <strong>{{ data.bundle!.length }} object(s)</strong> to Config Hub and wait for processing to complete.
+      } @else {
+        This will upload the selected version to Config Hub and wait for processing to complete.
+      }
     </p>
 
     <div class="detail-grid">
-      <div class="detail-row">
-        <span class="detail-label">Type</span>
-        <span class="detail-value type-chip">{{ data.object.objectType }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Name</span>
-        <span class="detail-value">{{ data.object.name }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Object ID</span>
-        <span class="detail-value mono">{{ data.object.objectId }}</span>
-      </div>
+
+      @if (!isBundle) {
+        <!-- Single-object details -->
+        <div class="detail-row">
+          <span class="detail-label">Type</span>
+          <span class="detail-value type-chip">{{ data.object!.objectType }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Name</span>
+          <span class="detail-value">{{ data.object!.name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Object ID</span>
+          <span class="detail-value mono">{{ data.object!.objectId }}</span>
+        </div>
+      } @else {
+        <!-- Multi-object: list affected objects -->
+        <div class="detail-row">
+          <span class="detail-label">Objects</span>
+          <div class="detail-value affected-list">
+            @for (o of data.affectedObjects; track $index) {
+              <div class="affected-row">
+                <mat-chip class="type-chip-sm" [disableRipple]="true">{{ o.objectType }}</mat-chip>
+                <span>{{ o.name }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
       <div class="detail-row">
         <span class="detail-label">Commit</span>
         <span class="detail-value mono">{{ data.commitSha.slice(0, 7) }}</span>
@@ -46,7 +68,6 @@
         </div>
       }
     </div>
-
   }
 
   @if (restoring()) {

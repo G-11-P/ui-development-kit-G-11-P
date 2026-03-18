@@ -4,7 +4,27 @@
   <mat-toolbar color="primary" class="hub-toolbar">
     <mat-icon>hub</mat-icon>
     <span class="toolbar-title">Config Hub</span>
+
     <span class="spacer"></span>
+
+    <!-- View mode toggle -->
+    <mat-button-toggle-group
+      class="view-toggle"
+      [value]="viewMode()"
+      (change)="viewMode.set($event.value)"
+      aria-label="View mode">
+      <mat-button-toggle value="object" matTooltip="Browse by object type">
+        <mat-icon>folder_open</mat-icon>
+        <span class="toggle-label">By Object</span>
+      </mat-button-toggle>
+      <mat-button-toggle value="commit" matTooltip="Browse by commit">
+        <mat-icon>history</mat-icon>
+        <span class="toggle-label">By Commit</span>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <span class="spacer-sm"></span>
+
     <button mat-icon-button (click)="openSettings()" matTooltip="Repository settings">
       <mat-icon>settings</mat-icon>
     </button>
@@ -23,20 +43,27 @@
 
   <div class="workspace" [class.workspace-no-settings]="!hasSettings()">
 
-    <!-- Left: object browser -->
-    <div class="browser-pane">
-      <app-object-browser
-        (objectSelected)="onObjectSelected($event)">
-      </app-object-browser>
-    </div>
+    @if (viewMode() === 'object') {
+      <!-- By Object: type browser + diff viewer -->
+      <div class="browser-pane">
+        <app-object-browser (objectSelected)="onObjectSelected($event)">
+        </app-object-browser>
+      </div>
+      <div class="detail-pane">
+        <app-diff-viewer
+          [backupObject]="selectedObject()"
+          (restoreRequested)="onRestoreRequested($event)">
+        </app-diff-viewer>
+      </div>
+    }
 
-    <!-- Right: diff viewer -->
-    <div class="detail-pane">
-      <app-diff-viewer
-        [backupObject]="selectedObject()"
-        (restoreRequested)="onRestoreRequested($event)">
-      </app-diff-viewer>
-    </div>
+    @if (viewMode() === 'commit') {
+      <!-- By Commit: commit timeline + object list + inline diff -->
+      <app-commit-browser
+        class="commit-browser-host"
+        (restoreRequested)="onCommitRestoreRequested($event)">
+      </app-commit-browser>
+    }
 
   </div>
 </div>

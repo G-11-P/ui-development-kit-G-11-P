@@ -8,42 +8,47 @@ const TERMINAL_STATUSES = new Set(['COMPLETE', 'CANCELLED', 'FAILED']);
 
 @Injectable({ providedIn: 'root' })
 export class ConfigHubApiService {
-  /** True while the upload or polling is in flight. */
+  /** True while an upload or poll is in flight. */
   readonly restoring = signal(false);
   /** Human-readable phase message shown in the restore dialog. */
   readonly restoreStatusMessage = signal('');
 
   constructor(private sdkService: SailPointSDKService) {}
 
+  // ── Public API ────────────────────────────────────────────────────────────
+
   /**
-   * Upload a single config object to Config Hub and poll until the job
-   * reaches a terminal state (COMPLETE / CANCELLED / FAILED).
-   *
-   * Flow:
-   *   1. POST /v2025/configuration-hub/backups/uploads  → BackupResponseV2025 with jobId
-   *   2. Poll GET /v2025/configuration-hub/backups/uploads/{id} every 2 s
-   *   3. Resolve with success/failure once the job finishes (or times out).
+   * Restore a single config object — wraps the bundle upload with a
+   * descriptive name derived from the object metadata.
    */
   async restore(backupObject: BackupObject, objectContent: any): Promise<RestoreResult> {
+    const name = `Restore ${backupObject.objectType} - ${backupObject.name}`;
+    console.log('[ConfigHubApiService] restore() single object:', backupObject.objectType, backupObject.objectId);
+    return this.runRestore([objectContent], name);
+  }
+
+  /**
+   * Restore a pre-built bundle of config objects (e.g. all objects changed in
+   * a commit).  The caller is responsible for assembling the array.
+   */
+  async restoreBundle(bundle: any[], name: string): Promise<RestoreResult> {
+    console.log('[ConfigHubApiService] restoreBundle():', bundle.length, 'objects, name:', name);
+    return this.runRestore(bundle, name);
+  }
+
+  // ── Private ───────────────────────────────────────────────────────────────
+
+  private async runRestore(bundle: any[], name: string): Promise<RestoreResult> {
     this.restoring.set(true);
     this.restoreStatusMessage.set('Uploading configuration…');
-    console.log('[ConfigHubApiService] restore() called for:',
-      backupObject.objectType, backupObject.objectId, backupObject.name);
 
     try {
-      const name = `Restore ${backupObject.objectType} - ${backupObject.name}`;
-
-      const bundle = [objectContent];
       const jsonStr = JSON.stringify(bundle, null, 2);
-      console.log('[ConfigHubApiService] Payload size:', jsonStr.length, 'chars');
+      console.log('[ConfigHubApiService] Payload size:', jsonStr.length, 'chars,', bundle.length, 'object(s)');
 
-      // File/Blob objects lose their prototype methods over Electron IPC structured
-      // clone.  Pass a plain object; the SDK wrapper reconstructs a Blob from it.
-      const fileProxy: any = {
-        content: jsonStr,
-        name: `${name}.json`,
-        type: 'application/json',
-      };
+      // File/Blob objects lose prototype methods over Electron IPC structured
+      // clone — pass a plain object; the SDK wrapper reconstructs a Blob from it.
+      const fileProxy: any = { content: jsonStr, name: `${name}.json`, type: 'application/json' };
 
       console.log('[ConfigHubApiService] Calling sdkService.createUploadedConfiguration…');
       const response = await this.sdkService.createUploadedConfiguration({ data: fileProxy as File, name });
@@ -54,7 +59,7 @@ export class ConfigHubApiService {
           ?? (response?.data as any)?.detailCode
           ?? response?.statusText
           ?? 'Unknown error';
-        console.error('[ConfigHubApiService] Upload failed:', response?.status, errDetail, response?.data);
+        console.error('[ConfigHubApiService] Upload failed:', response?.status, errDetail);
         return { success: false, error: `Upload failed (HTTP ${response?.status}): ${errDetail}` };
       }
 
@@ -62,36 +67,24 @@ export class ConfigHubApiService {
       console.log('[ConfigHubApiService] Upload accepted, jobId:', jobId);
 
       if (!jobId) {
-        // No jobId — upload was accepted but polling isn't possible.
         return {
           success: true,
-          message: `"${backupObject.name}" has been uploaded to Config Hub as "${name}". `
-            + `Open the SailPoint UI to review and deploy the configuration.`,
+          message: `Uploaded to Config Hub as "${name}". Open the SailPoint UI to review and deploy.`,
         };
       }
 
-      // ── Polling phase ────────────────────────────────────────────────────
       const finalStatus = await this.pollUploadStatus(jobId);
 
       if (finalStatus === 'COMPLETE') {
-        return {
-          success: true,
-          message: `"${backupObject.name}" has been successfully processed by Config Hub as "${name}".`,
-        };
+        return { success: true, message: `Successfully processed by Config Hub as "${name}".` };
       }
-
       if (finalStatus === 'TIMEOUT') {
         return {
           success: false,
-          error: `Upload was accepted (job ${jobId}) but did not complete within the timeout window. `
-            + `Check Config Hub for the current status.`,
+          error: `Upload accepted (job ${jobId}) but did not complete within the timeout. Check Config Hub.`,
         };
       }
-
-      return {
-        success: false,
-        error: `Upload processing ended with status: ${finalStatus}. Check Config Hub for details.`,
-      };
+      return { success: false, error: `Upload ended with status: ${finalStatus}. Check Config Hub for details.` };
 
     } catch (error) {
       console.error('[ConfigHubApiService] Caught exception:', error);
@@ -102,30 +95,20 @@ export class ConfigHubApiService {
     }
   }
 
-  // ── Private ───────────────────────────────────────────────────────────────
-
   private async pollUploadStatus(jobId: string): Promise<string> {
     for (let attempt = 1; attempt <= MAX_POLLS; attempt++) {
       await new Promise<void>(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
-
       try {
         const res = await this.sdkService.getUploadedConfiguration({ id: jobId });
         const status = (res?.data as any)?.status as string | undefined;
         console.log(`[ConfigHubApiService] Poll ${attempt}/${MAX_POLLS}: status =`, status);
-
-        this.restoreStatusMessage.set(
-          `Processing… ${status ?? 'checking'} (${attempt}/${MAX_POLLS})`
-        );
-
-        if (status && TERMINAL_STATUSES.has(status)) {
-          return status;
-        }
+        this.restoreStatusMessage.set(`Processing… ${status ?? 'checking'} (${attempt}/${MAX_POLLS})`);
+        if (status && TERMINAL_STATUSES.has(status)) return status;
       } catch (err) {
         console.warn('[ConfigHubApiService] Poll error (will retry):', err);
         this.restoreStatusMessage.set(`Polling… (attempt ${attempt}/${MAX_POLLS})`);
       }
     }
-
     return 'TIMEOUT';
   }
 }

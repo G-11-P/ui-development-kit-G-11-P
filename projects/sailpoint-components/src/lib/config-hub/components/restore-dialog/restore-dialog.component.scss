@@ -64,6 +64,30 @@ mat-dialog-content {
   font-weight: 600;
 }
 
+.affected-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.affected-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--theme-primary-text);
+}
+
+.type-chip-sm {
+  --mdc-chip-elevated-container-color: color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background));
+  --mdc-chip-label-text-color: var(--theme-primary);
+  font-size: 10px;
+  font-weight: 600;
+  height: 20px;
+}
+
 .warning-banner {
   display: flex;
   align-items: flex-start;

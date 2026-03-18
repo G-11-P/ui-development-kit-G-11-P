@@ -46,3 +46,11 @@ export interface RestoreResult {
   message?: string;
   error?: string;
 }
+
+export interface CommitFile {
+  objectType: string;
+  objectId: string;
+  filePath: string;
+  /** GitHub change status for this file in the commit. */
+  status: 'added' | 'modified' | 'removed' | 'renamed';
+}

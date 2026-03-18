@@ -14,8 +14,17 @@
     font-weight: 500;
   }
 
-  .spacer {
-    flex: 1;
+  .spacer { flex: 1; }
+  .spacer-sm { width: 8px; }
+}
+
+.view-toggle {
+  // Slightly reduce height to fit neatly in the toolbar
+  --mat-standard-button-toggle-height: 34px;
+
+  .toggle-label {
+    font-size: 13px;
+    margin-left: 4px;
   }
 }
 
@@ -61,6 +70,13 @@
 }
 
 .detail-pane {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.commit-browser-host {
   flex: 1;
   overflow: hidden;
   display: flex;

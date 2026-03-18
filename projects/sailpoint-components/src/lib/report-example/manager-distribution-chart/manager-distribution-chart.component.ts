@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IdentityV2025 } from 'sailpoint-api-client';
@@ -15,9 +15,7 @@ interface ChartDataPoint {
 @Component({
   selector: 'app-manager-distribution-chart',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [],
   templateUrl: './manager-distribution-chart.component.html',
   styleUrl: './manager-distribution-chart.component.scss'
 })

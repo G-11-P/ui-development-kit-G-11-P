@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { SourceV2025 } from 'sailpoint-api-client';
 import { SailPointSDKService } from 'sailpoint-components';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,7 @@ import { AxiosResponse } from 'axios';
 
 @Component({
   selector: 'app-sources',
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, MatProgressSpinnerModule],
   templateUrl: './sources.component.html',
   styleUrl: './sources.component.scss'
 })

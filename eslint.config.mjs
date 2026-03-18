@@ -14,6 +14,7 @@ export default [
       'dist/**/*',
       'release/**/*',
       'src/environments/*',
+      'src/zone-testing-setup.ts',
       'e2e/playwright.config.ts',
       'projects/sailpoint-components/src/lib/sailpoint-sdk.service.ts',
       'node_modules/**'

@@ -1,6 +1,6 @@
 
 // Angular core and common modules
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   ViewChild,
@@ -32,7 +32,6 @@ declare function structuredClone<T>(value: T): T;
   standalone: true,
   imports: [
     FormsModule,
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -42,8 +41,8 @@ declare function structuredClone<T>(value: T): T;
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    MatSelectModule,
-  ],
+    MatSelectModule
+],
   templateUrl: './theme-picker.component.html',
   styleUrl: './theme-picker.component.scss',
 })

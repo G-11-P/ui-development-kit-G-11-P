@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -24,13 +24,12 @@ export interface CategoryDisplay {
   selector: 'app-colab-section',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
     ColabCardComponent
-  ],
+],
   templateUrl: './colab-section.component.html',
   styleUrl: './colab-section.component.scss'
 })

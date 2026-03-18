@@ -13,115 +13,125 @@
             <mat-label>Name</mat-label>
             <input matInput placeholder="Filter by name" formControlName="name">
           </mat-form-field>
-          
+
           <mat-form-field class="filter-field">
             <mat-label>Source ID</mat-label>
             <input matInput placeholder="Filter by source ID" formControlName="sourceId">
           </mat-form-field>
-          
+
           <mat-form-field class="filter-field">
             <mat-label>Correlated</mat-label>
             <mat-select formControlName="correlated">
-              <mat-option *ngFor="let option of correlatedOptions" [value]="option.value">
-                {{option.label}}
-              </mat-option>
+              @for (option of correlatedOptions; track option) {
+                <mat-option [value]="option.value">
+                  {{option.label}}
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
-          
+
           <button mat-stroked-button color="primary" (click)="resetFilters()">
             <mat-icon>clear</mat-icon> Clear
           </button>
         </div>
       </form>
     </div>
-    
+
     <!-- Loading spinner -->
-    <div *ngIf="loading" class="spinner-container">
-      <mat-spinner diameter="75"></mat-spinner>
-    </div>
-
-    <div *ngIf="!loading" class="table-container">
-      <!-- Accounts table -->
-      <table mat-table [dataSource]="accounts" matSort [matSortActive]="sortActive" 
-             [matSortDirection]="sortDirection" (matSortChange)="onSortChange($event)" 
-             class="mat-elevation-z8" *ngIf="accounts.length">
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-          <td mat-cell *matCellDef="let account">{{ account.id }}</td>
-        </ng-container>
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-          <td mat-cell *matCellDef="let account">{{ account.name || '-' }}</td>
-        </ng-container>
-
-        <!-- Native Identity Column -->
-        <ng-container matColumnDef="nativeIdentity">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Native Identity</th>
-          <td mat-cell *matCellDef="let account">{{ account.nativeIdentity || '-' }}</td>
-        </ng-container>
-
-        <!-- Source ID Column -->
-        <ng-container matColumnDef="sourceId">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
-          <td mat-cell *matCellDef="let account">{{ account.sourceId || '-' }}</td>
-        </ng-container>
-
-        <!-- Disabled Column -->
-        <ng-container matColumnDef="disabled">
-          <th mat-header-cell *matHeaderCellDef>Disabled</th>
-          <td mat-cell *matCellDef="let account">
-            <mat-icon *ngIf="account.disabled">check_circle</mat-icon>
-            <mat-icon *ngIf="!account.disabled">cancel</mat-icon>
-          </td>
-        </ng-container>
-
-        <!-- Locked Column -->
-        <ng-container matColumnDef="locked">
-          <th mat-header-cell *matHeaderCellDef>Locked</th>
-          <td mat-cell *matCellDef="let account">
-            <mat-icon *ngIf="account.locked">lock</mat-icon>
-            <mat-icon *ngIf="!account.locked">lock_open</mat-icon>
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let account">
-            <button mat-button color="primary" (click)="viewAccount(account)">
-              <mat-icon>visibility</mat-icon> View
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      <!-- Paginator -->
-      <mat-paginator
-        [length]="totalCount"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        [pageSizeOptions]="[5, 10, 25, 100, 250]"
-        (page)="onPageChange($event)"
-        showFirstLastButtons
-        aria-label="Select page of accounts">
-      </mat-paginator>
-
-      <!-- No data message -->
-      <div *ngIf="accounts.length === 0 && !error" class="no-data-message">
-        No accounts found.
+    @if (loading) {
+      <div class="spinner-container">
+        <mat-spinner diameter="75"></mat-spinner>
       </div>
-      
-      <!-- Error message -->
-      <div *ngIf="error" class="error-message mat-elevation-z1">
-        <mat-icon color="warn">error</mat-icon>
-        <span>Error loading accounts: {{ errorMessage }}</span>
+    }
+
+    @if (!loading) {
+      <div class="table-container">
+        <!-- Accounts table -->
+        @if (accounts.length) {
+          <table mat-table [dataSource]="accounts" matSort [matSortActive]="sortActive"
+            [matSortDirection]="sortDirection" (matSortChange)="onSortChange($event)"
+            class="mat-elevation-z8">
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td mat-cell *matCellDef="let account">{{ account.id }}</td>
+            </ng-container>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let account">{{ account.name || '-' }}</td>
+            </ng-container>
+            <!-- Native Identity Column -->
+            <ng-container matColumnDef="nativeIdentity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Native Identity</th>
+              <td mat-cell *matCellDef="let account">{{ account.nativeIdentity || '-' }}</td>
+            </ng-container>
+            <!-- Source ID Column -->
+            <ng-container matColumnDef="sourceId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
+              <td mat-cell *matCellDef="let account">{{ account.sourceId || '-' }}</td>
+            </ng-container>
+            <!-- Disabled Column -->
+            <ng-container matColumnDef="disabled">
+              <th mat-header-cell *matHeaderCellDef>Disabled</th>
+              <td mat-cell *matCellDef="let account">
+                @if (account.disabled) {
+                  <mat-icon>check_circle</mat-icon>
+                }
+                @if (!account.disabled) {
+                  <mat-icon>cancel</mat-icon>
+                }
+              </td>
+            </ng-container>
+            <!-- Locked Column -->
+            <ng-container matColumnDef="locked">
+              <th mat-header-cell *matHeaderCellDef>Locked</th>
+              <td mat-cell *matCellDef="let account">
+                @if (account.locked) {
+                  <mat-icon>lock</mat-icon>
+                }
+                @if (!account.locked) {
+                  <mat-icon>lock_open</mat-icon>
+                }
+              </td>
+            </ng-container>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let account">
+                <button mat-button color="primary" (click)="viewAccount(account)">
+                  <mat-icon>visibility</mat-icon> View
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        }
+        <!-- Paginator -->
+        <mat-paginator
+          [length]="totalCount"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[5, 10, 25, 100, 250]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+          aria-label="Select page of accounts">
+        </mat-paginator>
+        <!-- No data message -->
+        @if (accounts.length === 0 && !error) {
+          <div class="no-data-message">
+            No accounts found.
+          </div>
+        }
+        <!-- Error message -->
+        @if (error) {
+          <div class="error-message mat-elevation-z1">
+            <mat-icon color="warn">error</mat-icon>
+            <span>Error loading accounts: {{ errorMessage }}</span>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
 </div>

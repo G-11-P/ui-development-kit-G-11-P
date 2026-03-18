@@ -1,5 +1,5 @@
 // velocity-editor-dialog.component.ts
-import { CommonModule } from '@angular/common';
+
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,14 +37,13 @@ export interface VelocityEditorData {
   styleUrls: ['./velocity-editor-dialog.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule
-  ]
+]
 })
 export class VelocityEditorDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorContainer', { static: true }) editorContainer!: ElementRef<HTMLDivElement>;

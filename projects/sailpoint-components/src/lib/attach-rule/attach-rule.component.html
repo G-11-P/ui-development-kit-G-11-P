@@ -5,13 +5,8 @@
   </mat-toolbar>
 
   <div class="content">
-    <ng-template #loading>
-      <div class="loading-overlay">
-        <mat-spinner></mat-spinner>
-      </div>
-    </ng-template>
 
-    <ng-container *ngIf="!isLoading; else loading">
+    @if (!isLoading) {
       <mat-card class="top-panel">
         <mat-card-content class="top-content">
           <mat-form-field appearance="fill" class="source-field">
@@ -19,16 +14,17 @@
             <mat-select
               [(ngModel)]="selectedSource"
               (selectionChange)="onSourceChange($event.value)"
-            >
-              <mat-option *ngFor="let s of sources" [value]="s">
-                {{ s.name || s.id }}
-              </mat-option>
+              >
+              @for (s of sources; track s) {
+                <mat-option [value]="s">
+                  {{ s.name || s.id }}
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </mat-card-content>
       </mat-card>
-
-      <ng-container *ngIf="selectedSource; else pickOne">
+      @if (selectedSource) {
         <div class="rules-grid">
           <div class="available-column">
             <mat-card>
@@ -42,19 +38,22 @@
                 [cdkDropListData]="availableRules"
                 [cdkDropListConnectedTo]="slotDropListIds"
                 (cdkDropListDropped)="onDrop($event)"
-              >
-                <div
-                  *ngFor="let rule of availableRules"
-                  cdkDrag
-                  [cdkDragData]="rule"
-                  class="rule-card"
                 >
-                  <mat-icon>drag_handle</mat-icon>
-                  {{ rule.name }}
-                </div>
-                <div *ngIf="availableRules.length === 0" class="empty-slot">
-                  No rules available
-                </div>
+                @for (rule of availableRules; track rule) {
+                  <div
+                    cdkDrag
+                    [cdkDragData]="rule"
+                    class="rule-card"
+                    >
+                    <mat-icon>drag_handle</mat-icon>
+                    {{ rule.name }}
+                  </div>
+                }
+                @if (availableRules.length === 0) {
+                  <div class="empty-slot">
+                    No rules available
+                  </div>
+                }
               </mat-card-content>
             </mat-card>
           </div>
@@ -64,51 +63,55 @@
                 <mat-card-title>Rule Slots</mat-card-title>
               </mat-card-header>
               <mat-card-content class="slots-grid">
-                <div *ngFor="let slot of slots" class="slot-wrapper">
-                  <mat-card class="slot-card">
-                    <mat-card-header>
-                      <mat-card-title>{{ slot.label }}</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content
-                      cdkDropList
-                      [id]="'assigned-' + slot.key"
-                      class="list-container slot-drop"
-                      [cdkDropListData]="assignedRulesMap[slot.key] ?? []"
-                      [cdkDropListConnectedTo]="availableConnectedTo"
-                      (cdkDropListDropped)="onDrop($event)"
-                    >
-                      <div
-                        *ngFor="
-                          let assigned of assignedRulesMap[slot.key] ?? []
-                        "
-                        cdkDrag
-                        [cdkDragData]="assigned"
-                        class="rule-card"
-                      >
-                        <mat-icon>drag_handle</mat-icon>
-                        <span class="rule-name">{{ assigned.name }}</span>
-                        <button
-                          mat-icon-button
-                          color="warn"
-                          aria-label="Remove this rule"
+                @for (slot of slots; track slot) {
+                  <div class="slot-wrapper">
+                    <mat-card class="slot-card">
+                      <mat-card-header>
+                        <mat-card-title>{{ slot.label }}</mat-card-title>
+                      </mat-card-header>
+                      <mat-card-content
+                        cdkDropList
+                        [id]="'assigned-' + slot.key"
+                        class="list-container slot-drop"
+                        [cdkDropListData]="assignedRulesMap[slot.key] ?? []"
+                        [cdkDropListConnectedTo]="availableConnectedTo"
+                        (cdkDropListDropped)="onDrop($event)"
+                        >
+                        @for (
+                          assigned of assignedRulesMap[slot.key] ?? []
+                          ; track
+                          assigned) {
+                          <div
+                            cdkDrag
+                            [cdkDragData]="assigned"
+                            class="rule-card"
+                            >
+                            <mat-icon>drag_handle</mat-icon>
+                            <span class="rule-name">{{ assigned.name }}</span>
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              aria-label="Remove this rule"
                           (click)="
                             $event.stopPropagation();
                             removeAssignedRule(slot.key, assigned)
                           "
-                        >
-                          <mat-icon>close</mat-icon>
-                        </button>
-                      </div>
-
-                      <div
-                        *ngIf="(assignedRulesMap[slot.key]?.length ?? 0) === 0"
-                        class="empty-slot"
-                      >
-                        Drop rule here
-                      </div>
-                    </mat-card-content>
-                  </mat-card>
-                </div>
+                              >
+                              <mat-icon>close</mat-icon>
+                            </button>
+                          </div>
+                        }
+                        @if ((assignedRulesMap[slot.key]?.length ?? 0) === 0) {
+                          <div
+                            class="empty-slot"
+                            >
+                            Drop rule here
+                          </div>
+                        }
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                }
               </mat-card-content>
             </mat-card>
           </div>
@@ -119,17 +122,19 @@
             color="primary"
             (click)="applyPatches()"
             [disabled]="!pendingOps.length || isSaving"
-          >
+            >
             {{ isSaving ? "Saving…" : "Save Changes" }}
           </button>
         </div>
-      </ng-container>
-
-      <ng-template #pickOne>
+      } @else {
         <p style="text-align: center; color: #666">
           Please select a source to begin assigning rules.
         </p>
-      </ng-template>
-    </ng-container>
+      }
+    } @else {
+      <div class="loading-overlay">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
   </div>
 </div>

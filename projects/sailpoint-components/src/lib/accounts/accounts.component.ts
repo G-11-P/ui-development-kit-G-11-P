@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +21,6 @@ import { AccountV2025 } from 'sailpoint-api-client';
   selector: 'app-accounts',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -35,7 +34,7 @@ import { AccountV2025 } from 'sailpoint-api-client';
     MatInputModule,
     MatSelectModule,
     GenericDialogComponent
-  ],
+],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })

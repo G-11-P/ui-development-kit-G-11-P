@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AxiosResponse } from 'axios';
 import { IdentityV2025 } from 'sailpoint-api-client';
 import { SailPointSDKService } from 'sailpoint-components';
@@ -8,7 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-identities',
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, MatProgressSpinnerModule],
   templateUrl: './identities.component.html',
   styleUrl: './identities.component.scss'
 })

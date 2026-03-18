@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,27 +14,28 @@ export interface DeploymentErrorData {
   selector: 'app-deployment-error-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule
-  ],
+],
   template: `
     <div class="deployment-error-dialog">
       <div class="dialog-header">
         <mat-icon class="error-icon">error</mat-icon>
         <h2 mat-dialog-title>{{ data.title }}</h2>
       </div>
-      
+    
       <mat-dialog-content>
         <p class="error-message">{{ data.message }}</p>
-        
-        <div class="error-details" *ngIf="data.details">
-          <div class="details-label">Details:</div>
-          <div class="details-content">{{ data.details }}</div>
-        </div>
+    
+        @if (data.details) {
+          <div class="error-details">
+            <div class="details-label">Details:</div>
+            <div class="details-content">{{ data.details }}</div>
+          </div>
+        }
       </mat-dialog-content>
-      
+    
       <mat-dialog-actions align="end">
         <button mat-raised-button color="warn" (click)="close()">
           <mat-icon>close</mat-icon>
@@ -42,7 +43,7 @@ export interface DeploymentErrorData {
         </button>
       </mat-dialog-actions>
     </div>
-  `,
+    `,
   styles: [`
     .deployment-error-dialog {
       min-width: 500px;

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -64,7 +64,6 @@ interface CampaignSummary {
   selector: 'app-certification-management',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -84,8 +83,8 @@ interface CampaignSummary {
     MatPaginatorModule,
     CertificationDetailComponent,
     IdentityInfoComponent,
-    AccessDetailComponent,
-  ],
+    AccessDetailComponent
+],
   templateUrl: './certification-management.component.html',
   styleUrl: './certification-management.component.scss',
 })

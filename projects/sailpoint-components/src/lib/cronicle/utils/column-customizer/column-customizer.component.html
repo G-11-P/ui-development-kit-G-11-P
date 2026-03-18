@@ -4,24 +4,26 @@
 </button>
 
 <!-- Dropdown Panel -->
-<div
-  #panelRef
-  class="dropdown-panel"
-  *ngIf="showSelector"
-  cdkDropList
-  (cdkDropListDropped)="dropColumn($event)"
->
+@if (showSelector) {
   <div
-    class="column-option"
-    *ngFor="let col of allColumns"
-    cdkDrag
-  >
-    <input
-      type="checkbox"
-      [checked]="isDisplayed(col)"
-      (change)="toggleColumn(col)"
-    />
-    {{ col }}
-    <span class="drag-handle">☰</span>
+    #panelRef
+    class="dropdown-panel"
+    cdkDropList
+    (cdkDropListDropped)="dropColumn($event)"
+    >
+    @for (col of allColumns; track col) {
+      <div
+        class="column-option"
+        cdkDrag
+        >
+        <input
+          type="checkbox"
+          [checked]="isDisplayed(col)"
+          (change)="toggleColumn(col)"
+          />
+        {{ col }}
+        <span class="drag-handle">☰</span>
+      </div>
+    }
   </div>
-</div>
+}

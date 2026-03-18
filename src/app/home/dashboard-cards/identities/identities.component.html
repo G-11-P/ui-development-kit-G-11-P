@@ -1,11 +1,15 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>Identities</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div *ngIf="loading" class="loading-container">
-            <mat-spinner diameter="40"></mat-spinner>
-        </div>
-        <p *ngIf="!loading" class="identities-count">{{ identities?.headers?.['x-total-count'] || 0 }}</p>
-    </mat-card-content>
+  <mat-card-header>
+    <mat-card-title>Identities</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (loading) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+    @if (!loading) {
+      <p class="identities-count">{{ identities?.headers?.['x-total-count'] || 0 }}</p>
+    }
+  </mat-card-content>
 </mat-card>

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,23 +21,22 @@ export interface DeploymentErrorData {
   selector: 'app-deployment-success-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule
-  ],
+],
   template: `
     <div class="deployment-success-dialog">
       <div class="dialog-header">
         <mat-icon class="success-icon">check_circle</mat-icon>
         <h2 mat-dialog-title>Deployment Successful!</h2>
       </div>
-      
+    
       <mat-dialog-content>
         <p class="success-message">
           <strong>{{ data.connectorName }}</strong> {{ getSuccessMessage() }}
         </p>
-        
+    
         <div class="deployment-details">
           <div class="detail-item">
             <span class="detail-label">{{ getIdLabel() }}:</span>
@@ -45,13 +44,15 @@ export interface DeploymentErrorData {
               <span class="detail-value">{{ data.connectorId }}</span>
             </div>
           </div>
-          <div class="detail-item" *ngIf="data.version">
-            <span class="detail-label">Version:</span>
-            <span class="detail-value">{{ data.version }}</span>
-          </div>
+          @if (data.version) {
+            <div class="detail-item">
+              <span class="detail-label">Version:</span>
+              <span class="detail-value">{{ data.version }}</span>
+            </div>
+          }
         </div>
       </mat-dialog-content>
-      
+    
       <mat-dialog-actions align="end">
         <button mat-raised-button color="primary" (click)="close()">
           <mat-icon>done</mat-icon>
@@ -59,7 +60,7 @@ export interface DeploymentErrorData {
         </button>
       </mat-dialog-actions>
     </div>
-  `,
+    `,
   styles: [`
     .deployment-success-dialog {
       min-width: 500px;

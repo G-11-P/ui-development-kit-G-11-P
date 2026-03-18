@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,25 +27,23 @@ import { IdentityService } from './identity-service';
   templateUrl: './identity-search.component.html',
   styleUrls: ['./identity-search.component.scss'],
   imports: [
-        // Material Modules
-        FormsModule,
-        MatButtonModule,
-        MatCardModule,
-        MatChipsModule,
-        MatExpansionModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatListModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatTableModule,
-        MatToolbarModule,
-        CommonModule,
-        ReactiveFormsModule
-  ],
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatToolbarModule,
+    ReactiveFormsModule
+],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
 })

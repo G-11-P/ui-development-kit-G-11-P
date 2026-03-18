@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,6 @@ import { IdentityV2025 } from 'sailpoint-api-client';
   selector: 'app-identity-info',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -25,8 +24,8 @@ import { IdentityV2025 } from 'sailpoint-api-client';
     MatDividerModule,
     MatChipsModule,
     MatListModule,
-    MatGridListModule,
-  ],
+    MatGridListModule
+],
   templateUrl: './identity-info.component.html',
   styleUrls: ['./identity-info.component.scss'],
 })

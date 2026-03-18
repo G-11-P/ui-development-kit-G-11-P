@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,7 +38,6 @@ const COLAB_CATEGORIES: CategoryDisplay[] = [
   selector: 'app-colab',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -51,7 +50,7 @@ const COLAB_CATEGORIES: CategoryDisplay[] = [
     HttpClientModule,
     ColabSectionComponent,
     ColabCardComponent
-  ],
+],
   templateUrl: './colab.component.html',
   styleUrl: './colab.component.scss'
 })

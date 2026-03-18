@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,13 +20,12 @@ export type AuthEvent = {
   styleUrls: ['./web-auth.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule
-  ]
+]
 })
 export class WebAuthComponent implements OnInit {
   @Output() authEvent = new EventEmitter<AuthEvent>();

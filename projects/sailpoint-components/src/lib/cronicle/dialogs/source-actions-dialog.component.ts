@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,18 +32,17 @@ export interface SourceActionsDialogData {
     templateUrl: './source-actions-dialog.component.html',
     styleUrls: ['./source-actions-dialog.component.scss'],
     imports: [
-        CommonModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatSnackBarModule
-    ]
+    MatDialogModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSnackBarModule
+]
 })
 export class SourceActionsDialogComponent implements OnInit {
     busy = signal<boolean>(false);

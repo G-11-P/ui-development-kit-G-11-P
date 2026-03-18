@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,6 @@ import { ReportDataService } from '../report-data.service';
   selector: 'app-identity-detail-view',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatButtonModule,
     MatCardModule,
@@ -29,8 +28,8 @@ import { ReportDataService } from '../report-data.service';
     MatSortModule,
     MatProgressSpinnerModule,
     MatInputModule,
-    MatFormFieldModule,
-  ],
+    MatFormFieldModule
+],
   templateUrl: './identity-detail-view.component.html',
   styleUrl: './identity-detail-view.component.scss',
 })

@@ -18,134 +18,133 @@
       [allColumns]="columnOrder"
       [displayedColumns]="displayedColumns"
       (displayedColumnsChange)="displayedColumns = $event"
-    />
+      />
 
     <!-- Loading spinner shown while data is being fetched -->
-    <div *ngIf="loading" class="spinner-container">
-      <mat-spinner diameter="75"></mat-spinner>
-    </div>
+    @if (loading) {
+      <div class="spinner-container">
+        <mat-spinner diameter="75"></mat-spinner>
+      </div>
+    }
 
     <!-- Identity table, shown only when data is loaded and not empty -->
-    <table
-      mat-table
-      [dataSource]="filteredIdentities"
-      class="mat-elevation-z8"
-      *ngIf="!loading && filteredIdentities.length"
-    >
-      <!-- Dynamically create table columns based on allColumns -->
-      <ng-container
-        *ngFor="let column of allColumns; trackBy: trackByFn"
-        [matColumnDef]="column"
-      >
-        <!-- Table header cell with optional sort functionality -->
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          [ngClass]="{ sortable: sortableFields.includes(column) }"
-          (click)="sortableFields.includes(column) && toggleSort(column)"
+    @if (!loading && filteredIdentities.length) {
+      <table
+        mat-table
+        [dataSource]="filteredIdentities"
+        class="mat-elevation-z8"
         >
-          <div class="header-content">
-            <span>{{ columnDisplayNames[column] || column }}</span>
-            <!-- Show sort icon if the column is sortable -->
-            <ng-container *ngIf="sortableFields.includes(column)">
-              <span class="sort-icon" [class.active]="isSorted(column)">
-                <ng-container
-                  *ngIf="getSortSymbol(column) as symbol; else idleIcon"
-                >
-                  {{ symbol }}
-                </ng-container>
-                <ng-template #idleIcon>⇅</ng-template>
-              </span>
-            </ng-container>
-          </div>
-        </th>
-
-        <!-- Table data cell logic based on column type -->
-        <td mat-cell *matCellDef="let identity">
-          <ng-container [ngSwitch]="column">
-            <!-- Custom button for attribute details -->
-            <ng-container *ngSwitchCase="'attributes'">
-              <button
-                id="attibuteDetails"
-                mat-button
-                color="accent"
-                (click)="onViewAttributes(identity)"
+        <!-- Dynamically create table columns based on allColumns -->
+        @for (column of allColumns; track trackByFn($index, column)) {
+          <ng-container
+            [matColumnDef]="column"
+            >
+            <!-- Table header cell with optional sort functionality -->
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [ngClass]="{ sortable: sortableFields.includes(column) }"
+              (click)="sortableFields.includes(column) && toggleSort(column)"
               >
-                Attribute Details
-              </button>
-            </ng-container>
-
-            <!-- Manager reference handling -->
-            <ng-container *ngSwitchCase="'managerRef'">
-              <ng-container *ngIf="identity.managerRef; else noManager">
-                <button
-                  id="managerDetails"
-                  mat-button
-                  color="accent"
-                  (click)="onViewManager(identity)"
-                >
-                  Manager Details
-                </button>
-              </ng-container>
-              <ng-template #noManager>–</ng-template>
-            </ng-container>
-
-            <!-- Default data display for other fields -->
-            <ng-container *ngSwitchDefault>
-              {{ formatValue(column, identity[column]) }}
-            </ng-container>
+              <div class="header-content">
+                <span>{{ columnDisplayNames[column] || column }}</span>
+                <!-- Show sort icon if the column is sortable -->
+                @if (sortableFields.includes(column)) {
+                  <span class="sort-icon" [class.active]="isSorted(column)">
+                    @if (getSortSymbol(column); as symbol) {
+                      {{ symbol }}
+                    } @else {
+                      ⇅
+                    }
+                  </span>
+                }
+              </div>
+            </th>
+            <!-- Table data cell logic based on column type -->
+            <td mat-cell *matCellDef="let identity">
+              @switch (column) {
+                <!-- Custom button for attribute details -->
+                @case ('attributes') {
+                  <button
+                    id="attibuteDetails"
+                    mat-button
+                    color="accent"
+                    (click)="onViewAttributes(identity)"
+                    >
+                    Attribute Details
+                  </button>
+                }
+                <!-- Manager reference handling -->
+                @case ('managerRef') {
+                  @if (identity.managerRef) {
+                    <button
+                      id="managerDetails"
+                      mat-button
+                      color="accent"
+                      (click)="onViewManager(identity)"
+                      >
+                      Manager Details
+                    </button>
+                  } @else {
+                    –
+                  }
+                }
+                <!-- Default data display for other fields -->
+                @default {
+                  {{ formatValue(column, identity[column]) }}
+                }
+              }
+            </td>
           </ng-container>
-        </td>
-      </ng-container>
-
-      <!-- Extra column for action buttons like "View" -->
-      <ng-container matColumnDef="viewAction">
-        <th mat-header-cell *matHeaderCellDef>Action</th>
-        <td mat-cell *matCellDef="let identity">
-          <button
-            id="viewIdentity"
-            mat-button
-            color="primary"
-            (click)="onView(identity)"
-          >
-            View
-          </button>
-        </td>
-      </ng-container>
-
-      <!-- paginator column -->
-      <ng-container matColumnDef="paginator">
-        <td
-          mat-footer-cell
-          *matFooterCellDef
-          [attr.colspan]="displayedColumns.length"
-          class="paginator-footer-cell"
-        >
-          <mat-paginator
-            [length]="totalCount"
-            [pageSize]="pageSize"
-            [pageIndex]="pageIndex"
-            [pageSizeOptions]="[10, 25, 50, 100]"
-            (page)="onPageChange($event)"
-            showFirstLastButtons
-          ></mat-paginator>
-        </td>
-      </ng-container>
-
-      <!-- Header and row definitions -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      <!-- footer row with only the paginator column -->
-      <tr mat-footer-row *matFooterRowDef="['paginator']"></tr>
-    </table>
+        }
+        <!-- Extra column for action buttons like "View" -->
+        <ng-container matColumnDef="viewAction">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let identity">
+            <button
+              id="viewIdentity"
+              mat-button
+              color="primary"
+              (click)="onView(identity)"
+              >
+              View
+            </button>
+          </td>
+        </ng-container>
+        <!-- paginator column -->
+        <ng-container matColumnDef="paginator">
+          <td
+            mat-footer-cell
+            *matFooterCellDef
+            [attr.colspan]="displayedColumns.length"
+            class="paginator-footer-cell"
+            >
+            <mat-paginator
+              [length]="totalCount"
+              [pageSize]="pageSize"
+              [pageIndex]="pageIndex"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              (page)="onPageChange($event)"
+              showFirstLastButtons
+            ></mat-paginator>
+          </td>
+        </ng-container>
+        <!-- Header and row definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <!-- footer row with only the paginator column -->
+        <tr mat-footer-row *matFooterRowDef="['paginator']"></tr>
+      </table>
+    }
 
     <!-- Message shown when no data was returned after loading completes -->
-    <div
-      *ngIf="!loading && hasDataLoaded && identities.length === 0"
-      class="empty-message"
-    >
-      No identities found.
-    </div>
+    @if (!loading && hasDataLoaded && identities.length === 0) {
+      <div
+        class="empty-message"
+        >
+        No identities found.
+      </div>
+    }
 
     <!-- Paginator for navigating identity pages
     <mat-paginator

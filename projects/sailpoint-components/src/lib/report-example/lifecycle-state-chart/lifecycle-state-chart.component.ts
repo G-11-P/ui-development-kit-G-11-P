@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IdentityV2025 } from 'sailpoint-api-client';
@@ -9,9 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-lifecycle-state-chart',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [],
   templateUrl: './lifecycle-state-chart.component.html',
   styleUrl: './lifecycle-state-chart.component.scss'
 })

@@ -1,69 +1,85 @@
-<mat-card 
-  class="colab-card" 
-  (click)="onCardClick()" 
+<mat-card
+  class="colab-card"
+  (click)="onCardClick()"
   [class.deploying]="isDeploying"
   appearance="outlined"
->
+  >
   <!-- Card Image -->
   <div class="card-image-container">
-    <img 
-      class="card-image" 
-      [src]="post.image || getDefaultImage()" 
+    <img
+      class="card-image"
+      [src]="post.image || getDefaultImage()"
       [alt]="post.title"
       (error)="onImageError($event)"
-    />
+      />
     <div class="card-gradient-strip"></div>
   </div>
 
   <!-- Badge Section -->
-  <div class="badge-container" *ngIf="isSailPointDeveloped || isSailPointCertified">
-    <div class="badge sailpoint-developed" *ngIf="isSailPointDeveloped" matTooltip="SailPoint Developed">
-      <mat-icon class="badge-icon">verified</mat-icon>
-      <span class="badge-text">SailPoint</span>
+  @if (isSailPointDeveloped || isSailPointCertified) {
+    <div class="badge-container">
+      @if (isSailPointDeveloped) {
+        <div class="badge sailpoint-developed" matTooltip="SailPoint Developed">
+          <mat-icon class="badge-icon">verified</mat-icon>
+          <span class="badge-text">SailPoint</span>
+        </div>
+      }
+      @if (isSailPointCertified && !isSailPointDeveloped) {
+        <div class="badge sailpoint-certified" matTooltip="SailPoint Certified">
+          <mat-icon class="badge-icon">shield</mat-icon>
+        </div>
+      }
     </div>
-    <div class="badge sailpoint-certified" *ngIf="isSailPointCertified && !isSailPointDeveloped" matTooltip="SailPoint Certified">
-      <mat-icon class="badge-icon">shield</mat-icon>
-    </div>
-  </div>
+  }
 
   <!-- Card Content -->
   <mat-card-content class="card-content">
     <mat-card-title class="card-title">{{ post.title }}</mat-card-title>
-    
-    <mat-card-subtitle class="card-excerpt" *ngIf="post.excerpt">{{ post.excerpt }}</mat-card-subtitle>
+
+    @if (post.excerpt) {
+      <mat-card-subtitle class="card-excerpt">{{ post.excerpt }}</mat-card-subtitle>
+    }
 
     <!-- Creator Info -->
     <div class="card-creator">
-      <img 
-        class="creator-avatar" 
-        [src]="post.creatorImage || getDefaultAvatar()" 
+      <img
+        class="creator-avatar"
+        [src]="post.creatorImage || getDefaultAvatar()"
         [alt]="post.creatorName"
         (error)="onAvatarError($event)"
-      />
+        />
       <div class="creator-info">
         <span class="creator-name">{{ post.creatorName }}</span>
-        <span class="creator-title" *ngIf="post.creatorTitle">{{ post.creatorTitle }}</span>
+        @if (post.creatorTitle) {
+          <span class="creator-title">{{ post.creatorTitle }}</span>
+        }
       </div>
     </div>
   </mat-card-content>
 
   <!-- Card Actions -->
-  <mat-card-actions *ngIf="showDeployButton" class="card-actions">
-    <button 
-      mat-raised-button 
-      color="accent"
-      class="deploy-button"
-      (click)="onDeploy($event)"
-      [disabled]="isDeploying"
-    >
-      <span class="button-content">
-        <span class="button-icon">
-          <mat-spinner *ngIf="isDeploying" diameter="18"></mat-spinner>
-          <mat-icon *ngIf="!isDeploying">rocket_launch</mat-icon>
+  @if (showDeployButton) {
+    <mat-card-actions class="card-actions">
+      <button
+        mat-raised-button
+        color="accent"
+        class="deploy-button"
+        (click)="onDeploy($event)"
+        [disabled]="isDeploying"
+        >
+        <span class="button-content">
+          <span class="button-icon">
+            @if (isDeploying) {
+              <mat-spinner diameter="18"></mat-spinner>
+            }
+            @if (!isDeploying) {
+              <mat-icon>rocket_launch</mat-icon>
+            }
+          </span>
+          <span class="button-text">{{ isDeploying ? 'Deploying...' : 'Deploy' }}</span>
         </span>
-        <span class="button-text">{{ isDeploying ? 'Deploying...' : 'Deploy' }}</span>
-      </span>
-    </button>
-  </mat-card-actions>
+      </button>
+    </mat-card-actions>
+  }
 </mat-card>
 

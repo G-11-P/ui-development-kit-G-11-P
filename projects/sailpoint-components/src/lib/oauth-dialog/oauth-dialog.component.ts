@@ -1,5 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,6 @@ export interface OAuthDialogData {
 @Component({
   selector: 'app-oauth-dialog',
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
@@ -25,22 +24,22 @@ export interface OAuthDialogData {
     MatProgressSpinnerModule,
     MatCardModule,
     MatDividerModule
-  ],
+],
   template: `
     <h1 mat-dialog-title>
       <mat-icon class="title-icon">login</mat-icon>
       {{ data.title || 'OAuth Authentication' }}
     </h1>
-
+    
     <div mat-dialog-content class="dialog-content">
       <div class="spinner-container">
         <mat-spinner diameter="40"></mat-spinner>
       </div>
-      
+    
       <p class="instruction-text">
         Please complete authentication in your browser window and return here.
       </p>
-
+    
       <mat-card class="confirmation-code-card">
         <mat-card-header>
           <mat-card-title class="confirmation-label">Confirmation Code</mat-card-title>
@@ -49,43 +48,45 @@ export interface OAuthDialogData {
           <div class="confirmation-code">{{ data.uuid.slice(-8).slice(0, 4).toUpperCase() }}-{{ data.uuid.slice(-8).slice(4, 8).toUpperCase() }}</div>
         </mat-card-content>
       </mat-card>
-
+    
       <mat-divider></mat-divider>
-
-      <mat-card *ngIf="data.authUrl" class="auth-url-card">
-        <mat-card-header>
-          <mat-card-title class="url-label">Authentication URL</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="url-container">
-            <a 
-              [href]="data.authUrl" 
-              target="_blank" 
-              mat-button
-              color="primary"
-              class="auth-url-button">
-              <mat-icon>open_in_new</mat-icon>
-              Open Authentication Page
-            </a>
-            <button 
-              mat-icon-button 
-              (click)="copyUrl()" 
-              matTooltip="Copy URL"
-              color="primary">
-              <mat-icon>content_copy</mat-icon>
-            </button>
-          </div>
-          <p class="url-display">{{ data.authUrl.substring(0, 80) }}...</p>
-        </mat-card-content>
-      </mat-card>
+    
+      @if (data.authUrl) {
+        <mat-card class="auth-url-card">
+          <mat-card-header>
+            <mat-card-title class="url-label">Authentication URL</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="url-container">
+              <a
+                [href]="data.authUrl"
+                target="_blank"
+                mat-button
+                color="primary"
+                class="auth-url-button">
+                <mat-icon>open_in_new</mat-icon>
+                Open Authentication Page
+              </a>
+              <button
+                mat-icon-button
+                (click)="copyUrl()"
+                matTooltip="Copy URL"
+                color="primary">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+            <p class="url-display">{{ data.authUrl.substring(0, 80) }}...</p>
+          </mat-card-content>
+        </mat-card>
+      }
     </div>
-
+    
     <div mat-dialog-actions align="end">
       <button mat-button (click)="onCancel()" class="cancel-button">
         Cancel
       </button>
     </div>
-  `,
+    `,
   styles: [`
     .dialog-content {
       min-width: 450px;

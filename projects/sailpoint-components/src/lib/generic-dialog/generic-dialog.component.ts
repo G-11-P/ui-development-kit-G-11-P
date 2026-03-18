@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -35,7 +35,6 @@ export interface DialogData {
 @Component({
   selector: 'app-generic-dialog',
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatProgressSpinnerModule,
@@ -43,83 +42,103 @@ export interface DialogData {
     MatTooltipModule,
     MatExpansionModule,
     MatCardModule
-  ],
+],
   template: `
     <h1 mat-dialog-title>
-      <mat-icon *ngIf="data.showSpinner" class="title-icon">{{
-        getTitleIcon()
-      }}</mat-icon>
+      @if (data.showSpinner) {
+        <mat-icon class="title-icon">{{
+          getTitleIcon()
+        }}</mat-icon>
+      }
       {{ data.title || 'Notification' }}
     </h1>
-
+    
     <div mat-dialog-content class="dialog-content">
-      <div *ngIf="data.showSpinner" class="spinner-container">
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
-      <div class="copy-container" *ngIf="isJsonMessage">
-        <button
-          id="copyButton"
-          mat-icon-button
-          (click)="copyToClipboard()"
-          matTooltip="Copy to clipboard"
-        >
-          <mat-icon>content_copy</mat-icon>
-        </button>
-      </div>
-      <ng-container *ngIf="!isUnsavedChangesPrompt">
-        <pre class="dialog-message json-message" *ngIf="isJsonMessage"><code class="language-json" [innerHTML]="highlightedJson"></code></pre>
-        <pre class="dialog-message text-message" *ngIf="!isJsonMessage">{{ formattedMessage }}</pre>
-      </ng-container>
-      <p *ngIf="data.showSpinner && isOAuthFlow()" class="oauth-instruction">
-        <mat-icon class="info-icon">info</mat-icon>
-        Please complete the authentication in your browser window and return
-        here.
-      </p>
-    <mat-accordion *ngIf="data.treeData?.length" class="usage-accordion">
-        <mat-expansion-panel *ngFor="let root of data.treeData">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{ root.name }}</mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div class="entry-cards">
-            <mat-card *ngFor="let entry of root.children" class="entry-card mat-elevation-z2">
-              <mat-card-header>
-                <mat-card-title>{{ entry.name }}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div *ngFor="let leaf of entry.children" class="leaf-item">{{ leaf.name }}</div>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
+      @if (data.showSpinner) {
+        <div class="spinner-container">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @if (isJsonMessage) {
+        <div class="copy-container">
+          <button
+            id="copyButton"
+            mat-icon-button
+            (click)="copyToClipboard()"
+            matTooltip="Copy to clipboard"
+            >
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      }
+      @if (!isUnsavedChangesPrompt) {
+        @if (isJsonMessage) {
+          <pre class="dialog-message json-message"><code class="language-json" [innerHTML]="highlightedJson"></code></pre>
+        }
+        @if (!isJsonMessage) {
+          <pre class="dialog-message text-message">{{ formattedMessage }}</pre>
+        }
+      }
+      @if (data.showSpinner && isOAuthFlow()) {
+        <p class="oauth-instruction">
+          <mat-icon class="info-icon">info</mat-icon>
+          Please complete the authentication in your browser window and return
+          here.
+        </p>
+      }
+      @if (data.treeData?.length) {
+        <mat-accordion class="usage-accordion">
+          @for (root of data.treeData; track root) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ root.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="entry-cards">
+                @for (entry of root.children; track entry) {
+                  <mat-card class="entry-card mat-elevation-z2">
+                    <mat-card-header>
+                      <mat-card-title>{{ entry.name }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      @for (leaf of entry.children; track leaf) {
+                        <div class="leaf-item">{{ leaf.name }}</div>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      }
     </div>
     <div mat-dialog-actions align="end">
       <!-- Confirmation Dialog Buttons -->
-      <ng-container *ngIf="data.isConfirmation">
+      @if (data.isConfirmation) {
         <button mat-button (click)="onCancel()">
           {{ data.cancelText || 'Cancel' }}
         </button>
         <button mat-raised-button color="warn" (click)="onConfirm()">
           {{ data.confirmText || 'Confirm' }}
         </button>
-      </ng-container>
+      }
       <!-- Standard Dialog Button -->
-      <button
-        id="closeButton"
-        mat-button
-        (click)="onClose()"
-        *ngIf="!data.isConfirmation && data.showCancel !== false"
-      >
-        {{ data.showSpinner ? 'Cancel' : 'Close' }}
-      </button>
-
-      <ng-container *ngIf="isUnsavedChangesPrompt">
+      @if (!data.isConfirmation && data.showCancel !== false) {
+        <button
+          id="closeButton"
+          mat-button
+          (click)="onClose()"
+          >
+          {{ data.showSpinner ? 'Cancel' : 'Close' }}
+        </button>
+      }
+    
+      @if (isUnsavedChangesPrompt) {
         <button mat-button color="warn" (click)="onDiscard()">Discard</button>
         <button mat-button color="primary" (click)="onSave()">Save</button>
-      </ng-container>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
     .mat-dialog-container,

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +21,6 @@ import { TransformResult } from './transform-preview.component';
   templateUrl: './transform-results.component.html',
   styleUrls: ['./transform-results.component.scss'],
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -36,7 +35,7 @@ import { TransformResult } from './transform-preview.component';
     MatSnackBarModule,
     MatTableModule,
     MatToolbarModule
-  ],
+],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
 })

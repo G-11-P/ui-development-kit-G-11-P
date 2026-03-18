@@ -1,58 +1,60 @@
 <div class="velocity-editor-dialog" (keydown)="$event.stopPropagation()">
-      <h2 mat-dialog-title>{{ data.title || 'Edit Velocity Code' }}</h2>
-      
-      <mat-dialog-content class="dialog-content">
-        <form [formGroup]="editorForm" class="editor-form">
-          <div class="editor-toolbar">
-            <div class="toolbar-left">
-              <button 
-                mat-icon-button 
-                matTooltip="Format Code"
-                type="button" 
-                (click)="formatCode()"
-                title="Format Code">
-                <mat-icon>code</mat-icon>
-              </button>
-              <button 
-                mat-icon-button 
-                type="button" 
-                (click)="toggleWordWrap()"
-                title="Toggle Word Wrap">
-                <mat-icon>wrap_text</mat-icon>
-              </button>
-            </div>
-            <div class="toolbar-right">
-              <span class="editor-info" *ngIf="editorStats">
-                <span class="info-item">Lines: {{ editorStats.lines }}</span>
-                <span class="info-item">Length: {{ editorStats.length }}</span>
-                <span class="info-item">Sel: {{ editorStats.selection }}</span>
-                <span class="info-item">Pos: {{ editorStats.cursor }}</span>
-              </span>
-            </div>
-          </div>
-          
-          <div class="code-editor-container" #editorContainer>
-            <!-- CodeMirror will be mounted here -->
-          </div>
-        </form>
-      </mat-dialog-content>
-      
-      <mat-dialog-actions align="end" class="dialog-actions">
-        <button 
-          mat-button 
-          type="button" 
-          (click)="onCancel()"
-          class="cancel-btn">
-          Cancel
-        </button>
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="button"
-          (click)="onSave()"
-          [disabled]="!editorForm.valid || !hasChanges"
-          class="save-btn">
-          Save
-        </button>
-      </mat-dialog-actions>
-    </div>
+  <h2 mat-dialog-title>{{ data.title || 'Edit Velocity Code' }}</h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="editorForm" class="editor-form">
+      <div class="editor-toolbar">
+        <div class="toolbar-left">
+          <button
+            mat-icon-button
+            matTooltip="Format Code"
+            type="button"
+            (click)="formatCode()"
+            title="Format Code">
+            <mat-icon>code</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            (click)="toggleWordWrap()"
+            title="Toggle Word Wrap">
+            <mat-icon>wrap_text</mat-icon>
+          </button>
+        </div>
+        <div class="toolbar-right">
+          @if (editorStats) {
+            <span class="editor-info">
+              <span class="info-item">Lines: {{ editorStats.lines }}</span>
+              <span class="info-item">Length: {{ editorStats.length }}</span>
+              <span class="info-item">Sel: {{ editorStats.selection }}</span>
+              <span class="info-item">Pos: {{ editorStats.cursor }}</span>
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="code-editor-container" #editorContainer>
+        <!-- CodeMirror will be mounted here -->
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      class="cancel-btn">
+      Cancel
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onSave()"
+      [disabled]="!editorForm.valid || !hasChanges"
+      class="save-btn">
+      Save
+    </button>
+  </mat-dialog-actions>
+</div>

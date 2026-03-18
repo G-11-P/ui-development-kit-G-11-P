@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ export interface MapRow {
   selector: 'app-map-editor-dialog',
   templateUrl: './map-editor-dialog.component.html',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, CommonModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule, MatInput],
+  imports: [MatTableModule, MatButtonModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule, MatInput],
 
 })
 export class MapEditorDialogComponent {

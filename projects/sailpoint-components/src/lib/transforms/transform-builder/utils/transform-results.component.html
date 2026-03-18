@@ -1,44 +1,50 @@
 <div class="results-container">
   <h2 class="section-title">Transform Results</h2>
 
-  <div *ngIf="results.length === 0" class="no-results">
-    <mat-icon>info</mat-icon>
-    <span
-      >No transform results available. Run a transform to see results
-      here.</span
-    >
-  </div>
+  @if (results.length === 0) {
+    <div class="no-results">
+      <mat-icon>info</mat-icon>
+      <span
+        >No transform results available. Run a transform to see results
+        here.</span
+        >
+      </div>
+    }
 
-  <div *ngIf="results.length > 0" class="results-list">
-    <mat-accordion>
-      <mat-expansion-panel
-        *ngFor="let result of results; trackBy: trackByIdentityId"
-        [expanded]="expandedPanels[result.identityName]"
-        (opened)="expandedPanels[result.identityName] = true"
-        (closed)="expandedPanels[result.identityName] = false"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <div class="panel-title">
-              <span>{{ result.identityName }}</span>
-              <mat-chip
-                [color]="result.success ? 'primary' : 'warn'"
-                [highlighted]="true"
+    @if (results.length > 0) {
+      <div class="results-list">
+        <mat-accordion>
+          @for (result of results; track trackByIdentityId($index, result)) {
+            <mat-expansion-panel
+              [expanded]="expandedPanels[result.identityName]"
+              (opened)="expandedPanels[result.identityName] = true"
+              (closed)="expandedPanels[result.identityName] = false"
               >
-                {{ result.success ? "Success" : "Error" }}
-              </mat-chip>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description>
-            <span>Result: {{ result.result }}</span>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <div *ngIf="!result.success" class="error-message">
-          <mat-icon color="warn">error</mat-icon>
-          <span style="margin-left: 1em">{{ result.error }}</span>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="panel-title">
+                    <span>{{ result.identityName }}</span>
+                    <mat-chip
+                      [color]="result.success ? 'primary' : 'warn'"
+                      [highlighted]="true"
+                      >
+                      {{ result.success ? "Success" : "Error" }}
+                    </mat-chip>
+                  </div>
+                </mat-panel-title>
+                <mat-panel-description>
+                  <span>Result: {{ result.result }}</span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              @if (!result.success) {
+                <div class="error-message">
+                  <mat-icon color="warn">error</mat-icon>
+                  <span style="margin-left: 1em">{{ result.error }}</span>
+                </div>
+              }
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+    }
   </div>
-</div>

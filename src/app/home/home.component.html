@@ -1,248 +1,281 @@
 <!-- Not Connected State - Show Environment Management and Connection -->
-<div *ngIf="!state.isConnected && !state.loading" class="home-container">
-  <!-- Welcome Section -->
-  <div class="welcome-section">
-    <h1>Welcome to the SailPoint UI Development Kit</h1>
-      <p *ngIf="!state.isWebMode">Select an environment and connect to your SailPoint tenant to get started.</p>
-  </div>
-  
-  <!-- Web Authentication Component (shown only in web mode) -->
-  <app-web-auth *ngIf="state.isWebMode" (authEvent)="handleAuthEvent($event)"></app-web-auth>
-
-  <!-- Unified Environment Management and Connection Section -->
-  <!-- Hide this section in web mode since we use the simplified web-auth component -->
-  <mat-card *ngIf="!state.isWebMode" class="environment-card">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>cloud</mat-icon>
-        Environment & Connection
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <!-- Environment Selection -->
-      <div class="environment-section">
-        <mat-form-field appearance="outline" class="environment-select">
-          <mat-label>Select Environment</mat-label>
-          <mat-select [(value)]="state.selectedTenant" (selectionChange)="updateTenant()">
-            <mat-option value="new">+ Create New Environment</mat-option>
-            <mat-option *ngFor="let tenant of state.tenants" [value]="tenant.name">
-              {{ tenant.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button mat-icon-button (click)="toggleEnvironmentDetails()" title="Configure Environment"
-          class="action-button">
-          <mat-icon>{{ state.showEnvironmentDetails ? 'expand_less' : 'settings' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- Environment Details/Configuration -->
-      <div *ngIf="state.showEnvironmentDetails || state.selectedTenant === 'new'" class="environment-details">
-        <form class="config-form">
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Environment Name</mat-label>
-              <input matInput [(ngModel)]="state.actualTenant.name" name="environmentName"
-                placeholder="My Development Environment" [disabled]="state.selectedTenant !== 'new'" required>
-              <mat-hint>A friendly name for this environment configuration</mat-hint>
-            </mat-form-field>
-          </div>
-
-          <div class="form-row" *ngIf="state.selectedTenant === 'new'">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Tenant Name (for URL generation)</mat-label>
-              <input matInput [(ngModel)]="state.actualTenant.tenantName" name="tempTenantName"
-                (input)="onTenantNameChange()" placeholder="your-tenant-name" required>
-              <mat-hint>Your SailPoint tenant identifier - used only to auto-generate URLs below</mat-hint>
-            </mat-form-field>
-          </div>
-
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Tenant URL</mat-label>
-              <input matInput [(ngModel)]="state.actualTenant.tenantUrl" name="tenantUrl"
-                placeholder="https://your-tenant.identitynow.com" required>
-            </mat-form-field>
-          </div>
-
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>API Base URL</mat-label>
-              <input matInput [(ngModel)]="state.actualTenant.apiUrl" name="baseUrl" (input)="onBaseUrlChange()"
-                placeholder="https://your-tenant.api.identitynow.com" required>
-            </mat-form-field>
-          </div>
-
-          <!-- Authentication Type Toggle -->
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Authentication Method</mat-label>
-              <mat-select [(value)]="state.actualTenant.authtype">
-                <mat-option value="pat">
-                  <mat-icon>vpn_key</mat-icon>
-                  Personal Access Token (PAT)
-                </mat-option>
-                <mat-option value="oauth">
-                  <mat-icon>verified_user</mat-icon>
-                  OAuth Browser Authentication
-                </mat-option>
+@if (!state.isConnected && !state.loading) {
+  <div class="home-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1>Welcome to the SailPoint UI Development Kit</h1>
+      @if (!state.isWebMode) {
+        <p>Select an environment and connect to your SailPoint tenant to get started.</p>
+      }
+    </div>
+    <!-- Web Authentication Component (shown only in web mode) -->
+    @if (state.isWebMode) {
+      <app-web-auth (authEvent)="handleAuthEvent($event)"></app-web-auth>
+    }
+    <!-- Unified Environment Management and Connection Section -->
+    <!-- Hide this section in web mode since we use the simplified web-auth component -->
+    @if (!state.isWebMode) {
+      <mat-card class="environment-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>cloud</mat-icon>
+            Environment & Connection
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Environment Selection -->
+          <div class="environment-section">
+            <mat-form-field appearance="outline" class="environment-select">
+              <mat-label>Select Environment</mat-label>
+              <mat-select [(value)]="state.selectedTenant" (selectionChange)="updateTenant()">
+                <mat-option value="new">+ Create New Environment</mat-option>
+                @for (tenant of state.tenants; track tenant) {
+                  <mat-option [value]="tenant.name">
+                    {{ tenant.name }}
+                  </mat-option>
+                }
               </mat-select>
-              <mat-hint>Choose how to authenticate with this environment</mat-hint>
             </mat-form-field>
+            <button mat-icon-button (click)="toggleEnvironmentDetails()" title="Configure Environment"
+              class="action-button">
+              <mat-icon>{{ state.showEnvironmentDetails ? 'expand_less' : 'settings' }}</mat-icon>
+            </button>
           </div>
-
-          <!-- CA Certificate Path -->
-          <div class="form-row">
-            <div class="ca-cert-input-group">
-              <mat-form-field appearance="outline" class="ca-cert-input">
-                <mat-label>Custom CA Certificate Path (Optional)</mat-label>
-                <input matInput [(ngModel)]="state.actualTenant.caCertPath" 
-                       name="caCertPath" placeholder="/path/to/cert.pem"
-                       (input)="onCaCertPathChange()">
-                <mat-hint>Path to CA certificate file</mat-hint>
-              </mat-form-field>
-              <button mat-stroked-button type="button" (click)="browseCaCertFile()" 
-                      class="browse-button" *ngIf="!state.isWebMode"
-                      matTooltip="Browse for certificate file">
-                <mat-icon>folder_open</mat-icon>
-                Browse
-              </button>
-            </div>
-          </div>
-          <div class="ca-cert-hint" *ngIf="state.actualTenant.caCertPath">
-            <mat-icon class="info-icon" color="primary">info</mat-icon>
-            <span>Using custom CA certificate allows for TLS connection even behind corporate proxy networks that inspect traffic</span>
-          </div>
-
-          <!-- TLS Bypass Option -->
-          <div class="form-row">
-            <mat-checkbox [(ngModel)]="state.actualTenant.bypassTLS" name="bypassTLS" color="warn"
-                          (change)="onTlsBypassChange()">
-              Bypass TLS Certificate Validation
-            </mat-checkbox>
-            <div class="tls-bypass-hint" *ngIf="state.actualTenant.bypassTLS">
-              <mat-icon class="warning-icon" color="warn">warning</mat-icon>
-              <span>This will disable SSL certificate validation for this environment. Only use for debugging or test purposes. DO NOT USE FOR PRODUCTION.</span>
-            </div>
-          </div>
-
-          <!-- PAT Fields -->
-          <div *ngIf="state.actualTenant.authtype === 'pat'" class="pat-section">
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Client ID</mat-label>
-                <input matInput [(ngModel)]="state.actualTenant.clientId" name="clientId" required>
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Client Secret</mat-label>
-                <input matInput type="password" [(ngModel)]="state.actualTenant.clientSecret" name="clientSecret" required>
-              </mat-form-field>
-            </div>
-          </div>
-
-          <!-- OAuth Info -->
-          <div *ngIf="state.actualTenant.authtype === 'oauth'" class="oauth-section">
-            <p class="oauth-info">
-              <mat-icon>info</mat-icon>
-              OAuth authentication will open your browser for secure login.
-            </p>
-
-            <!-- OAuth Validation Status -->
-            <div class="oauth-validation" *ngIf="state.actualTenant.apiUrl">
+          <!-- Environment Details/Configuration -->
+          @if (state.showEnvironmentDetails || state.selectedTenant === 'new') {
+            <div class="environment-details">
+              <form class="config-form">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Environment Name</mat-label>
+                    <input matInput [(ngModel)]="state.actualTenant.name" name="environmentName"
+                      placeholder="My Development Environment" [disabled]="state.selectedTenant !== 'new'" required>
+                    <mat-hint>A friendly name for this environment configuration</mat-hint>
+                  </mat-form-field>
+                </div>
+                @if (state.selectedTenant === 'new') {
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Tenant Name (for URL generation)</mat-label>
+                      <input matInput [(ngModel)]="state.actualTenant.tenantName" name="tempTenantName"
+                        (input)="onTenantNameChange()" placeholder="your-tenant-name" required>
+                      <mat-hint>Your SailPoint tenant identifier - used only to auto-generate URLs below</mat-hint>
+                    </mat-form-field>
+                  </div>
+                }
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tenant URL</mat-label>
+                    <input matInput [(ngModel)]="state.actualTenant.tenantUrl" name="tenantUrl"
+                      placeholder="https://your-tenant.identitynow.com" required>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>API Base URL</mat-label>
+                      <input matInput [(ngModel)]="state.actualTenant.apiUrl" name="baseUrl" (input)="onBaseUrlChange()"
+                        placeholder="https://your-tenant.api.identitynow.com" required>
+                      </mat-form-field>
+                    </div>
+                    <!-- Authentication Type Toggle -->
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Authentication Method</mat-label>
+                        <mat-select [(value)]="state.actualTenant.authtype">
+                          <mat-option value="pat">
+                            <mat-icon>vpn_key</mat-icon>
+                            Personal Access Token (PAT)
+                          </mat-option>
+                          <mat-option value="oauth">
+                            <mat-icon>verified_user</mat-icon>
+                            OAuth Browser Authentication
+                          </mat-option>
+                        </mat-select>
+                        <mat-hint>Choose how to authenticate with this environment</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <!-- CA Certificate Path -->
+                    <div class="form-row">
+                      <div class="ca-cert-input-group">
+                        <mat-form-field appearance="outline" class="ca-cert-input">
+                          <mat-label>Custom CA Certificate Path (Optional)</mat-label>
+                          <input matInput [(ngModel)]="state.actualTenant.caCertPath"
+                            name="caCertPath" placeholder="/path/to/cert.pem"
+                            (input)="onCaCertPathChange()">
+                          <mat-hint>Path to CA certificate file</mat-hint>
+                        </mat-form-field>
+                        @if (!state.isWebMode) {
+                          <button mat-stroked-button type="button" (click)="browseCaCertFile()"
+                            class="browse-button"
+                            matTooltip="Browse for certificate file">
+                            <mat-icon>folder_open</mat-icon>
+                            Browse
+                          </button>
+                        }
+                      </div>
+                    </div>
+                    @if (state.actualTenant.caCertPath) {
+                      <div class="ca-cert-hint">
+                        <mat-icon class="info-icon" color="primary">info</mat-icon>
+                        <span>Using custom CA certificate allows for TLS connection even behind corporate proxy networks that inspect traffic</span>
+                      </div>
+                    }
+                    <!-- TLS Bypass Option -->
+                    <div class="form-row">
+                      <mat-checkbox [(ngModel)]="state.actualTenant.bypassTLS" name="bypassTLS" color="warn"
+                        (change)="onTlsBypassChange()">
+                        Bypass TLS Certificate Validation
+                      </mat-checkbox>
+                      @if (state.actualTenant.bypassTLS) {
+                        <div class="tls-bypass-hint">
+                          <mat-icon class="warning-icon" color="warn">warning</mat-icon>
+                          <span>This will disable SSL certificate validation for this environment. Only use for debugging or test purposes. DO NOT USE FOR PRODUCTION.</span>
+                        </div>
+                      }
+                    </div>
+                    <!-- PAT Fields -->
+                    @if (state.actualTenant.authtype === 'pat') {
+                      <div class="pat-section">
+                        <div class="form-row">
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Client ID</mat-label>
+                            <input matInput [(ngModel)]="state.actualTenant.clientId" name="clientId" required>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-row">
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Client Secret</mat-label>
+                            <input matInput type="password" [(ngModel)]="state.actualTenant.clientSecret" name="clientSecret" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    }
+                    <!-- OAuth Info -->
+                    @if (state.actualTenant.authtype === 'oauth') {
+                      <div class="oauth-section">
+                        <p class="oauth-info">
+                          <mat-icon>info</mat-icon>
+                          OAuth authentication will open your browser for secure login.
+                        </p>
+                        <!-- OAuth Validation Status -->
+                        @if (state.actualTenant.apiUrl) {
+                          <div class="oauth-validation">
               <div class="validation-indicator" [ngClass]="{
                 'validation-unknown': state.oauthValidationStatus === 'unknown',
                 'validation-testing': state.oauthValidationStatus === 'testing',
                 'validation-valid': state.oauthValidationStatus === 'valid',
                 'validation-invalid': state.oauthValidationStatus === 'invalid'
               }">
-                <mat-icon *ngIf="state.oauthValidationStatus === 'testing'">sync</mat-icon>
-                <mat-icon *ngIf="state.oauthValidationStatus === 'valid'">check_circle</mat-icon>
-                <mat-icon *ngIf="state.oauthValidationStatus === 'invalid'">error</mat-icon>
-                <mat-icon *ngIf="state.oauthValidationStatus === 'unknown'">help_outline</mat-icon>
-                <span>
-                  <ng-container [ngSwitch]="state.oauthValidationStatus">
-                    <span *ngSwitchCase="'testing'">Testing OAuth endpoint...</span>
-                    <span *ngSwitchCase="'valid'">OAuth endpoint is reachable</span>
-                    <span *ngSwitchCase="'invalid'">OAuth endpoint is not reachable</span>
-                    <span *ngSwitchDefault>OAuth endpoint not tested</span>
-                  </ng-container>
-                </span>
-              </div>
-            </div>
-            
-          </div>
-
-          <!-- Save Environment Button -->
-          <div class="form-actions" *ngIf="state.showEnvironmentDetails || state.selectedTenant === 'new'">
-            <button mat-raised-button color="accent" type="button" (click)="saveEnvironment()" class="save-button">
-              <mat-icon>save</mat-icon>
-              {{ state.selectedTenant === 'new' ? 'Create Environment' : 'Update Environment' }}
-            </button>
-
-            <button mat-stroked-button color="warn" type="button" (click)="deleteEnvironment()"
-              *ngIf="state.selectedTenant !== 'new'" class="delete-button">
-              <mat-icon>delete</mat-icon>
-              Delete Environment
-            </button>
-          </div>
-        </form>
+                              @if (state.oauthValidationStatus === 'testing') {
+                                <mat-icon>sync</mat-icon>
+                              }
+                              @if (state.oauthValidationStatus === 'valid') {
+                                <mat-icon>check_circle</mat-icon>
+                              }
+                              @if (state.oauthValidationStatus === 'invalid') {
+                                <mat-icon>error</mat-icon>
+                              }
+                              @if (state.oauthValidationStatus === 'unknown') {
+                                <mat-icon>help_outline</mat-icon>
+                              }
+                              <span>
+                                @switch (state.oauthValidationStatus) {
+                                  @case ('testing') {
+                                    <span>Testing OAuth endpoint...</span>
+                                  }
+                                  @case ('valid') {
+                                    <span>OAuth endpoint is reachable</span>
+                                  }
+                                  @case ('invalid') {
+                                    <span>OAuth endpoint is not reachable</span>
+                                  }
+                                  @default {
+                                    <span>OAuth endpoint not tested</span>
+                                  }
+                                }
+                              </span>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+                    <!-- Save Environment Button -->
+                    @if (state.showEnvironmentDetails || state.selectedTenant === 'new') {
+                      <div class="form-actions">
+                        <button mat-raised-button color="accent" type="button" (click)="saveEnvironment()" class="save-button">
+                          <mat-icon>save</mat-icon>
+                          {{ state.selectedTenant === 'new' ? 'Create Environment' : 'Update Environment' }}
+                        </button>
+                        @if (state.selectedTenant !== 'new') {
+                          <button mat-stroked-button color="warn" type="button" (click)="deleteEnvironment()"
+                            class="delete-button">
+                            <mat-icon>delete</mat-icon>
+                            Delete Environment
+                          </button>
+                        }
+                      </div>
+                    }
+                  </form>
+                </div>
+              }
+              <!-- Auth Method and Connection Section -->
+              @if (state.selectedTenant !== 'new') {
+                <div class="connection-section">
+                  <!-- Auth Method Selector -->
+                  <div class="auth-method-section">
+                    <!-- Connection Button -->
+                    <div class="connection-action">
+                      <button mat-raised-button
+                        color="primary"
+                        (click)="connectToISC()"
+                        class="connect-button"
+                        [disabled]="authenticating">
+                        <div class="button-content">
+                          @if (!authenticating) {
+                            <mat-icon>login</mat-icon>
+                          }
+                          @if (authenticating) {
+                            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+                          }
+                          <span>Connect to Environment</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
       </div>
+    }
 
-      <!-- Auth Method and Connection Section -->
-      <div *ngIf="state.selectedTenant !== 'new'" class="connection-section">
-        <!-- Auth Method Selector -->
-        <div class="auth-method-section">
-          <!-- Connection Button -->
-          <div class="connection-action">
-            <button mat-raised-button 
-                    color="primary"
-                    (click)="connectToISC()" 
-                    class="connect-button"
-                    [disabled]="authenticating">
-              <div class="button-content">
-                <mat-icon *ngIf="!authenticating">login</mat-icon>
-                <mat-spinner *ngIf="authenticating" diameter="20" class="button-spinner"></mat-spinner>
-                <span>Connect to Environment</span>
-              </div>
-            </button>
+    <!-- Connected State -->
+    @if (state.isConnected) {
+      <div class="dashboard-page">
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+          <!-- Top Row - Stats Cards -->
+          <div class="dashboard-row">
+            <div class="dashboard-card stats-card">
+              <app-tenant-data></app-tenant-data>
+            </div>
+            <div class="dashboard-card stats-card">
+              <app-sources></app-sources>
+            </div>
+            <div class="dashboard-card stats-card">
+              <app-identities></app-identities>
+            </div>
+            <div class="dashboard-card stats-card">
+              <app-identity-profiles></app-identity-profiles>
+            </div>
+          </div>
+          <!-- Bottom Row - Shortcuts Card -->
+          <div class="dashboard-row">
+            <div class="dashboard-card shortcuts-card">
+              <app-shortcuts></app-shortcuts>
+            </div>
           </div>
         </div>
       </div>
-
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<!-- Connected State -->
-<div *ngIf="state.isConnected" class="dashboard-page">
-  
-  <!-- Main Dashboard Grid -->
-  <div class="dashboard-grid">
-    <!-- Top Row - Stats Cards -->
-    <div class="dashboard-row">
-      <div class="dashboard-card stats-card">
-        <app-tenant-data></app-tenant-data>
-      </div>
-      <div class="dashboard-card stats-card">
-        <app-sources></app-sources>
-      </div>
-      <div class="dashboard-card stats-card">
-        <app-identities></app-identities>
-      </div>
-      <div class="dashboard-card stats-card">
-        <app-identity-profiles></app-identity-profiles>
-      </div>
-    </div>
-
-    <!-- Bottom Row - Shortcuts Card -->
-    <div class="dashboard-row">
-      <div class="dashboard-card shortcuts-card">
-        <app-shortcuts></app-shortcuts>
-      </div>
-    </div>
-  </div>
-</div>
+    }

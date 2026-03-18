@@ -10,30 +10,29 @@
       sidebar.
     </p>
     <div class="components-grid">
-      <mat-card
-        *ngFor="let component of availableComponents"
-        class="component-card"
-      >
-        <mat-card-header>
-          <mat-icon mat-card-avatar>{{ component.icon }}</mat-icon>
-          <mat-card-title>{{ component.displayName }}</mat-card-title>
-        </mat-card-header>
-
-        <mat-card-content>
-          <p>{{ component.description }}</p>
-        </mat-card-content>
-
-        <mat-card-actions class="card-actions">
-          <span class="spacer"></span>
-          <mat-slide-toggle
-            [checked]="component.enabled"
-            (change)="onToggleComponent(component)"
-            color="primary"
+      @for (component of availableComponents; track component) {
+        <mat-card
+          class="component-card"
           >
-            {{ component.enabled ? "Enabled" : "Disabled" }}
-          </mat-slide-toggle>
-        </mat-card-actions>
-      </mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>{{ component.icon }}</mat-icon>
+            <mat-card-title>{{ component.displayName }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ component.description }}</p>
+          </mat-card-content>
+          <mat-card-actions class="card-actions">
+            <span class="spacer"></span>
+            <mat-slide-toggle
+              [checked]="component.enabled"
+              (change)="onToggleComponent(component)"
+              color="primary"
+              >
+              {{ component.enabled ? "Enabled" : "Disabled" }}
+            </mat-slide-toggle>
+          </mat-card-actions>
+        </mat-card>
+      }
     </div>
   </div>
 </div>

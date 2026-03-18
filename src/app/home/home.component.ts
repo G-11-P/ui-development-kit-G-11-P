@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, inject, DOCUMENT } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ConnectionService } from '../services/connection.service';
@@ -24,7 +24,7 @@ import { IdentitiesComponent } from './dashboard-cards/identities/identities.com
 import { IdentityProfilesComponent } from './dashboard-cards/identity-profiles/identity-profiles.component';
 import { ShortcutsComponent } from './dashboard-cards/shortcuts/shortcuts.component';
 import { ElectronApiFactoryService } from 'sailpoint-components';
-import { DOCUMENT } from '@angular/common';
+
 import { WebAuthComponent, AuthEvent } from '../web-auth/web-auth.component';
 import { GenericDialogComponent, OAuthDialogComponent, OAuthDialogData } from 'sailpoint-components'
 import { environment } from '../../environments/environment';

@@ -3,7 +3,7 @@ import { AppComponent } from './app/app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withHashLocation } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +19,7 @@ export const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideAnimations(),
+    provideZoneChangeDetection(),provideAnimations(),
     provideHttpClient(),
     provideRouter(appRoutes, withHashLocation()),
     { provide: WEB_API_URL, useValue: environment.webApiUrl },

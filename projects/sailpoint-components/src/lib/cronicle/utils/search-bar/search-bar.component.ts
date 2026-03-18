@@ -1,6 +1,6 @@
 // Angular core and module imports
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-search-bar', // Component selector for use in templates
   standalone: true,           // Allows this component to be used without needing to be declared in a module
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule], // Modules this component depends on
+  imports: [FormsModule, MatFormFieldModule, MatInputModule], // Modules this component depends on
   templateUrl: './search-bar.component.html', // HTML template file
   styleUrl: './search-bar.component.scss',    // SCSS style file
 })

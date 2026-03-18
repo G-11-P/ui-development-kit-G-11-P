@@ -4,85 +4,84 @@
       <mat-icon>arrow_back</mat-icon>
     </button>
     <span class="toolbar-title">{{ title }}</span>
-    
+
     <div class="spacer"></div>
-    
-    <span *ngIf="totalCount > 0" class="count-badge">
-      {{ totalCount }} identities
-    </span>
+
+    @if (totalCount > 0) {
+      <span class="count-badge">
+        {{ totalCount }} identities
+      </span>
+    }
   </mat-toolbar>
 
   <div class="content">
-    <div *ngIf="loading" class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Loading identity details...</p>
-    </div>
+    @if (loading) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading identity details...</p>
+      </div>
+    }
 
-    <div *ngIf="!loading" class="table-container">
-      <mat-card>
-        <mat-card-content>
-          <div *ngIf="allIdentities.length === 0" class="no-data">
-            <mat-icon>info</mat-icon>
-            <p>No identities match the selected criteria</p>
-            <button mat-raised-button color="primary" (click)="navigateBack()">
-              Back to Charts
-            </button>
-          </div>
-
-          <ng-container *ngIf="allIdentities.length > 0">
-            <!-- Filter form -->
-            <div class="filter-container">
-              <h3>{{ filterCategory }}: {{ filterValue }}</h3>
-            </div>
-
-            <!-- Identity table -->
-            <table mat-table [dataSource]="displayedIdentities" matSort (matSortChange)="sortData($event)" class="identity-table">
-              
-              <!-- Name Column -->
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                <td mat-cell *matCellDef="let identity">{{ identity.name }}</td>
-              </ng-container>
-
-              <!-- Alias Column -->
-              <ng-container matColumnDef="alias">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
-                <td mat-cell *matCellDef="let identity">{{ identity.alias || '–' }}</td>
-              </ng-container>
-
-              <!-- Email Column -->
-              <ng-container matColumnDef="emailAddress">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                <td mat-cell *matCellDef="let identity">{{ identity.emailAddress || '–' }}</td>
-              </ng-container>
-
-              <!-- Status Column -->
-              <ng-container matColumnDef="identityStatus">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                <td mat-cell *matCellDef="let identity">{{ identity.identityStatus || 'Unknown' }}</td>
-              </ng-container>
-
-              <!-- Lifecycle State Column -->
-              <ng-container matColumnDef="lifecycleState">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Lifecycle State</th>
-                <td mat-cell *matCellDef="let identity">{{ formatLifecycleState(identity) }}</td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-
-            <!-- Pagination -->
-            <mat-paginator 
-              [length]="totalCount"
-              [pageSize]="pageSize"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              (page)="onPageChange($event)"
-              aria-label="Select page of identities">
-            </mat-paginator>
-          </ng-container>
-        </mat-card-content>
-      </mat-card>
-    </div>
+    @if (!loading) {
+      <div class="table-container">
+        <mat-card>
+          <mat-card-content>
+            @if (allIdentities.length === 0) {
+              <div class="no-data">
+                <mat-icon>info</mat-icon>
+                <p>No identities match the selected criteria</p>
+                <button mat-raised-button color="primary" (click)="navigateBack()">
+                  Back to Charts
+                </button>
+              </div>
+            }
+            @if (allIdentities.length > 0) {
+              <!-- Filter form -->
+              <div class="filter-container">
+                <h3>{{ filterCategory }}: {{ filterValue }}</h3>
+              </div>
+              <!-- Identity table -->
+              <table mat-table [dataSource]="displayedIdentities" matSort (matSortChange)="sortData($event)" class="identity-table">
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                  <td mat-cell *matCellDef="let identity">{{ identity.name }}</td>
+                </ng-container>
+                <!-- Alias Column -->
+                <ng-container matColumnDef="alias">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+                  <td mat-cell *matCellDef="let identity">{{ identity.alias || '–' }}</td>
+                </ng-container>
+                <!-- Email Column -->
+                <ng-container matColumnDef="emailAddress">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                  <td mat-cell *matCellDef="let identity">{{ identity.emailAddress || '–' }}</td>
+                </ng-container>
+                <!-- Status Column -->
+                <ng-container matColumnDef="identityStatus">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let identity">{{ identity.identityStatus || 'Unknown' }}</td>
+                </ng-container>
+                <!-- Lifecycle State Column -->
+                <ng-container matColumnDef="lifecycleState">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Lifecycle State</th>
+                  <td mat-cell *matCellDef="let identity">{{ formatLifecycleState(identity) }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <!-- Pagination -->
+              <mat-paginator
+                [length]="totalCount"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                (page)="onPageChange($event)"
+                aria-label="Select page of identities">
+              </mat-paginator>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
   </div>
 </div>

@@ -33,36 +33,44 @@
 
 
       <!-- Validation Error Display -->
-      <div *ngIf="cronValidationError()" class="validation-error">
-        <mat-icon color="warn">error</mat-icon>
-        <span>{{ cronValidationError() }}</span>
-      </div>
+      @if (cronValidationError()) {
+        <div class="validation-error">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ cronValidationError() }}</span>
+        </div>
+      }
 
       <!-- Preview Display -->
-      <div *ngIf="isPreviewed() && !cronValidationError()" class="preview-success">
-        <mat-icon color="primary">check_circle</mat-icon>
-        <span><strong>Preview:</strong> {{ cronPreview }}</span>
-      </div>
+      @if (isPreviewed() && !cronValidationError()) {
+        <div class="preview-success">
+          <mat-icon color="primary">check_circle</mat-icon>
+          <span><strong>Preview:</strong> {{ cronPreview }}</span>
+        </div>
+      }
 
       <div class="row">
         <!-- Preview Button (shown when not previewed or has error) -->
-        <button *ngIf="!isPreviewed() || cronValidationError()" 
-                mat-raised-button 
-                color="primary" 
-                (click)="previewCronExpression()" 
-                [disabled]="busy() || !schedForm.get('cronExpression')?.value">
-          Preview
-        </button>
-        
+        @if (!isPreviewed() || cronValidationError()) {
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="previewCronExpression()"
+            [disabled]="busy() || !schedForm.get('cronExpression')?.value">
+            Preview
+          </button>
+        }
+
         <!-- Save Button (shown only after successful preview) -->
-        <button *ngIf="isPreviewed() && !cronValidationError()" 
-                mat-raised-button 
-                color="primary" 
-                (click)="saveSchedule()" 
-                [disabled]="busy()">
-          Save
-        </button>
-        
+        @if (isPreviewed() && !cronValidationError()) {
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="saveSchedule()"
+            [disabled]="busy()">
+            Save
+          </button>
+        }
+
         <button mat-stroked-button (click)="close()">Cancel</button>
         <span class="spacer"></span>
         <button mat-button color="warn" (click)="disableSchedule()" [disabled]="busy()">Disable</button>
@@ -81,7 +89,7 @@
           Unoptimized (reprocess all accounts)
         </mat-checkbox>
       </div>
-      
+
       <div class="run-group">
         <button mat-raised-button color="accent" (click)="runEntitlementAgg()" [disabled]="busy()">
           Run Entitlement Aggregation

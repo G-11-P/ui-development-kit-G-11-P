@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,13 +11,12 @@ import { ColabPost, ColabCategory } from '../../services/discourse.service';
   selector: 'app-colab-card',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatTooltipModule,
     MatProgressSpinnerModule
-  ],
+],
   templateUrl: './colab-card.component.html',
   styleUrl: './colab-card.component.scss'
 })

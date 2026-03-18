@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,30 +36,7 @@ export type TransformResult = {
   templateUrl: './transform-preview.component.html',
   styleUrl: './transform-preview.component.scss',
   standalone: true,
-  imports: [ MatButtonModule,
-    MatStepperModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatTableModule,
-    MatToolbarModule,
-    CommonModule,
-    IdentitySearchComponent,
-    TransformResultsComponent
-  ],
+  imports: [MatButtonModule, MatStepperModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatChipsModule, MatExpansionModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule, MatSnackBarModule, MatTableModule, MatToolbarModule, IdentitySearchComponent, TransformResultsComponent],
   encapsulation: ViewEncapsulation.None,
 
 })

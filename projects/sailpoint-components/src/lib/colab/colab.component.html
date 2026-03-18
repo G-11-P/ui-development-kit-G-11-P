@@ -6,9 +6,9 @@
         <span class="hero-eyebrow">CoLab Marketplace</span>
         <h1 class="hero-title">What is the CoLab?</h1>
         <p class="hero-description">
-          The community CoLab is a place where members of our community can build 
-          fully-featured solutions on our platform and share those solutions with 
-          each other. Users collaborate on these solutions to benefit both themselves 
+          The community CoLab is a place where members of our community can build
+          fully-featured solutions on our platform and share those solutions with
+          each other. Users collaborate on these solutions to benefit both themselves
           and the community at large.
         </p>
         <button mat-raised-button color="primary" class="hero-cta" (click)="openGettingStarted()">
@@ -37,8 +37,8 @@
       <div class="deploy-info-content">
         <mat-card-title class="deploy-info-title">One-Click Deployment</mat-card-title>
         <mat-card-subtitle class="deploy-info-text">
-          Deploy Workflows, SaaS Connectors, SaaS Connector Customizers, and Transforms 
-          directly to your environment with a single click. Look for the 
+          Deploy Workflows, SaaS Connectors, SaaS Connector Customizers, and Transforms
+          directly to your environment with a single click. Look for the
           <strong>Deploy</strong> button on supported items.
         </mat-card-subtitle>
       </div>
@@ -55,54 +55,68 @@
         placeholder="Search by name, tags, or description"
         [value]="searchTerm"
         (input)="onSearchChange($any($event.target).value)"
-      />
-      <button *ngIf="searchTerm" mat-icon-button matSuffix aria-label="Clear" (click)="onSearchChange('')">
-        <mat-icon>close</mat-icon>
-      </button>
+        />
+      @if (searchTerm) {
+        <button mat-icon-button matSuffix aria-label="Clear" (click)="onSearchChange('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
-    <div class="search-status" *ngIf="searching">
-      <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
-      <span>Searching CoLab...</span>
-    </div>
-    <div class="search-error" *ngIf="searchError">{{ searchError }}</div>
+    @if (searching) {
+      <div class="search-status">
+        <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+        <span>Searching CoLab...</span>
+      </div>
+    }
+    @if (searchError) {
+      <div class="search-error">{{ searchError }}</div>
+    }
   </section>
 
   <!-- Search Results -->
-  <section class="search-results" *ngIf="searchTerm.trim().length >= 2">
-    <div class="section-header">
-      <h2 class="section-title">
-        Search results
-        <span class="result-count" *ngIf="searchResults.length">({{ searchResults.length }})</span>
-      </h2>
-    </div>
-
-    <div class="empty-container" *ngIf="!searching && searchResults.length === 0">
-      <mat-icon class="empty-icon">search_off</mat-icon>
-      <p class="empty-text">No matches found for “{{ searchTerm }}”.</p>
-    </div>
-
-    <div class="cards-grid" *ngIf="searchResults.length > 0">
-      <app-colab-card
-        *ngFor="let item of searchResults"
-        [post]="item.post"
-        [category]="item.category"
-        [showDeployButton]="isDeployable(item.category)"
-        (deploy)="onDeploy({ post: item.post, category: item.category })"
-      ></app-colab-card>
-    </div>
-  </section>
+  @if (searchTerm.trim().length >= 2) {
+    <section class="search-results">
+      <div class="section-header">
+        <h2 class="section-title">
+          Search results
+          @if (searchResults.length) {
+            <span class="result-count">({{ searchResults.length }})</span>
+          }
+        </h2>
+      </div>
+      @if (!searching && searchResults.length === 0) {
+        <div class="empty-container">
+          <mat-icon class="empty-icon">search_off</mat-icon>
+          <p class="empty-text">No matches found for “{{ searchTerm }}”.</p>
+        </div>
+      }
+      @if (searchResults.length > 0) {
+        <div class="cards-grid">
+          @for (item of searchResults; track item) {
+            <app-colab-card
+              [post]="item.post"
+              [category]="item.category"
+              [showDeployButton]="isDeployable(item.category)"
+              (deploy)="onDeploy({ post: item.post, category: item.category })"
+            ></app-colab-card>
+          }
+        </div>
+      }
+    </section>
+  }
 
   <!-- Category Sections -->
   <main class="categories-container">
-    <app-colab-section
-      *ngFor="let category of categories; trackBy: trackByCategory"
-      [category]="category"
-      [limit]="getLimitFor(category.id)"
-      [expanded]="isExpanded(category.id)"
-      (viewAll)="onViewAll($event)"
-      (deploy)="onDeploy($event)"
-    ></app-colab-section>
+    @for (category of categories; track trackByCategory($index, category)) {
+      <app-colab-section
+        [category]="category"
+        [limit]="getLimitFor(category.id)"
+        [expanded]="isExpanded(category.id)"
+        (viewAll)="onViewAll($event)"
+        (deploy)="onDeploy($event)"
+      ></app-colab-section>
+    }
   </main>
 
   <!-- Footer CTA -->
@@ -111,16 +125,16 @@
       <mat-icon class="footer-cta-icon">groups</mat-icon>
       <mat-card-title class="footer-cta-title">Want to Contribute?</mat-card-title>
       <mat-card-subtitle class="footer-cta-text">
-        Share your own solutions with the SailPoint developer community. 
+        Share your own solutions with the SailPoint developer community.
         Your contributions help others build better identity solutions.
       </mat-card-subtitle>
-      <a 
-        href="https://developer.sailpoint.com/discuss/t/about-the-sailpoint-developer-community-colab/11230" 
+      <a
+        href="https://developer.sailpoint.com/discuss/t/about-the-sailpoint-developer-community-colab/11230"
         target="_blank"
-        mat-raised-button 
+        mat-raised-button
         color="accent"
         class="footer-cta-button"
-      >
+        >
         Learn How to Contribute
         <mat-icon>open_in_new</mat-icon>
       </a>

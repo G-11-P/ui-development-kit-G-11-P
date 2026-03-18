@@ -1,120 +1,121 @@
-<div
-  *ngIf="isReady"
-  id="autosaveControls"
-  class="autosave-controls"
->
-  <h4 class="transform-name">{{ definition?.properties?.name }}</h4>
-
-  <button mat-button class="action-buttons" color="primary" (click)="togglePreview()" matTooltip="Test your transform with live identity data"
->
-    Preview Transform
-  </button>
-  <button
-    mat-button
-    class="action-buttons"
-    color="primary"
-    (click)="toggleReadonlyClicked()"
-  >
-  {{isReadonly ? "Enable" : "Disable"}} Editing
-  </button>
-
-  <button
-    mat-button
-    class="action-buttons"
-    color="primary"
-    (click)="viewTransformDefinition()"
-  >
-    View Definition
-  </button>
-
-  <!-- Sync controls -->
-  <div class="sync-controls">
-    <button
-      mat-button
-      class="action-buttons"
-      color="warn"
-      (click)="discardLocalChanges()"
-      [disabled]="!hasUnsavedChanges || isSyncing"
-      *ngIf="hasUnsavedChanges"
+@if (isReady) {
+  <div
+    id="autosaveControls"
+    class="autosave-controls"
     >
-      <mat-icon>delete</mat-icon>
-      Discard
+    <h4 class="transform-name">{{ definition?.properties?.name }}</h4>
+    <button mat-button class="action-buttons" color="primary" (click)="togglePreview()" matTooltip="Test your transform with live identity data"
+      >
+      Preview Transform
     </button>
-
-    <button
-      mat-button
-      class="action-buttons"
-      color="accent"
-      (click)="downloadTransform()"
-      [disabled]="!definition?.sequence?.[0]"
-      matTooltip="Download Transform Definition"
-    >
-      <mat-icon>download</mat-icon>
-      Download
-    </button>
-
     <button
       mat-button
       class="action-buttons"
       color="primary"
-      (click)="saveToCloud()"
-      [matBadge]="hasUnsavedChanges ? '!' : null"
-      matBadgeColor="warn"
-      matBadgeSize="small"
-    >
-      <mat-icon>{{ isSyncing ? "sync" : "cloud_upload" }}</mat-icon>
-      {{
-        isSyncing ? "Syncing..." : isNewTransform ? "Create Transform" : "Save"
-      }}
+      (click)="toggleReadonlyClicked()"
+      >
+      {{isReadonly ? "Enable" : "Disable"}} Editing
     </button>
-
-    <!-- Auto-save status -->
-    <div class="autosave-status">
-      <mat-icon
+    <button
+      mat-button
+      class="action-buttons"
+      color="primary"
+      (click)="viewTransformDefinition()"
+      >
+      View Definition
+    </button>
+    <!-- Sync controls -->
+    <div class="sync-controls">
+      @if (hasUnsavedChanges) {
+        <button
+          mat-button
+          class="action-buttons"
+          color="warn"
+          (click)="discardLocalChanges()"
+          [disabled]="!hasUnsavedChanges || isSyncing"
+          >
+          <mat-icon>delete</mat-icon>
+          Discard
+        </button>
+      }
+      <button
+        mat-button
+        class="action-buttons"
+        color="accent"
+        (click)="downloadTransform()"
+        [disabled]="!definition?.sequence?.[0]"
+        matTooltip="Download Transform Definition"
+        >
+        <mat-icon>download</mat-icon>
+        Download
+      </button>
+      <button
+        mat-button
+        class="action-buttons"
+        color="primary"
+        (click)="saveToCloud()"
+        [matBadge]="hasUnsavedChanges ? '!' : null"
+        matBadgeColor="warn"
+        matBadgeSize="small"
+        >
+        <mat-icon>{{ isSyncing ? "sync" : "cloud_upload" }}</mat-icon>
+        {{
+        isSyncing ? "Syncing..." : isNewTransform ? "Create Transform" : "Save"
+        }}
+      </button>
+      <!-- Auto-save status -->
+      <div class="autosave-status">
+        <mat-icon
         [style.color]="
           isSaving ? 'orange' : hasUnsavedChanges ? 'red' : 'green'
         "
-      >
-        {{ isSaving ? "sync" : hasUnsavedChanges ? "cloud_off" : "cloud_done" }}
-      </mat-icon>
-      <span class="status-text">
-        <ng-container *ngIf="isSaving">Saving...</ng-container>
-        <ng-container *ngIf="!isSaving && hasUnsavedChanges">
-          Unsaved
-        </ng-container>
-        <ng-container *ngIf="!isSaving && !hasUnsavedChanges"
-          >Saved</ng-container
-        >
-      </span>
+          >
+          {{ isSaving ? "sync" : hasUnsavedChanges ? "cloud_off" : "cloud_done" }}
+        </mat-icon>
+        <span class="status-text">
+          @if (isSaving) {
+            Saving...
+          }
+          @if (!isSaving && hasUnsavedChanges) {
+            Unsaved
+          }
+          @if (!isSaving && !hasUnsavedChanges) {
+            Saved
+          }
+        </span>
+      </div>
     </div>
   </div>
-</div>
+}
 
-<div *ngIf="!isReady" class="spinner-container">
-  <mat-spinner diameter="75"></mat-spinner>
-</div>
+@if (!isReady) {
+  <div class="spinner-container">
+    <mat-spinner diameter="75"></mat-spinner>
+  </div>
+}
 
-<ng-container *ngIf="showDesigner">
-  <sqd-designer
-    *ngIf="isReady"
-    [theme]="designerTheme"
-    [definition]="definition"
-    [toolboxConfiguration]="toolboxConfiguration"
-    [stepsConfiguration]="stepsConfiguration"
-    [validatorConfiguration]="validatorConfiguration"
-    [controlBar]="true"
-    [isReadonly]="isReadonly"
-    [areEditorsHidden]="false"
-    [rootEditor]="rootEditorProvider"
-    [stepEditor]="stepEditorProvider"
-    [isToolboxCollapsed]="isToolboxCollapsed"
-    [isEditorCollapsed]="isEditorCollapsed"
-    [undoStackSize]="5"
-    (onReady)="onDesignerReady($event)"
-    (onDefinitionChanged)="onDefinitionChanged($event)"
-  >
-  </sqd-designer>
-</ng-container>
+@if (showDesigner) {
+  @if (isReady) {
+    <sqd-designer
+      [theme]="designerTheme"
+      [definition]="definition"
+      [toolboxConfiguration]="toolboxConfiguration"
+      [stepsConfiguration]="stepsConfiguration"
+      [validatorConfiguration]="validatorConfiguration"
+      [controlBar]="true"
+      [isReadonly]="isReadonly"
+      [areEditorsHidden]="false"
+      [rootEditor]="rootEditorProvider"
+      [stepEditor]="stepEditorProvider"
+      [isToolboxCollapsed]="isToolboxCollapsed"
+      [isEditorCollapsed]="isEditorCollapsed"
+      [undoStackSize]="5"
+      (onReady)="onDesignerReady($event)"
+      (onDefinitionChanged)="onDefinitionChanged($event.definition)"
+      >
+    </sqd-designer>
+  }
+}
 
 <ng-template #rootEditorProvider let-editor>
   <h3>Transform</h3>
@@ -134,13 +135,13 @@
           editor.context
         )
       "
-    />
+      />
   </mat-form-field>
-   <mat-slide-toggle
-            [(ngModel)]="editor.definition.properties.requiresPeriodicRefresh"
-            matTooltip="This is a true or false value indicating whether the transform logic must be reevaluated every evening as part of the identity refresh process."
-            name="requiresPeriodicRefresh"
-            [disabled]="editor.isReadonly"
+  <mat-slide-toggle
+    [(ngModel)]="editor.definition.properties.requiresPeriodicRefresh"
+    matTooltip="This is a true or false value indicating whether the transform logic must be reevaluated every evening as part of the identity refresh process."
+    name="requiresPeriodicRefresh"
+    [disabled]="editor.isReadonly"
             (change)="
               updateProperty(
                 editor.definition.properties,
@@ -149,17 +150,17 @@
                 editor.context
               )
             "
-          >
+    >
     <mat-label>Requires Periodic Refresh</mat-label>
-    </mat-slide-toggle>
-    <!-- <mat-form-field class="full-width">
-    <mat-label>Description</mat-label>
-    <textarea
-      matInput
-      name="Description"
-      [(ngModel)]="editor.definition.properties.description"
-      [value]="editor.definition.properties.description"
-      [readonly]="editor.isReadonly"
+  </mat-slide-toggle>
+  <!-- <mat-form-field class="full-width">
+  <mat-label>Description</mat-label>
+  <textarea
+    matInput
+    name="Description"
+    [(ngModel)]="editor.definition.properties.description"
+    [value]="editor.definition.properties.description"
+    [readonly]="editor.isReadonly"
       (input)="
         updateProperty(
           editor.definition.properties,
@@ -168,8 +169,8 @@
           editor.context
         )
       "
-    ></textarea>
-  </mat-form-field> -->
+  ></textarea>
+</mat-form-field> -->
 </ng-template>
 
 <ng-template #stepEditorProvider let-editor>
@@ -177,19 +178,19 @@
     <h3>{{ editor.step.name }}</h3>
 
     <p class="transform-description">{{editor.step.description}}</p>
-    <ng-container *ngIf="editor.step.type !== 'dateMath'">
+    @if (editor.step.type !== 'dateMath') {
       <p>Attributes</p>
-      <ng-container *ngFor="let key of objectKeys(editor.step.properties)">
-        <div
-          *ngIf="isBoolean(editor.step.properties[key]); else numberCheck"
-          style="display: block; margin-top: 1rem"
-        >
-          <mat-slide-toggle
-            style="margin-bottom: 1rem"
-            [(ngModel)]="editor.step.properties[key]"
-            matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-            name="{{ key }}"
-            [disabled]="editor.isReadonly"
+      @for (key of objectKeys(editor.step.properties); track key) {
+        @if (isBoolean(editor.step.properties[key])) {
+          <div
+            style="display: block; margin-top: 1rem"
+            >
+            <mat-slide-toggle
+              style="margin-bottom: 1rem"
+              [(ngModel)]="editor.step.properties[key]"
+              matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+              name="{{ key }}"
+              [disabled]="editor.isReadonly"
             (change)="
               updateProperty(
                 editor.step.properties,
@@ -198,27 +199,25 @@
                 editor.context
               )
             "
-          >
-            {{ getLabelForProperty(editor.step.type, key) }}
-          </mat-slide-toggle>
-        </div>
-
-        <!-- Number handling -->
-        <ng-template #numberCheck>
-          <div
-            *ngIf="isNumber(editor.step.properties[key], key, editor.step.type); else fieldCheck"
-            style="display: block; margin-top: 1rem"
-          >
-            <mat-form-field appearance="fill">
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <input
-                matInput
-                type="number"
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                [(ngModel)]="editor.step.properties[key]"
-                name="{{ key }}"
-                [readonly]="editor.isReadonly"
-                [required]="isRequired(editor.step.type, key)"
+              >
+              {{ getLabelForProperty(editor.step.type, key) }}
+            </mat-slide-toggle>
+          </div>
+        } @else {
+          @if (isNumber(editor.step.properties[key], key, editor.step.type)) {
+            <div
+              style="display: block; margin-top: 1rem"
+              >
+              <mat-form-field appearance="fill">
+                <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                  [(ngModel)]="editor.step.properties[key]"
+                  name="{{ key }}"
+                  [readonly]="editor.isReadonly"
+                  [required]="isRequired(editor.step.type, key)"
                 (input)="
                   updateNumericProperty(
                     editor.step.properties,
@@ -227,52 +226,47 @@
                     editor.context
                   )
                 "
-              />
-              <mat-error
-                *ngIf="
+                  />
+                @if (
                   editor.step.properties[key] === null ||
                   editor.step.properties[key] === undefined
-                "
-              >
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </ng-template>
-
-        <ng-template #fieldCheck>
-          <div
-            *ngIf="isMap(editor.step.properties[key]); else textField"
-            style="display: block; margin-top: 1rem"
-          >
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="editMap(editor.step.properties, key, editor.context)"
-            >
-              Edit {{ key }}
-            </button>
-          </div>
-        </ng-template>
-
-        <ng-template #textField>
-          <!-- Special handling for sourceName -->
-          <ng-container
-            *ngIf="
-              key === 'sourceName' && editor.step.type === 'accountAttribute'
-            "
-          >
-            <mat-form-field
-              appearance="fill"
-              style="display: block; margin-top: 1rem"
-            >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <mat-select
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                [(ngModel)]="editor.step.properties[key]"
-                [disabled]="editor.isReadonly"
-                [required]="isRequired(editor.step.type, key)"
-                name="{{ key }}"
+                  ) {
+                  <mat-error
+                    >
+                    {{ key }} is required
+                  </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          } @else {
+            @if (isMap(editor.step.properties[key])) {
+              <div
+                style="display: block; margin-top: 1rem"
+                >
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="editMap(editor.step.properties, key, editor.context)"
+                  >
+                  Edit {{ key }}
+                </button>
+              </div>
+            } @else {
+              <!-- Special handling for sourceName -->
+              @if (
+                key === 'sourceName' && editor.step.type === 'accountAttribute'
+                ) {
+                <mat-form-field
+                  appearance="fill"
+                  style="display: block; margin-top: 1rem"
+                  >
+                  <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                  <mat-select
+                    matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                    [(ngModel)]="editor.step.properties[key]"
+                    [disabled]="editor.isReadonly"
+                    [required]="isRequired(editor.step.type, key)"
+                    name="{{ key }}"
                 (selectionChange)="
                   onSourceNameChanged(
                     editor.step.properties,
@@ -281,41 +275,42 @@
                     editor.context
                   )
                 "
-              >
-                <mat-option
-                  *ngFor="
-                    let choice of getChoicesForProperty(editor.step.type, key)
-                  "
-                  [value]="choice"
-                >
-                  {{ getChoiceLabel(editor.step.type, choice) }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="editor.step.properties[key] === ''">
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-          </ng-container>
-
-          <!-- Special handling for accountAttribute -->
-          <ng-container
-            *ngIf="
-              key === 'attributeName' && editor.step.type === 'accountAttribute'
-            "
-          >
-            <mat-form-field
-              appearance="fill"
-              style="display: block; margin-top: 1rem"
-            >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <mat-select
-                [(ngModel)]="editor.step.properties[key]"
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                    >
+                    @for (
+                      choice of getChoicesForProperty(editor.step.type, key)
+                      ; track
+                      choice) {
+                      <mat-option
+                        [value]="choice"
+                        >
+                        {{ getChoiceLabel(editor.step.type, choice) }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  @if (editor.step.properties[key] === '') {
+                    <mat-error>
+                      {{ key }} is required
+                    </mat-error>
+                  }
+                </mat-form-field>
+              }
+              <!-- Special handling for accountAttribute -->
+              @if (
+                key === 'attributeName' && editor.step.type === 'accountAttribute'
+                ) {
+                <mat-form-field
+                  appearance="fill"
+                  style="display: block; margin-top: 1rem"
+                  >
+                  <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                  <mat-select
+                    [(ngModel)]="editor.step.properties[key]"
+                    matTooltip="{{getHintForProperty(editor.step.type, key)}}"
                 [disabled]="
                   editor.isReadonly || isAccountAttributeDisabled(editor)
                 "
-                [required]="isRequired(editor.step.type, key)"
-                name="{{ key }}"
+                    [required]="isRequired(editor.step.type, key)"
+                    name="{{ key }}"
                 (selectionChange)="
                   updateProperty(
                     editor.step.properties,
@@ -324,51 +319,54 @@
                     editor.context
                   )
                 "
-              >
-                <!-- Fixed: Use attr directly as both value and display text -->
-                <mat-option
-                  *ngFor="let attr of getAccountAttributes(editor)"
-                  [value]="attr"
-                >
-                  {{ attr }}
-                </mat-option>
-              </mat-select>
-              <mat-hint *ngIf="isLoadingAccountAttributes(editor)"
-                >Loading attributes...</mat-hint
-              >
-              <mat-hint
-                *ngIf="
-                  !editor.step.properties['sourceName'] &&
-                  !isLoadingAccountAttributes(editor)
-                "
-              >
-                Please select a source name first
-              </mat-hint>
-              <mat-error *ngIf="editor.step.properties[key] === ''">
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-          </ng-container>
-
-          <!-- For getReferenceIdentityAttribute: text input -->
-          <ng-container
-            *ngIf="
-              key === 'attributeName' &&
-              editor.step.type === 'getReferenceIdentityAttribute'
-            "
-          >
-            <mat-form-field
-              appearance="fill"
-              style="display: block; margin-top: 1rem"
-            >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <input
-                matInput
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                [(ngModel)]="editor.step.properties[key]"
-                [readonly]="editor.isReadonly"
-                [required]="isRequired(editor.step.type, key)"
-                name="{{ key }}"
+                    >
+                    <!-- Fixed: Use attr directly as both value and display text -->
+                    @for (attr of getAccountAttributes(editor); track attr) {
+                      <mat-option
+                        [value]="attr"
+                        >
+                        {{ attr }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  @if (isLoadingAccountAttributes(editor)) {
+                    <mat-hint
+                      >Loading attributes...</mat-hint
+                      >
+                    }
+                    @if (
+                      !editor.step.properties['sourceName'] &&
+                      !isLoadingAccountAttributes(editor)
+                      ) {
+                      <mat-hint
+                        >
+                        Please select a source name first
+                      </mat-hint>
+                    }
+                    @if (editor.step.properties[key] === '') {
+                      <mat-error>
+                        {{ key }} is required
+                      </mat-error>
+                    }
+                  </mat-form-field>
+                }
+                <!-- For getReferenceIdentityAttribute: text input -->
+                @if (
+                  key === 'attributeName' &&
+                  editor.step.type === 'getReferenceIdentityAttribute'
+                  ) {
+                  <mat-form-field
+                    appearance="fill"
+                    style="display: block; margin-top: 1rem"
+                    >
+                    <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                    <input
+                      matInput
+                      matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                      [(ngModel)]="editor.step.properties[key]"
+                      [readonly]="editor.isReadonly"
+                      [required]="isRequired(editor.step.type, key)"
+                      name="{{ key }}"
                 (input)="
                   updateProperty(
                     editor.step.properties,
@@ -377,29 +375,27 @@
                     editor.context
                   )
                 "
-              />
-              <mat-error *ngIf="editor.step.properties[key] === ''">
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-          </ng-container>
-
-          <ng-container
-            *ngIf="key === 'inputFormat' && editor.step.type === 'dateFormat'"
-          >
-            <!-- Help section with common patterns -->
-
-            <mat-form-field
-              appearance="fill"
-              style="display: block; margin-top: 1rem"
-            >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <mat-select
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                [(ngModel)]="editor.step.properties[key]"
-                [disabled]="editor.isReadonly"
-                [required]="isRequired(editor.step.type, key)"
-                name="{{ key }}"
+                      />
+                    @if (editor.step.properties[key] === '') {
+                      <mat-error>
+                        {{ key }} is required
+                      </mat-error>
+                    }
+                  </mat-form-field>
+                }
+                @if (key === 'inputFormat' && editor.step.type === 'dateFormat') {
+                  <!-- Help section with common patterns -->
+                  <mat-form-field
+                    appearance="fill"
+                    style="display: block; margin-top: 1rem"
+                    >
+                    <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                    <mat-select
+                      matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                      [(ngModel)]="editor.step.properties[key]"
+                      [disabled]="editor.isReadonly"
+                      [required]="isRequired(editor.step.type, key)"
+                      name="{{ key }}"
                 (selectionChange)="
                   updateProperty(
                     editor.step.properties,
@@ -408,34 +404,37 @@
                     editor.context
                   )
                 "
-              >
-                <mat-option
-                  *ngFor="
-                    let choice of getChoicesForProperty(editor.step.type, key)
-                  "
-                  [value]="choice"
-                >
-                  {{ getChoiceLabel(editor.step.type, choice) }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="editor.step.properties[key] === ''">
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Custom Input Format Field -->
-            <div
-              *ngIf="editor.step.properties['inputFormat'] === 'CUSTOM'"
-              style="margin-top: 0.5rem"
-            >
-              <mat-form-field appearance="fill" style="width: 100%">
-                <mat-label>Custom Input Format</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="editor.step.properties['customInputFormat']"
-                  [readonly]="editor.isReadonly"
-                  [required]="true"
-                  placeholder="e.g., yyyy-MM-dd HH:mm:ss"
+                      >
+                      @for (
+                        choice of getChoicesForProperty(editor.step.type, key)
+                        ; track
+                        choice) {
+                        <mat-option
+                          [value]="choice"
+                          >
+                          {{ getChoiceLabel(editor.step.type, choice) }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                    @if (editor.step.properties[key] === '') {
+                      <mat-error>
+                        {{ key }} is required
+                      </mat-error>
+                    }
+                  </mat-form-field>
+                  <!-- Custom Input Format Field -->
+                  @if (editor.step.properties['inputFormat'] === 'CUSTOM') {
+                    <div
+                      style="margin-top: 0.5rem"
+                      >
+                      <mat-form-field appearance="fill" style="width: 100%">
+                        <mat-label>Custom Input Format</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="editor.step.properties['customInputFormat']"
+                          [readonly]="editor.isReadonly"
+                          [required]="true"
+                          placeholder="e.g., yyyy-MM-dd HH:mm:ss"
                   (input)="
                     updateProperty(
                       editor.step.properties,
@@ -444,17 +443,17 @@
                       editor.context
                     )
                   "
-                />
-                <mat-error
-                  *ngIf="editor.step.properties['customInputFormat'] === ''"
-                >
-                  Custom input format is required when using CUSTOM
-                </mat-error>
-              </mat-form-field>
-
-              <!-- Preview for custom input format -->
-              <div
-                *ngIf="editor.step.properties['customInputFormat']"
+                          />
+                        @if (editor.step.properties['customInputFormat'] === '') {
+                          <mat-error
+                            >
+                            Custom input format is required when using CUSTOM
+                          </mat-error>
+                        }
+                      </mat-form-field>
+                      <!-- Preview for custom input format -->
+                      @if (editor.step.properties['customInputFormat']) {
+                        <div
                 style="
                   margin-top: 0.5rem;
                   padding: 0.5rem;
@@ -462,32 +461,31 @@
                   border-radius: 4px;
                   font-size: 0.875rem;
                 "
-              >
-                {{
-                  getDateFormatExample(
-                    editor.step.properties["customInputFormat"]
-                  )
-                }}
-              </div>
-            </div>
-          </ng-container>
-
-          <!-- Output Format handling -->
-          <ng-container
-            *ngIf="key === 'outputFormat' && editor.step.type === 'dateFormat'"
-          >
-            <!-- Check if it's a choice field first -->
-            <mat-form-field
-              appearance="fill"
-              style="display: block; margin-top: 1rem"
-            >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-              <mat-select
-                matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                [(ngModel)]="editor.step.properties[key]"
-                [disabled]="editor.isReadonly"
-                [required]="isRequired(editor.step.type, key)"
-                name="{{ key }}"
+                          >
+                          {{
+                          getDateFormatExample(
+                          editor.step.properties["customInputFormat"]
+                          )
+                          }}
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+                <!-- Output Format handling -->
+                @if (key === 'outputFormat' && editor.step.type === 'dateFormat') {
+                  <!-- Check if it's a choice field first -->
+                  <mat-form-field
+                    appearance="fill"
+                    style="display: block; margin-top: 1rem"
+                    >
+                    <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                    <mat-select
+                      matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                      [(ngModel)]="editor.step.properties[key]"
+                      [disabled]="editor.isReadonly"
+                      [required]="isRequired(editor.step.type, key)"
+                      name="{{ key }}"
                 (selectionChange)="
                   updateProperty(
                     editor.step.properties,
@@ -496,35 +494,38 @@
                     editor.context
                   )
                 "
-              >
-                <mat-option
-                  *ngFor="
-                    let choice of getChoicesForProperty(editor.step.type, key)
-                  "
-                  [value]="choice"
-                >
-                  {{ getChoiceLabel(editor.step.type, choice) }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="editor.step.properties[key] === ''">
-                {{ key }} is required
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Custom Output Format Field -->
-            <div
-              *ngIf="editor.step.properties['outputFormat'] === 'CUSTOM'"
-              style="margin-top: 0.5rem"
-            >
-              <mat-form-field appearance="fill" style="width: 100%">
-                <mat-label>Custom Output Format</mat-label>
-                <input
-                  matInput
-                  matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                  [(ngModel)]="editor.step.properties['customOutputFormat']"
-                  [readonly]="editor.isReadonly"
-                  [required]="true"
-                  placeholder="e.g., dd/MM/yyyy HH:mm"
+                      >
+                      @for (
+                        choice of getChoicesForProperty(editor.step.type, key)
+                        ; track
+                        choice) {
+                        <mat-option
+                          [value]="choice"
+                          >
+                          {{ getChoiceLabel(editor.step.type, choice) }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                    @if (editor.step.properties[key] === '') {
+                      <mat-error>
+                        {{ key }} is required
+                      </mat-error>
+                    }
+                  </mat-form-field>
+                  <!-- Custom Output Format Field -->
+                  @if (editor.step.properties['outputFormat'] === 'CUSTOM') {
+                    <div
+                      style="margin-top: 0.5rem"
+                      >
+                      <mat-form-field appearance="fill" style="width: 100%">
+                        <mat-label>Custom Output Format</mat-label>
+                        <input
+                          matInput
+                          matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                          [(ngModel)]="editor.step.properties['customOutputFormat']"
+                          [readonly]="editor.isReadonly"
+                          [required]="true"
+                          placeholder="e.g., dd/MM/yyyy HH:mm"
                   (input)="
                     updateProperty(
                       editor.step.properties,
@@ -533,21 +534,21 @@
                       editor.context
                     )
                   "
-                />
-                <mat-hint
-                  >Use Java SimpleDateFormat pattern (e.g., dd/MM/yyyy, MMM dd,
-                  yyyy)</mat-hint
-                >
-                <mat-error
-                  *ngIf="editor.step.properties['customOutputFormat'] === ''"
-                >
-                  Custom output format is required when using CUSTOM
-                </mat-error>
-              </mat-form-field>
-
-              <!-- Preview for custom output format -->
-              <div
-                *ngIf="editor.step.properties['customOutputFormat']"
+                          />
+                        <mat-hint
+                          >Use Java SimpleDateFormat pattern (e.g., dd/MM/yyyy, MMM dd,
+                          yyyy)</mat-hint
+                          >
+                          @if (editor.step.properties['customOutputFormat'] === '') {
+                            <mat-error
+                              >
+                              Custom output format is required when using CUSTOM
+                            </mat-error>
+                          }
+                        </mat-form-field>
+                        <!-- Preview for custom output format -->
+                        @if (editor.step.properties['customOutputFormat']) {
+                          <div
                 style="
                   margin-top: 0.5rem;
                   padding: 0.5rem;
@@ -555,20 +556,22 @@
                   border-radius: 4px;
                   font-size: 0.875rem;
                 "
-              >
-                <strong>Example:</strong>
-                {{
-                  getDateFormatExample(
-                    editor.step.properties["customOutputFormat"]
-                  )
-                }}
-              </div>
-            </div>
-            <div
-              *ngIf="
-                editor.step.properties['inputFormat'] === 'CUSTOM' ||
-                editor.step.properties['outputFormat'] === 'CUSTOM'
-              "
+                            >
+                            <strong>Example:</strong>
+                            {{
+                            getDateFormatExample(
+                            editor.step.properties["customOutputFormat"]
+                            )
+                            }}
+                          </div>
+                        }
+                      </div>
+                    }
+                    @if (
+                      editor.step.properties['inputFormat'] === 'CUSTOM' ||
+                      editor.step.properties['outputFormat'] === 'CUSTOM'
+                      ) {
+                      <div
               style="
                 margin-top: 1rem;
                 margin-bottom: 1rem;
@@ -577,57 +580,51 @@
                 border-radius: 4px;
                 border-left: 4px solid #2196f3;
               "
-            >
-              <h4
+                        >
+                        <h4
                 style="
                   margin: 0 0 0.5rem 0;
                   color: #1976d2;
                   font-size: 0.875rem;
                 "
-              >
-                Common Date Format Patterns
-              </h4>
-              <div style="font-size: 0.75rem; color: #424242">
-                <div><code>yyyy-MM-dd</code> → 2024-03-15</div>
-                <div><code>MM/dd/yyyy</code> → 03/15/2024</div>
-                <div><code>dd/MM/yyyy</code> → 15/03/2024</div>
-                <div><code>MMM dd, yyyy</code> → Mar 15, 2024</div>
-                <div>
-                  <code>yyyy-MM-dd HH:mm:ss</code> → 2024-03-15 14:30:45
-                </div>
-                <div><code>HH:mm:ss</code> → 14:30:45</div>
-              </div>
-            </div>
-          </ng-container>
-
-          <!-- Default handling for other properties -->
-          <ng-container
-            *ngIf="
-              key !== 'sourceName' &&
-              key !== 'attributeName' &&
-              key !== 'inputFormat' &&
-              key !== 'outputFormat' &&
-              key !== 'customInputFormat' &&
-              key !== 'customOutputFormat'
-            "
-          >
-            <ng-container
-              *ngIf="
-                getChoicesForProperty(editor.step.type, key) as choices;
-                else defaultInput
-              "
-            >
-              <mat-form-field
-                appearance="fill"
-                style="display: block; margin-top: 1rem"
-              >
-              <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-                <mat-select
-                  matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                  [(ngModel)]="editor.step.properties[key]"
-                  [disabled]="editor.isReadonly"
-                  [required]="isRequired(editor.step.type, key)"
-                  name="{{ key }}"
+                          >
+                          Common Date Format Patterns
+                        </h4>
+                        <div style="font-size: 0.75rem; color: #424242">
+                          <div><code>yyyy-MM-dd</code> → 2024-03-15</div>
+                          <div><code>MM/dd/yyyy</code> → 03/15/2024</div>
+                          <div><code>dd/MM/yyyy</code> → 15/03/2024</div>
+                          <div><code>MMM dd, yyyy</code> → Mar 15, 2024</div>
+                          <div>
+                            <code>yyyy-MM-dd HH:mm:ss</code> → 2024-03-15 14:30:45
+                          </div>
+                          <div><code>HH:mm:ss</code> → 14:30:45</div>
+                        </div>
+                      </div>
+                    }
+                  }
+                  <!-- Default handling for other properties -->
+                  @if (
+                    key !== 'sourceName' &&
+                    key !== 'attributeName' &&
+                    key !== 'inputFormat' &&
+                    key !== 'outputFormat' &&
+                    key !== 'customInputFormat' &&
+                    key !== 'customOutputFormat'
+                    ) {
+                    @if (
+                      getChoicesForProperty(editor.step.type, key); as choices) {
+                      <mat-form-field
+                        appearance="fill"
+                        style="display: block; margin-top: 1rem"
+                        >
+                        <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                        <mat-select
+                          matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                          [(ngModel)]="editor.step.properties[key]"
+                          [disabled]="editor.isReadonly"
+                          [required]="isRequired(editor.step.type, key)"
+                          name="{{ key }}"
                   (selectionChange)="
                     updateProperty(
                       editor.step.properties,
@@ -636,31 +633,32 @@
                       editor.context
                     )
                   "
-                >
-                  <mat-option *ngFor="let choice of choices" [value]="choice">{{
-                    getChoiceLabel(editor.step.type, choice)
-                  }}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="editor.step.properties[key] === ''">
-                  {{ key }} is required
-                </mat-error>
-              </mat-form-field>
-            </ng-container>
-
-            
-            <ng-template #defaultInput>
-              <div class="input-with-editor-container">
-                <mat-form-field
-                  appearance="outline"
-                  class="input-field">
-                  <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
-                  <input
-                    matInput
-                    matTooltip="{{getHintForProperty(editor.step.type, key)}}"
-                    [(ngModel)]="editor.step.properties[key]"
-                    name="{{ key }}"
-                    [readonly]="editor.isReadonly"
-                    [required]="isRequired(editor.step.type, key)"
+                          >
+                          @for (choice of choices; track choice) {
+                            <mat-option [value]="choice">{{
+                              getChoiceLabel(editor.step.type, choice)
+                            }}</mat-option>
+                          }
+                        </mat-select>
+                        @if (editor.step.properties[key] === '') {
+                          <mat-error>
+                            {{ key }} is required
+                          </mat-error>
+                        }
+                      </mat-form-field>
+                    } @else {
+                      <div class="input-with-editor-container">
+                        <mat-form-field
+                          appearance="outline"
+                          class="input-field">
+                          <mat-label>{{ getLabelForProperty(editor.step.type, key) }}</mat-label>
+                          <input
+                            matInput
+                            matTooltip="{{getHintForProperty(editor.step.type, key)}}"
+                            [(ngModel)]="editor.step.properties[key]"
+                            name="{{ key }}"
+                            [readonly]="editor.isReadonly"
+                            [required]="isRequired(editor.step.type, key)"
                     (input)="
                       updateProperty(
                         editor.step.properties,
@@ -669,37 +667,40 @@
                         editor.context
                       )
                     "
-                  />
-                  <mat-error *ngIf="editor.step.properties[key] === ''">
-                    {{ key }} is required
-                  </mat-error>
-                </mat-form-field>
-                
-                <button
-                  mat-icon-button
-                  color="primary"
-                  class="editor-button"
-                  [disabled]="editor.isReadonly"
-                  (click)="openVelocityEditor(editor.step.properties, key, $event, editor.context)"
-                  matTooltip="Open Code Editor"
-                >
-                  <mat-icon>code</mat-icon>
-                </button>
-              </div>
-            </ng-template>
-          </ng-container>
-
-          <!-- Enhanced Date Math Section for stepEditorProvider template -->
-          <!-- This should be added to handle dateMath steps specifically -->
-        </ng-template>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf="editor.step.type === 'dateMath'">
-      <!-- Toggle between builder and manual input -->
-      <div style="margin-top: 1rem">
-        <mat-slide-toggle
-          [(ngModel)]="editor.step.properties.useBuilder"
-          [disabled]="editor.isReadonly"
+                            />
+                          @if (editor.step.properties[key] === '') {
+                            <mat-error>
+                              {{ key }} is required
+                            </mat-error>
+                          }
+                        </mat-form-field>
+                        <button
+                          mat-icon-button
+                          color="primary"
+                          class="editor-button"
+                          [disabled]="editor.isReadonly"
+                          (click)="openVelocityEditor(editor.step.properties, key, $event, editor.context)"
+                          matTooltip="Open Code Editor"
+                          >
+                          <mat-icon>code</mat-icon>
+                        </button>
+                      </div>
+                    }
+                  }
+                  <!-- Enhanced Date Math Section for stepEditorProvider template -->
+                  <!-- This should be added to handle dateMath steps specifically -->
+                }
+              }
+            }
+            <!-- Number handling -->
+          }
+        }
+        @if (editor.step.type === 'dateMath') {
+          <!-- Toggle between builder and manual input -->
+          <div style="margin-top: 1rem">
+            <mat-slide-toggle
+              [(ngModel)]="editor.step.properties.useBuilder"
+              [disabled]="editor.isReadonly"
           (change)="
             onDateMathBuilderToggle(
               editor.step.properties,
@@ -707,49 +708,46 @@
               editor.context
             )
           "
-        >
-          Use Visual Expression Builder
-        </mat-slide-toggle>
-      </div>
-
-      <!-- Visual Builder Mode -->
-      <div *ngIf="editor.step.properties.useBuilder" style="margin-top: 1rem">
-        <!-- Base Date Selection -->
-        <mat-form-field
-          appearance="fill"
-          style="display: block; margin-top: 1rem"
-        >
-          <mat-label>Base Date</mat-label>
-          <mat-select
-            [(ngModel)]="editor.step.properties.baseDate"
-            [disabled]="editor.isReadonly"
+              >
+              Use Visual Expression Builder
+            </mat-slide-toggle>
+          </div>
+          <!-- Visual Builder Mode -->
+          @if (editor.step.properties.useBuilder) {
+            <div style="margin-top: 1rem">
+              <!-- Base Date Selection -->
+              <mat-form-field
+                appearance="fill"
+                style="display: block; margin-top: 1rem"
+                >
+                <mat-label>Base Date</mat-label>
+                <mat-select
+                  [(ngModel)]="editor.step.properties.baseDate"
+                  [disabled]="editor.isReadonly"
             (selectionChange)="
               updateDateMathExpression(editor.step.properties, editor.context)
             "
-          >
-            <mat-option value="input">Use Input Date</mat-option>
-            <mat-option value="now">Use Current Date/Time</mat-option>
-          </mat-select>
-          <mat-hint>
-            <ng-container *ngIf="editor.step.properties.baseDate === 'input'">
-              Start with the date provided as input to this transform
-            </ng-container>
-            <ng-container *ngIf="editor.step.properties.baseDate === 'now'">
-              Start with the current date and time
-            </ng-container>
-          </mat-hint>
-        </mat-form-field>
-
-        <!-- Operations Builder -->
-        <div style="margin-top: 1rem">
-          <h4 style="margin: 0.5rem 0; color: #424242">Date/Time Operations</h4>
-
-          <!-- Existing Operations -->
-          <div
-            *ngFor="
-              let operation of getDateMathOperations(editor.step.properties);
-              let i = index
-            "
+                  >
+                  <mat-option value="input">Use Input Date</mat-option>
+                  <mat-option value="now">Use Current Date/Time</mat-option>
+                </mat-select>
+                <mat-hint>
+                  @if (editor.step.properties.baseDate === 'input') {
+                    Start with the date provided as input to this transform
+                  }
+                  @if (editor.step.properties.baseDate === 'now') {
+                    Start with the current date and time
+                  }
+                </mat-hint>
+              </mat-form-field>
+              <!-- Operations Builder -->
+              <div style="margin-top: 1rem">
+                <h4 style="margin: 0.5rem 0; color: #424242">Date/Time Operations</h4>
+                <!-- Existing Operations -->
+                @for (
+                  operation of getDateMathOperations(editor.step.properties); track
+                  operation; let i = $index) {
+                  <div
             style="
               display: flex;
               align-items: center;
@@ -759,13 +757,13 @@
               border: 1px solid #ddd;
               border-radius: 4px;
             "
-          >
-            <!-- Operation Type -->
-            <mat-form-field appearance="outline" style="flex: 0 0 120px">
-              <mat-label>Operation</mat-label>
-              <mat-select
-                [ngModel]="operation.operation" (ngModelChange)="operation.operation = $event"
-                [disabled]="editor.isReadonly"
+                    >
+                    <!-- Operation Type -->
+                    <mat-form-field appearance="outline" style="flex: 0 0 120px">
+                      <mat-label>Operation</mat-label>
+                      <mat-select
+                        [ngModel]="operation.operation" (ngModelChange)="operation.operation = $event"
+                        [disabled]="editor.isReadonly"
                 (selectionChange)="
                   updateDateMathOperationAt(
                     editor.step.properties,
@@ -775,26 +773,25 @@
                     editor.context
                   )
                 "
-              >
-                <mat-option value="+">Add</mat-option>
-                <mat-option value="-">Subtract</mat-option>
-                <mat-option value="/">Round to</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <!-- Value (only for + and -) -->
-            <mat-form-field
-              appearance="outline"
-              style="flex: 0 0 80px"
-              *ngIf="operation.operation !== '/' && operation.operation !== undefined"
-            >
-              <mat-label>Value</mat-label>
-              <input
-                matInput
-                type="number"
-                min="1"
-                [ngModel]="operation.value" (ngModelChange)="operation.value = $event"
-                [readonly]="editor.isReadonly"
+                        >
+                        <mat-option value="+">Add</mat-option>
+                        <mat-option value="-">Subtract</mat-option>
+                        <mat-option value="/">Round to</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- Value (only for + and -) -->
+                    @if (operation.operation !== '/' && operation.operation !== undefined) {
+                      <mat-form-field
+                        appearance="outline"
+                        style="flex: 0 0 80px"
+                        >
+                        <mat-label>Value</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          min="1"
+                          [ngModel]="operation.value" (ngModelChange)="operation.value = $event"
+                          [readonly]="editor.isReadonly"
                 (input)="
                   updateDateMathOperationAt(
                     editor.step.properties,
@@ -804,15 +801,15 @@
                     editor.context
                   )
                 "
-              />
-            </mat-form-field>
-
-            <!-- Unit -->
-            <mat-form-field appearance="outline" style="flex: 0 0 120px">
-              <mat-label>Unit</mat-label>
-              <mat-select
-                [ngModel]="operation.unit" (ngModelChange)="operation.unit = $event"
-                [disabled]="editor.isReadonly"
+                          />
+                      </mat-form-field>
+                    }
+                    <!-- Unit -->
+                    <mat-form-field appearance="outline" style="flex: 0 0 120px">
+                      <mat-label>Unit</mat-label>
+                      <mat-select
+                        [ngModel]="operation.unit" (ngModelChange)="operation.unit = $event"
+                        [disabled]="editor.isReadonly"
                 (selectionChange)="
                   updateDateMathOperationAt(
                     editor.step.properties,
@@ -822,22 +819,21 @@
                     editor.context
                   )
                 "
-              >
-                <mat-option value="y">Years</mat-option>
-                <mat-option value="M">Months</mat-option>
-                <mat-option value="w">Weeks</mat-option>
-                <mat-option value="d">Days</mat-option>
-                <mat-option value="h">Hours</mat-option>
-                <mat-option value="m">Minutes</mat-option>
-                <mat-option value="s">Seconds</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <!-- Remove Operation -->
-            <button
-              mat-icon-button
-              color="warn"
-              [disabled]="editor.isReadonly"
+                        >
+                        <mat-option value="y">Years</mat-option>
+                        <mat-option value="M">Months</mat-option>
+                        <mat-option value="w">Weeks</mat-option>
+                        <mat-option value="d">Days</mat-option>
+                        <mat-option value="h">Hours</mat-option>
+                        <mat-option value="m">Minutes</mat-option>
+                        <mat-option value="s">Seconds</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- Remove Operation -->
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      [disabled]="editor.isReadonly"
               (click)="
                 removeDateMathOperation(
                   editor.step.properties,
@@ -845,29 +841,28 @@
                   editor.context
                 )
               "
-              matTooltip="Remove operation"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-
-          <!-- Add Operation Button -->
-          <button
-            mat-stroked-button
-            color="primary"
-            [disabled]="editor.isReadonly"
+                      matTooltip="Remove operation"
+                      >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                }
+                <!-- Add Operation Button -->
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  [disabled]="editor.isReadonly"
             (click)="
               addDateMathOperation(editor.step.properties, editor.context)
             "
-            style="margin-top: 0.5rem"
-          >
-            <mat-icon>add</mat-icon>
-            Add Operation
-          </button>
-        </div>
-
-        <!-- Generated Expression Preview -->
-        <div
+                  style="margin-top: 0.5rem"
+                  >
+                  <mat-icon>add</mat-icon>
+                  Add Operation
+                </button>
+              </div>
+              <!-- Generated Expression Preview -->
+              <div
           style="
             margin-top: 1rem;
             padding: 1rem;
@@ -875,29 +870,30 @@
             border-radius: 4px;
             border-left: 4px solid #4caf50;
           "
-        >
-          <h4 style="margin: 0 0 0.5rem 0; color: #2e7d32">
-            Generated Expression
-          </h4>
-          <code style="font-size: 1rem; color: #1565c0">{{
-            getGeneratedExpression(editor.step.properties)
-          }}</code>
-          <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666">
-            {{ getExpressionDescription(editor.step.properties) }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Manual Expression Mode -->
-      <div *ngIf="!editor.step.properties.useBuilder" style="margin-top: 1rem">
-        <mat-form-field appearance="fill" style="display: block; width: 100%">
-          <mat-label>Date Math Expression</mat-label>
-          <input
-            matInput
-            [(ngModel)]="editor.step.properties.expression"
-            [readonly]="editor.isReadonly"
-            [required]="true"
-            placeholder="e.g., now+1w, +3M, now/d"
+                >
+                <h4 style="margin: 0 0 0.5rem 0; color: #2e7d32">
+                  Generated Expression
+                </h4>
+                <code style="font-size: 1rem; color: #1565c0">{{
+                  getGeneratedExpression(editor.step.properties)
+                }}</code>
+                <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666">
+                  {{ getExpressionDescription(editor.step.properties) }}
+                </div>
+              </div>
+            </div>
+          }
+          <!-- Manual Expression Mode -->
+          @if (!editor.step.properties.useBuilder) {
+            <div style="margin-top: 1rem">
+              <mat-form-field appearance="fill" style="display: block; width: 100%">
+                <mat-label>Date Math Expression</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="editor.step.properties.expression"
+                  [readonly]="editor.isReadonly"
+                  [required]="true"
+                  placeholder="e.g., now+1w, +3M, now/d"
             (input)="
               updateProperty(
                 editor.step.properties,
@@ -906,15 +902,16 @@
                 editor.context
               )
             "
-          />
-          <mat-hint>Enter a date math expression manually</mat-hint>
-          <mat-error *ngIf="editor.step.properties.expression === ''">
-            Expression is required
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Examples and Help -->
-        <div
+                  />
+                <mat-hint>Enter a date math expression manually</mat-hint>
+                @if (editor.step.properties.expression === '') {
+                  <mat-error>
+                    Expression is required
+                  </mat-error>
+                }
+              </mat-form-field>
+              <!-- Examples and Help -->
+              <div
           style="
             margin-top: 1rem;
             padding: 1rem;
@@ -922,46 +919,45 @@
             border-radius: 4px;
             border-left: 4px solid #2196f3;
           "
-        >
-          <h4 style="margin: 0 0 0.5rem 0; color: #1976d2">
-            Expression Examples
-          </h4>
-          <div style="font-size: 0.875rem; color: #424242">
-            <div style="margin-bottom: 0.25rem">
-              <code>now</code> - Current date and time
+                >
+                <h4 style="margin: 0 0 0.5rem 0; color: #1976d2">
+                  Expression Examples
+                </h4>
+                <div style="font-size: 0.875rem; color: #424242">
+                  <div style="margin-bottom: 0.25rem">
+                    <code>now</code> - Current date and time
+                  </div>
+                  <div style="margin-bottom: 0.25rem">
+                    <code>now/h</code> - Current time rounded to the hour
+                  </div>
+                  <div style="margin-bottom: 0.25rem">
+                    <code>now+1w</code> - One week from now
+                  </div>
+                  <div style="margin-bottom: 0.25rem">
+                    <code>+3M</code> - Add 3 months to input date
+                  </div>
+                  <div style="margin-bottom: 0.25rem">
+                    <code>-1d</code> - Subtract 1 day from input date
+                  </div>
+                  <div style="margin-bottom: 0.25rem">
+                    <code>/d</code> - Round input date to start of day
+                  </div>
+                  <div><code>now+1y+1M+2d-4h/s</code> - Complex calculation</div>
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.75rem; color: #666">
+                  <strong>Units:</strong> y=years, M=months, w=weeks, d=days, h=hours,
+                  m=minutes, s=seconds<br />
+                  <strong>Operations:</strong> +=add, -=subtract, /=round to
+                </div>
+              </div>
             </div>
-            <div style="margin-bottom: 0.25rem">
-              <code>now/h</code> - Current time rounded to the hour
-            </div>
-            <div style="margin-bottom: 0.25rem">
-              <code>now+1w</code> - One week from now
-            </div>
-            <div style="margin-bottom: 0.25rem">
-              <code>+3M</code> - Add 3 months to input date
-            </div>
-            <div style="margin-bottom: 0.25rem">
-              <code>-1d</code> - Subtract 1 day from input date
-            </div>
-            <div style="margin-bottom: 0.25rem">
-              <code>/d</code> - Round input date to start of day
-            </div>
-            <div><code>now+1y+1M+2d-4h/s</code> - Complex calculation</div>
-          </div>
-
-          <div style="margin-top: 1rem; font-size: 0.75rem; color: #666">
-            <strong>Units:</strong> y=years, M=months, w=weeks, d=days, h=hours,
-            m=minutes, s=seconds<br />
-            <strong>Operations:</strong> +=add, -=subtract, /=round to
-          </div>
-        </div>
-      </div>
-
-      <!-- Round Up Option -->
-      <div style="margin-top: 1rem">
-        <mat-slide-toggle
-            matTooltip="{{getHintForProperty(editor.step.type, 'roundUp')}}"
-          [(ngModel)]="editor.step.properties.roundUp"
-          [disabled]="editor.isReadonly"
+          }
+          <!-- Round Up Option -->
+          <div style="margin-top: 1rem">
+            <mat-slide-toggle
+              matTooltip="{{getHintForProperty(editor.step.type, 'roundUp')}}"
+              [(ngModel)]="editor.step.properties.roundUp"
+              [disabled]="editor.isReadonly"
           (change)="
             updateProperty(
               editor.step.properties,
@@ -970,27 +966,28 @@
               editor.context
             )
           "
-        >
-          Round Up
-        </mat-slide-toggle>
-      </div>
-    </ng-container>
+              >
+              Round Up
+            </mat-slide-toggle>
+          </div>
+        }
 
-    <div *ngIf="editor?.step?.branches">
-      <div
-        *ngFor="
-          let branchName of getBranchNames(editor.step.branches);
-          let i = index
-        "
-        class="branch-row"
-      >
-        <div *ngIf="showBranch(editor?.step, branchName)">
-          <mat-form-field appearance="outline" class="branch-field">
-            <input
-              matInput
-              [value]="branchName"
-              [readonly]="editor.isReadonly"
-              placeholder="Branch Name"
+        @if (editor?.step?.branches) {
+          <div>
+            @for (
+              branchName of getBranchNames(editor.step.branches); track
+              branchName; let i = $index) {
+              <div
+                class="branch-row"
+                >
+                @if (showBranch(editor?.step, branchName)) {
+                  <div>
+                    <mat-form-field appearance="outline" class="branch-field">
+                      <input
+                        matInput
+                        [value]="branchName"
+                        [readonly]="editor.isReadonly"
+                        placeholder="Branch Name"
               (change)="
                 renameBranchAtIndex(
                   editor.step.branches,
@@ -999,29 +996,32 @@
                   editor.context
                 )
               "
-            />
-          </mat-form-field>
-          <button
-            mat-icon-button
-            color="warn"
+                        />
+                    </mat-form-field>
+                    <button
+                      mat-icon-button
+                      color="warn"
             (click)="
               removeBranch(editor.step.branches, i, $event, editor.context)
             "
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+                      >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+            @if (branchingEnabled(editor.step)) {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="addBranch(editor.step.branches, editor.context)"
+                >
+                <mat-icon>add</mat-icon>
+                Add Branch
+              </button>
+            }
+          </div>
+        }
       </div>
-
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="addBranch(editor.step.branches, editor.context)"
-        *ngIf="branchingEnabled(editor.step)"
-      >
-        <mat-icon>add</mat-icon>
-        Add Branch
-      </button>
-    </div>
-  </div>
-</ng-template>
+    </ng-template>

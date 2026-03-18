@@ -3,7 +3,7 @@ import {
   Breakpoints,
   LayoutModule,
 } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   ElementRef,
@@ -29,7 +29,6 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
-    CommonModule,
     RouterModule,
     TranslateModule,
     LayoutModule,
@@ -37,8 +36,8 @@ import { MatSidenav } from '@angular/material/sidenav';
     MatToolbarModule,
     MatListModule,
     MatIconModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
 })
 
 export class AppComponent implements OnDestroy, OnInit {

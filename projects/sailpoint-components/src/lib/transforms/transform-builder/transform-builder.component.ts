@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -569,7 +569,6 @@ export function deserializeToStep(data: any): Step {
   standalone: true,
   imports: [
     SequentialWorkflowDesignerModule,
-    CommonModule,
     MatFormField,
     MatInputModule,
     MatButtonModule,
@@ -582,8 +581,8 @@ export function deserializeToStep(data: any): Step {
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatBadgeModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
   templateUrl: './transform-builder.component.html',
   styleUrl: './transform-builder.component.scss',
   encapsulation: ViewEncapsulation.None,

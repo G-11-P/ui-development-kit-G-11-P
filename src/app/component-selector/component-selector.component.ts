@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,13 +11,12 @@ import { ComponentInfo, ConfigService } from 'sailpoint-components';
 @Component({
   selector: 'app-component-selector',
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatSlideToggleModule,
     MatToolbarModule
-  ],
+],
   templateUrl: './component-selector.component.html',
   styleUrl: './component-selector.component.scss'
 })

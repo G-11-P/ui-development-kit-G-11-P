@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -177,11 +177,17 @@ const SLOTS: Slot[] = [ // rules and their location data is found (tested with P
   selector: 'app-rules',
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
-    MatCardModule, MatFormFieldModule, MatSelectModule,
-    MatIconModule, MatProgressSpinnerModule, MatButtonModule,
-    MatSnackBarModule, DragDropModule, MatToolbarModule
-  ],
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    DragDropModule,
+    MatToolbarModule
+],
   templateUrl: './attach-rule.component.html',
   styleUrls: ['./attach-rule.component.scss']
 })

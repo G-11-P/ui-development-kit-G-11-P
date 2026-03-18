@@ -8,19 +8,23 @@
   </mat-card-header>
   <mat-card-content>
     <div class="shortcuts-container">
-      <div class="category-section" *ngFor="let category of shortcutCategories">
-        <div class="category-header">
-          <mat-icon>{{ category.icon }}</mat-icon>
-          <h3>{{ category.title }}</h3>
+      @for (category of shortcutCategories; track category) {
+        <div class="category-section">
+          <div class="category-header">
+            <mat-icon>{{ category.icon }}</mat-icon>
+            <h3>{{ category.title }}</h3>
+          </div>
+          <div class="shortcuts-grid">
+            @for (shortcut of category.shortcuts; track shortcut) {
+              <button matFab extended class="shortcut-item"
+                (click)="onShortcutClick(shortcut)" [matTooltip]="shortcut.label" [attr.aria-label]="shortcut.label">
+                <mat-icon>{{ shortcut.icon }}</mat-icon>
+                {{shortcut.label}}
+              </button>
+            }
+          </div>
         </div>
-        <div class="shortcuts-grid">
-          <button matFab extended class="shortcut-item" *ngFor="let shortcut of category.shortcuts"
-            (click)="onShortcutClick(shortcut)" [matTooltip]="shortcut.label" [attr.aria-label]="shortcut.label">
-            <mat-icon>{{ shortcut.icon }}</mat-icon>
-            {{shortcut.label}}
-          </button>
-        </div>
-      </div>
+      }
     </div>
   </mat-card-content>
 </mat-card>

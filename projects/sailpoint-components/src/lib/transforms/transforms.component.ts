@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -62,7 +62,6 @@ interface RefNode {
   standalone: true,
   imports: [
     MatTableModule,
-    CommonModule,
     MatProgressSpinnerModule,
     MatInputModule,
     MatButtonModule,
@@ -72,7 +71,7 @@ interface RefNode {
     MatIconModule,
     MatProgressBarModule,
     MatDialogModule
-  ],
+],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './transforms.component.html',
   styleUrl: './transforms.component.scss',

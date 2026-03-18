@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +8,7 @@ import { ConnectionService } from '../../../services/connection.service';
 
 @Component({
   selector: 'app-shortcuts',
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './shortcuts.component.html',
   styleUrl: './shortcuts.component.scss'
 })

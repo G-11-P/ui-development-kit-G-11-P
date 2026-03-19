@@ -1,0 +1,334 @@
+.commit-browser {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+// ── Shared empty / status states ──────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  color: var(--theme-primary-text);
+  opacity: 0.55;
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  p { margin: 0; font-size: 14px; }
+
+  &.small {
+    height: auto;
+    padding: 24px;
+  }
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  color: var(--theme-primary-text);
+  font-size: 14px;
+}
+
+// ── Left: commit list ─────────────────────────────────────────────────────────
+
+.commits-pane {
+  width: 300px;
+  min-width: 260px;
+  border-right: 1px solid color-mix(in srgb, var(--theme-primary-text) 15%, transparent);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--theme-primary-text);
+  flex-shrink: 0;
+
+  span { flex: 1; }
+
+  mat-icon:first-child {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--theme-primary);
+  }
+}
+
+.commit-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.commit-msg-title {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-meta-line {
+  font-size: 11px;
+  color: var(--theme-primary-text);
+  opacity: 0.7;
+}
+
+.sha-badge {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 11px;
+  background: color-mix(in srgb, var(--theme-primary-text) 12%, var(--theme-background));
+  color: var(--theme-primary-text);
+  padding: 0 5px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+// ── Right: detail (objects + diff) ────────────────────────────────────────────
+
+.commit-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// ── Objects section ───────────────────────────────────────────────────────────
+
+.objects-section {
+  flex-shrink: 0;
+  max-height: 45%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.objects-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--theme-primary-text) 5%, var(--theme-background));
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-primary-text) 10%, transparent);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.commit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sha-badge-lg {
+  font-family: monospace;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background));
+  color: var(--theme-primary);
+  padding: 1px 7px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.commit-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--theme-primary-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-meta {
+  font-size: 11px;
+  color: var(--theme-primary-text);
+  opacity: 0.65;
+}
+
+.objects-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.objects-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.file-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.type-chip-sm {
+  --mdc-chip-elevated-container-color: color-mix(in srgb, var(--theme-primary) 14%, var(--theme-background));
+  --mdc-chip-label-text-color: var(--theme-primary);
+  font-size: 10px;
+  font-weight: 600;
+  height: 20px;
+}
+
+.status-chip {
+  font-size: 10px;
+  height: 20px;
+
+  &.status-added {
+    --mdc-chip-elevated-container-color: color-mix(in srgb, #4caf50 16%, var(--theme-background));
+    --mdc-chip-label-text-color: color-mix(in srgb, #4caf50 80%, var(--theme-primary-text));
+  }
+  &.status-modified {
+    --mdc-chip-elevated-container-color: color-mix(in srgb, #ff9800 16%, var(--theme-background));
+    --mdc-chip-label-text-color: color-mix(in srgb, #ff9800 80%, var(--theme-primary-text));
+  }
+  &.status-removed {
+    --mdc-chip-elevated-container-color: color-mix(in srgb, #f44336 16%, var(--theme-background));
+    --mdc-chip-label-text-color: color-mix(in srgb, #f44336 80%, var(--theme-primary-text));
+  }
+  &.status-renamed {
+    --mdc-chip-elevated-container-color: color-mix(in srgb, #9c27b0 16%, var(--theme-background));
+    --mdc-chip-label-text-color: color-mix(in srgb, #9c27b0 80%, var(--theme-primary-text));
+  }
+}
+
+// ── Diff section ──────────────────────────────────────────────────────────────
+
+.diff-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.diff-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: color-mix(in srgb, var(--theme-primary-text) 5%, var(--theme-background));
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-primary-text) 10%, transparent);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.diff-obj-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--theme-primary-text);
+}
+
+.diff-subtitle {
+  font-size: 12px;
+  color: var(--theme-primary-text);
+  opacity: 0.6;
+}
+
+.no-diff-label {
+  font-size: 12px;
+  color: var(--theme-primary-text);
+  opacity: 0.55;
+}
+
+.stat-chip {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 12px;
+  height: 22px;
+}
+
+.added-chip {
+  --mdc-chip-elevated-container-color: color-mix(in srgb, #4caf50 18%, var(--theme-background));
+  --mdc-chip-label-text-color: color-mix(in srgb, #4caf50 70%, var(--theme-primary-text));
+}
+
+.removed-chip {
+  --mdc-chip-elevated-container-color: color-mix(in srgb, #f44336 18%, var(--theme-background));
+  --mdc-chip-label-text-color: color-mix(in srgb, #f44336 70%, var(--theme-primary-text));
+}
+
+.diff-table-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  background: var(--theme-background);
+}
+
+.diff-line {
+  &.diff-added {
+    background-color: color-mix(in srgb, #4caf50 13%, var(--theme-background));
+    .diff-gutter {
+      background-color: color-mix(in srgb, #4caf50 28%, var(--theme-background));
+      color: color-mix(in srgb, #4caf50 70%, var(--theme-primary-text));
+    }
+  }
+  &.diff-removed {
+    background-color: color-mix(in srgb, #f44336 13%, var(--theme-background));
+    .diff-gutter {
+      background-color: color-mix(in srgb, #f44336 28%, var(--theme-background));
+      color: color-mix(in srgb, #f44336 70%, var(--theme-primary-text));
+    }
+  }
+  &.diff-unchanged .diff-gutter {
+    color: color-mix(in srgb, var(--theme-primary-text) 45%, transparent);
+  }
+}
+
+.line-num {
+  width: 44px;
+  min-width: 44px;
+  text-align: right;
+  padding: 0 6px;
+  color: color-mix(in srgb, var(--theme-primary-text) 45%, transparent);
+  user-select: none;
+  border-right: 1px solid color-mix(in srgb, var(--theme-primary-text) 15%, transparent);
+}
+
+.diff-gutter {
+  width: 20px;
+  min-width: 20px;
+  text-align: center;
+  padding: 0 2px;
+  user-select: none;
+  border-right: 1px solid color-mix(in srgb, var(--theme-primary-text) 15%, transparent);
+}
+
+.diff-content {
+  padding: 0 8px;
+  width: 100%;
+  color: var(--theme-primary-text);
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: inherit;
+    font-size: inherit;
+  }
+}

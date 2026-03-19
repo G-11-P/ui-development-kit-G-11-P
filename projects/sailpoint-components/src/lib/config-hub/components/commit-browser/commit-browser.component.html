@@ -1,0 +1,179 @@
+<div class="commit-browser">
+
+  <!-- ── Left: commit timeline ──────────────────────────────────────────── -->
+  <div class="commits-pane">
+    <div class="pane-header">
+      <mat-icon>history</mat-icon>
+      <span>Commits</span>
+      <button mat-icon-button matTooltip="Refresh" (click)="loadCommits()" [disabled]="loading()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    @if (loading()) {
+      <div class="status-row">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Loading commits&hellip;</span>
+      </div>
+    } @else if (commits().length === 0) {
+      <div class="empty-state">
+        <mat-icon>commit</mat-icon>
+        <p>No commits found</p>
+      </div>
+    } @else {
+      <mat-nav-list dense class="commit-list">
+        @for (c of commits(); track c.sha) {
+          <mat-list-item
+            [activated]="c.sha === selectedSha()"
+            (click)="onCommitSelect(c.sha)">
+            <mat-icon matListItemIcon>commit</mat-icon>
+            <span matListItemTitle class="commit-msg-title">{{ c.message | slice:0:60 }}</span>
+            <span matListItemLine class="commit-meta-line">
+              <code class="sha-badge">{{ c.sha.slice(0, 7) }}</code>
+              {{ c.author }}&ensp;&middot;&ensp;{{ formatRelativeTime(c.timestamp) }}
+            </span>
+          </mat-list-item>
+        }
+      </mat-nav-list>
+    }
+  </div>
+
+  <!-- ── Right: objects + diff ──────────────────────────────────────────── -->
+  <div class="commit-detail">
+
+    @if (!selectedSha()) {
+      <div class="empty-state">
+        <mat-icon>event_note</mat-icon>
+        <p>Select a commit to see changed objects</p>
+      </div>
+    } @else {
+
+      <!-- Objects section -->
+      <div class="objects-section">
+        <div class="objects-header">
+          <div class="commit-info">
+            <code class="sha-badge-lg">{{ selectedSha()!.slice(0, 7) }}</code>
+            <span class="commit-title">{{ selectedCommit()?.message | slice:0:70 }}</span>
+            <span class="commit-meta">
+              {{ selectedCommit()?.author }}&ensp;&middot;&ensp;{{ formatTimestamp(selectedCommit()?.timestamp || '') }}
+            </span>
+          </div>
+
+          <div class="objects-actions">
+            @if (loadingFiles()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <button mat-stroked-button
+                      [disabled]="commitFiles().length === 0"
+                      (click)="toggleSelectAll()">
+                {{ allSelected ? 'Deselect All' : 'Select All' }}
+              </button>
+              <button mat-raised-button color="primary"
+                      [disabled]="noneSelected || buildingBundle()"
+                      (click)="onRestoreSelected()"
+                      matTooltip="Restore selected objects from this commit">
+                @if (buildingBundle()) {
+                  <mat-spinner diameter="18"></mat-spinner>
+                } @else {
+                  <mat-icon>restore</mat-icon>
+                }
+                Restore Selected ({{ selectedFiles().size }})
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (loadingFiles()) {
+          <div class="status-row">
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Loading changed objects&hellip;</span>
+          </div>
+        } @else if (commitFiles().length === 0) {
+          <div class="empty-state small">
+            <mat-icon>folder_open</mat-icon>
+            <p>No backup objects changed in this commit</p>
+          </div>
+        } @else {
+          <mat-nav-list dense class="objects-list">
+            @for (f of commitFiles(); track f.filePath) {
+              <mat-list-item
+                [activated]="f.filePath === focusedFile()?.filePath"
+                (click)="onFileFocus(f)">
+                <!-- Checkbox: click stops propagation so it only toggles, doesn't refocus -->
+                <mat-checkbox
+                  matListItemIcon
+                  [checked]="selectedFiles().has(f.filePath)"
+                  (change)="onFileToggle(f.filePath, $event.checked)"
+                  (click)="$event.stopPropagation()">
+                </mat-checkbox>
+                <span matListItemTitle>
+                  {{ fileNames().get(f.filePath) || f.objectId }}
+                </span>
+                <span matListItemLine class="file-meta-line">
+                  <mat-chip-set>
+                    <mat-chip class="type-chip-sm" [disableRipple]="true">{{ f.objectType }}</mat-chip>
+                    <mat-chip class="status-chip status-{{ f.status }}" [disableRipple]="true">
+                      {{ f.status }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </span>
+              </mat-list-item>
+            }
+          </mat-nav-list>
+        }
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Inline diff section -->
+      <div class="diff-section">
+        @if (!focusedFile()) {
+          <div class="empty-state small">
+            <mat-icon>difference</mat-icon>
+            <p>Click an object above to view its diff vs HEAD</p>
+          </div>
+        } @else if (loadingDiff()) {
+          <div class="status-row">
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Computing diff&hellip;</span>
+          </div>
+        } @else {
+          <div class="diff-header">
+            <span class="diff-obj-name">
+              {{ fileNames().get(focusedFile()!.filePath) || focusedFile()!.objectId }}
+            </span>
+            <span class="diff-subtitle">HEAD &rarr; this commit</span>
+            @if (hasChanges) {
+              <mat-chip-set>
+                <mat-chip class="stat-chip added-chip" [disableRipple]="true">+{{ addedCount }}</mat-chip>
+                <mat-chip class="stat-chip removed-chip" [disableRipple]="true">-{{ removedCount }}</mat-chip>
+              </mat-chip-set>
+            } @else {
+              <span class="no-diff-label">No differences from HEAD</span>
+            }
+          </div>
+
+          <div class="diff-table-wrapper">
+            <table class="diff-table">
+              <tbody>
+                @for (line of diffLines(); track $index) {
+                  <tr [class]="'diff-line diff-' + line.type">
+                    <td class="line-num">{{ line.lineNumberLeft ?? '' }}</td>
+                    <td class="line-num">{{ line.lineNumberRight ?? '' }}</td>
+                    <td class="diff-gutter">
+                      {{ line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' ' }}
+                    </td>
+                    <td class="diff-content"><pre>{{ line.content }}</pre></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+    }
+  </div>
+
+</div>

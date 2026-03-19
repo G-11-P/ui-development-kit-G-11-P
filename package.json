@@ -79,7 +79,6 @@
     "@codemirror/view": "^6.0.1",
     "@lezer/highlight": "^1.2.0",
     "@types/codemirror": "5.60.16",
-    "@types/diff": "8.0.0",
     "axios": "1.12.1",
     "codemirror": "6.0.2",
     "cronstrue": "3.3.0",

@@ -315,11 +315,13 @@ function updateAppRoutes() {
 function updateAppComponentHtml() {
   const content = fs.readFileSync(appComponentFile, 'utf8');
   
-  const linkToAdd = `      <a *ngIf="isComponentEnabled('${componentNameKebab}')" mat-list-item class="sidebar-link" routerLink="/${componentNameKebab}" routerLinkActive="active-link"
-        [class.disabled]="!isConnected" (click)="onNavItemClick($event)">
-        <mat-icon class="card-icon">dashboard</mat-icon>
-        ${componentDisplayName}
-      </a>`;
+  const linkToAdd = `        @if (isComponentEnabled('${componentNameKebab}')) {
+          <a mat-list-item class="sidebar-link" routerLink="/${componentNameKebab}" routerLinkActive="active-link"
+            [class.disabled]="!isConnected" (click)="onNavItemClick($event)">
+            <mat-icon class="card-icon">dashboard</mat-icon>
+            ${componentDisplayName}
+          </a>
+        }`;
   
   // Find the closing </mat-nav-list> tag and insert before it
   const navListEndRegex = /(.*?)(\s+<\/mat-nav-list>.*)/s;

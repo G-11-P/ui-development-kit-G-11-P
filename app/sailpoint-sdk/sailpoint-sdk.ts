@@ -73,7 +73,30 @@ function generateErrorResponse(error: unknown): ApiResponse<any> {
 }
 
 
+// --- GENERATED SDK METHODS START ---
 
+/**
+ * Create a new Access Model Metadata Attribute. 
+ * @summary Create access model metadata attribute
+ * @param {AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAccessModelMetadataAttribute = (requestParameters: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AttributeDTOV2025>> => {
+    const accessmodelmetadatav2025api = new sdk.AccessModelMetadataV2025Api(apiConfig);
+    return handleApiCall(() => accessmodelmetadatav2025api.createAccessModelMetadataAttribute(requestParameters));
+}
+/**
+ * Create a new value for an existing Access Model Metadata Attribute.     
+ * @summary Create access model metadata value
+ * @param {AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeValueRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAccessModelMetadataAttributeValue = (requestParameters: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeValueRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AttributeValueDTOV2025>> => {
+    const accessmodelmetadatav2025api = new sdk.AccessModelMetadataV2025Api(apiConfig);
+    return handleApiCall(() => accessmodelmetadatav2025api.createAccessModelMetadataAttributeValue(requestParameters));
+}
 /**
  * Get single Access Model Metadata Attribute
  * @summary Get access model metadata attribute
@@ -119,10 +142,33 @@ export const listAccessModelMetadataAttributeValue = (requestParameters: sdk.Acc
     return handleApiCall(() => accessmodelmetadatav2025api.listAccessModelMetadataAttributeValue(requestParameters));
 }
 /**
+ * Update an existing Access Model Metadata Attribute.   The following fields are patchable: **name**, **description**, **multiselect**, **values** 
+ * @summary Update access model metadata attribute
+ * @param {AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateAccessModelMetadataAttribute = (requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AttributeDTOV2025>> => {
+    const accessmodelmetadatav2025api = new sdk.AccessModelMetadataV2025Api(apiConfig);
+    return handleApiCall(() => accessmodelmetadatav2025api.updateAccessModelMetadataAttribute(requestParameters));
+}
+/**
+ * Update an existing Access Model Metadata Attribute Value.     The following fields are patchable: **name** 
+ * @summary Update access model metadata value
+ * @param {AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeValueRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateAccessModelMetadataAttributeValue = (requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeValueRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AttributeValueDTOV2025>> => {
+    const accessmodelmetadatav2025api = new sdk.AccessModelMetadataV2025Api(apiConfig);
+    return handleApiCall(() => accessmodelmetadatav2025api.updateAccessModelMetadataAttributeValue(requestParameters));
+}
+/**
  * Bulk update Access Model Metadata Attribute Values using a filter
  * @summary Metadata Attribute update by filter
  * @param {AccessModelMetadataV2025ApiUpdateAccessModelMetadataByFilterRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const updateAccessModelMetadataByFilter = (requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataByFilterRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AccessModelMetadataBulkUpdateResponseV2025>> => {
@@ -134,6 +180,7 @@ export const updateAccessModelMetadataByFilter = (requestParameters: sdk.AccessM
  * @summary Metadata Attribute update by ids
  * @param {AccessModelMetadataV2025ApiUpdateAccessModelMetadataByIdsRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const updateAccessModelMetadataByIds = (requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataByIdsRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AccessModelMetadataBulkUpdateResponseV2025>> => {
@@ -145,6 +192,7 @@ export const updateAccessModelMetadataByIds = (requestParameters: sdk.AccessMode
  * @summary Metadata Attribute update by query
  * @param {AccessModelMetadataV2025ApiUpdateAccessModelMetadataByQueryRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const updateAccessModelMetadataByQuery = (requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataByQueryRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AccessModelMetadataBulkUpdateResponseV2025>> => {
@@ -365,7 +413,7 @@ export const cancelAccessRequestInBulk = (requestParameters: sdk.AccessRequestsV
     return handleApiCall(() => accessrequestsv2025api.cancelAccessRequestInBulk(requestParameters));
 }
 /**
- * This endpoint closes access requests that are stuck in a pending state. It can be used throughout a request\'s lifecycle even after the approval state, unlike the [Cancel Access Request endpoint](https://developer.sailpoint.com/idn/api/v3/cancel-access-request/).  To find pending access requests with the UI, navigate to Search and use this query: status: Pending AND \"Access Request\". Use the Column Chooser to select \'Tracking Number\', and use the \'Download\' button to export a CSV containing the tracking numbers.  To find pending access requests with the API, use the [List Account Activities endpoint](https://developer.sailpoint.com/idn/api/v3/list-account-activities/).  Input the IDs from either source.  To track the status of endpoint requests, navigate to Search and use this query: name:\"Close Identity Requests\". Search will include \"Close Identity Requests Started\" audits when requests are initiated and \"Close Identity Requests Completed\" audits when requests are completed. The completion audit will list the identity request IDs that finished in error.  This API triggers the [Provisioning Completed event trigger](https://developer.sailpoint.com/idn/docs/event-triggers/triggers/provisioning-completed/) for each access request that is closed. 
+ * This endpoint closes access requests that are stuck in a pending state. It can be used throughout a request\'s lifecycle even after the approval state, unlike the [Cancel Access Request endpoint](https://developer.sailpoint.com/idn/api/v3/cancel-access-request/).  To find pending access requests with the UI, navigate to Search and use this query: status: Pending AND \"Access Request\". Use the Column Chooser to select \'Tracking Number\', and use the \'Download\' button to export a CSV containing the tracking numbers.  To find pending access requests with the API, use the [List Account Activities endpoint](https://developer.sailpoint.com/idn/api/v3/list-account-activities/).  Input the IDs from either source.  To track the status of endpoint requests, navigate to Search and use this query: name:\"Close Identity Requests\". Search will include \"Close Identity Requests Started\" audits when requests are initiated and \"Close Identity Requests Completed\" audits when requests are completed. The completion audit will list the identity request IDs that finished in error.  This API triggers the [Provisioning Completed event trigger](https://developer.sailpoint.com/docs/extensibility/event-triggers/triggers/provisioning-completed/) for each access request that is closed. 
  * @summary Close access request
  * @param {AccessRequestsV2025ApiCloseAccessRequestRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -376,7 +424,7 @@ export const closeAccessRequest = (requestParameters: sdk.AccessRequestsV2025Api
     return handleApiCall(() => accessrequestsv2025api.closeAccessRequest(requestParameters));
 }
 /**
- * Use this API to submit an access request in Identity Security Cloud (ISC), where it follows any ISC approval processes.  :::info The ability to request access using this API is constrained by the Access Request Segments defined in the API token’s user context. :::  Access requests are processed asynchronously by ISC. A successful response from this endpoint means that the request has been submitted to ISC and is queued for processing. Because this endpoint is asynchronous, it doesn\'t return an error if you submit duplicate access requests in quick succession or submit an access request for access that is already in progress, approved, or rejected.  It\'s best practice to check for any existing access requests that reference the same access items before submitting a new access request. This can be accomplished by using the [List Access Request Status](https://developer.sailpoint.com/idn/api/v3/list-access-request-status) or the [Pending Access Request Approvals](https://developer.sailpoint.com/idn/api/v3/list-pending-approvals) APIs. You can also use the [Search API](https://developer.sailpoint.com/idn/api/v3/search) to check the existing access items an identity has before submitting an access request to ensure that you aren\'t requesting access that is already granted. If you use this API to request access that an identity already has,  without changing the account details or end date information from the existing assignment,  the API will cancel the request as a duplicate.  There are two types of access request:  __GRANT_ACCESS__ * Can be requested for multiple identities in a single request. * Supports self request and request on behalf of other users. Refer to the [Get Access Request Configuration](https://developer.sailpoint.com/idn/api/v3/get-access-request-config) endpoint for request configuration options.   * Allows any authenticated token (except API) to call this endpoint to request to grant access to themselves. Depending on the configuration, a user can request access for others. * Roles, access profiles and entitlements can be requested. * You can specify a `removeDate` to set or alter a sunset date-time on an assignment. The removeDate must be a future date-time, in the UTC timezone. Additionally, if the user already has the access assigned with a sunset date, you can also submit a request without a `removeDate` to request removal of the sunset date and time. * If a `removeDate` is specified, then the requested role, access profile, or entitlement will be removed on that date and time. * Now supports an alternate field \'requestedForWithRequestedItems\' for users to specify account selections while requesting items where they have more than one account on the source.  :::caution  If any entitlements are being requested, then the maximum number of entitlements that can be requested is 25, and the maximum number of identities that can be requested for is 10. If you exceed these limits, the request will fail with a 400 error. If you are not requesting any entitlements, then there are no limits.  :::  __REVOKE_ACCESS__ * Can only be requested for a single identity at a time. * You cannot use an access request to revoke access from an identity if that access has been granted by role membership or by birthright provisioning.  * Does not support self request. Only manager can request to revoke access for their directly managed employees. * If a `removeDate` is specified, then the requested role, access profile, or entitlement will be removed on that date and time. * Roles, access profiles, and entitlements can be requested for revocation. * Revoke requests for entitlements are limited to 1 entitlement per access request currently. * You can specify a `removeDate` to add or alter a sunset date and time on an assignment. The `removeDate` must be a future date-time, in the UTC timezone. If the user already has the access assigned with a sunset date and time, the removeDate must be a date-time earlier than the existing sunset date and time.  * Allows a manager to request to revoke access for direct employees. A user with ORG_ADMIN authority can also request to revoke access from anyone. * Now supports REVOKE_ACCESS requests for identities with multiple accounts on a single source, with the help of \'assignmentId\' and \'nativeIdentity\' fields. These fields should be used within the \'requestedItems\' section for the revoke requests.  * Usage of \'requestedForWithRequestedItems\' field is not supported for revoke requests. 
+ * Use this API to submit an access request in Identity Security Cloud (ISC), where it follows any ISC approval processes.  >**Security:** idn:access-request:manage is for ORG_ADMIN level. idn:access-request-self:manage is for USER level.  :::info The ability to request access using this API is constrained by the Access Request Segments defined in the API token\'s user context. :::  Access requests are processed asynchronously by ISC. A successful response from this endpoint means that the request has been submitted to ISC and is queued for processing. Because this endpoint is asynchronous, it does not return an error if you submit duplicate access requests in quick succession or submit an access request for access that is already in progress, approved, or rejected.  It is best practice to check for any existing access requests that reference the same access items before submitting a new access request. This can be accomplished by using the [List Access Request Status](https://developer.sailpoint.com/idn/api/v3/list-access-request-status) or the [Pending Access Request Approvals](https://developer.sailpoint.com/idn/api/v3/list-pending-approvals) APIs. You can also use the [Search API](https://developer.sailpoint.com/idn/api/v3/search) to check the existing access items an identity has before submitting an access request to ensure that you aren\'t requesting access that is already granted. If you use this API to request access that an identity already has,  without changing the account details or end date information from the existing assignment,  the API will cancel the request as a duplicate.  There are two types of access request:  __GRANT_ACCESS__ * Can be requested for multiple identities in a single request. * Supports self request and request on behalf of other users. Refer to the [Get Access Request Configuration](https://developer.sailpoint.com/idn/api/v3/get-access-request-config) endpoint for request configuration options.   * Allows any authenticated token (except API) to call this endpoint to request to grant access to themselves. Depending on the configuration, a user can request access for others. * Roles, access profiles and entitlements can be requested. * You can specify a `removeDate` to set or alter a sunset date-time on an assignment. The removeDate must be a future date-time, in the UTC timezone. Additionally, if the user already has the access assigned with a sunset date, you can also submit a request without a `removeDate` to request removal of the sunset date and time. * If a `removeDate` is specified, then the requested role, access profile, or entitlement will be removed on that date and time. * Now supports an alternate field \'requestedForWithRequestedItems\' for users to specify account selections while requesting items where they have more than one account on the source.  :::caution  If any entitlements are being requested, then the maximum number of entitlements that can be requested is 25, and the maximum number of identities that can be requested for is 10. If you exceed these limits, the request will fail with a 400 error. If you are not requesting any entitlements, then there are no limits.  :::  __REVOKE_ACCESS__ * Can only be requested for a single identity at a time. * You cannot use an access request to revoke access from an identity if that access has been granted by role membership or by birthright provisioning.  * Does not support self request. Only manager can request to revoke access for their directly managed employees. * If a `removeDate` is specified, then the requested role, access profile, or entitlement will be removed on that date and time. * Roles, access profiles, and entitlements can be requested for revocation. * Revoke requests for entitlements are limited to 1 entitlement per access request currently. * You can specify a `removeDate` to add or alter a sunset date and time on an assignment. The `removeDate` must be a future date-time, in the UTC timezone. If the user already has the access assigned with a sunset date and time, the removeDate must be a date-time earlier than the existing sunset date and time.  * Allows a manager to request to revoke access for direct employees. A user with ORG_ADMIN authority can also request to revoke access from anyone. * Now supports REVOKE_ACCESS requests for identities with multiple accounts on a single source, with the help of \'assignmentId\' and \'nativeIdentity\' fields. These fields should be used within the \'requestedItems\' section for the revoke requests.  * Usage of \'requestedForWithRequestedItems\' field is not supported for revoke requests. 
  * @summary Submit access request
  * @param {AccessRequestsV2025ApiCreateAccessRequestRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -390,6 +438,7 @@ export const createAccessRequest = (requestParameters: sdk.AccessRequestsV2025Ap
  * This endpoint returns the current access-request configuration.
  * @summary Get access request configuration
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const getAccessRequestConfig = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AccessRequestConfigV2025>> => {
@@ -445,6 +494,7 @@ export const loadAccountSelections = (requestParameters: sdk.AccessRequestsV2025
  * @summary Update access request configuration
  * @param {AccessRequestsV2025ApiSetAccessRequestConfigRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const setAccessRequestConfig = (requestParameters: sdk.AccessRequestsV2025ApiSetAccessRequestConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.AccessRequestConfigV2025>> => {
@@ -677,6 +727,29 @@ export const updateAccount = (requestParameters: sdk.AccountsV2025ApiUpdateAccou
 }
 
 /**
+ * This API gets an aggregated number of all API calls from an org in a specific timespan. Unless specified, the results are aggregated between the first day of the current month and today.
+ * @summary Total number of API requests
+ * @param {ApiUsageV2025ApiGetTotalCountRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getTotalCount = (requestParameters: sdk.ApiUsageV2025ApiGetTotalCountRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const apiusagev2025api = new sdk.ApiUsageV2025Api(apiConfig);
+    return handleApiCall(() => apiusagev2025api.getTotalCount(requestParameters));
+}
+/**
+ * This API gets a list of APIs called by the org in a specific timespan, sorted by number of calls. Unless specified,  the results are aggregated between the first day of the current month and today.
+ * @summary Get Api Summary
+ * @param {ApiUsageV2025ApiListApiSummaryRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const listApiSummary = (requestParameters: sdk.ApiUsageV2025ApiListApiSummaryRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.SummaryResponseV2025>>> => {
+    const apiusagev2025api = new sdk.ApiUsageV2025Api(apiConfig);
+    return handleApiCall(() => apiusagev2025api.listApiSummary(requestParameters));
+}
+
+/**
  * Get a list of applications that have been identified within the environment. This includes details such as application names, discovery dates, potential correlated saas_vendors and related suggested connectors. 
  * @summary Get discovered applications for tenant
  * @param {ApplicationDiscoveryV2025ApiGetDiscoveredApplicationsRequest} requestParameters Request parameters.
@@ -708,6 +781,17 @@ export const sendManualDiscoverApplicationsCsvTemplate = (requestParameters: sdk
     const applicationdiscoveryv2025api = new sdk.ApplicationDiscoveryV2025Api(apiConfig);
     return handleApiCall(() => applicationdiscoveryv2025api.sendManualDiscoverApplicationsCsvTemplate(requestParameters));
 }
+/**
+ * Use this API to discover applications.
+ * @summary Start Application Discovery
+ * @param {ApplicationDiscoveryV2025ApiStartApplicationDiscoveryRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const startApplicationDiscovery = (requestParameters: sdk.ApplicationDiscoveryV2025ApiStartApplicationDiscoveryRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ApplicationDiscoveryResponseV2025>> => {
+    const applicationdiscoveryv2025api = new sdk.ApplicationDiscoveryV2025Api(apiConfig);
+    return handleApiCall(() => applicationdiscoveryv2025api.startApplicationDiscovery(requestParameters));
+}
 
 /**
  * Currently this endpoint only supports Entitlement Description Approvals. Approves a specified approval request on behalf of the caller. This endpoint is for generic approvals, unlike the access-request-approval endpoint, and does not include access-request-approvals. The approval request must be in a state that allows it to be approved. If called by an admin and the admin is not listed as an approver, the approval request will be reassigned from a random approver to the admin user.
@@ -721,6 +805,39 @@ export const approveApproval = (requestParameters: sdk.ApprovalsV2025ApiApproveA
     return handleApiCall(() => approvalsv2025api.approveApproval(requestParameters));
 }
 /**
+ * Bulk Approves specified approval requests on behalf of the caller
+ * @summary Post Bulk Approve Approvals
+ * @param {ApprovalsV2025ApiApproveApprovalInBulkRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const approveApprovalInBulk = (requestParameters: sdk.ApprovalsV2025ApiApproveApprovalInBulkRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.approveApprovalInBulk(requestParameters));
+}
+/**
+ * Bulk cancels specified approval requests on behalf of the caller
+ * @summary Post Bulk Cancel Approvals
+ * @param {ApprovalsV2025ApiCancelApprovalRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const cancelApproval = (requestParameters: sdk.ApprovalsV2025ApiCancelApprovalRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.cancelApproval(requestParameters));
+}
+/**
+ * Deletes an approval configuration. Configurations at the APPROVAL_REQUEST scope cannot be deleted.
+ * @summary Delete Approval Configuration
+ * @param {ApprovalsV2025ApiDeleteApprovalConfigRequestRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteApprovalConfigRequest = (requestParameters: sdk.ApprovalsV2025ApiDeleteApprovalConfigRequestRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.deleteApprovalConfigRequest(requestParameters));
+}
+/**
  * Currently this endpoint only supports Entitlement Description Approvals. Retrieve a single approval for a given approval ID. This endpoint is for generic approvals, different than the access-request-approval endpoint and does not include access-request-approvals.
  * @summary Get an approval
  * @param {ApprovalsV2025ApiGetApprovalRequest} requestParameters Request parameters.
@@ -732,7 +849,7 @@ export const getApproval = (requestParameters: sdk.ApprovalsV2025ApiGetApprovalR
     return handleApiCall(() => approvalsv2025api.getApproval(requestParameters));
 }
 /**
- * Currently this endpoint only supports Entitlement Description Approvals. Get a list of approvals. This endpoint is for generic approvals, unlike the access-request-approval endpoint, and does not include access-request-approvals.  Absence of all query parameters for non admins will will default to mine=true. Absence of all query parameters for admins will return all approvals in the org.
+ * Currently this endpoint only supports Entitlement Description Approvals. Get a list of approvals. This endpoint is for generic approvals, unlike the access-request-approval endpoint, and does not include access-request-approvals.  Absence of all query parameters for non admins will will default to mine=true. Admin will default to mine=false. Absence of all query parameters for admins will return all approvals in the org.
  * @summary Get approvals
  * @param {ApprovalsV2025ApiGetApprovalsRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -741,6 +858,39 @@ export const getApproval = (requestParameters: sdk.ApprovalsV2025ApiGetApprovalR
 export const getApprovals = (requestParameters: sdk.ApprovalsV2025ApiGetApprovalsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ApprovalV2025>>> => {
     const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
     return handleApiCall(() => approvalsv2025api.getApprovals(requestParameters));
+}
+/**
+ * Retrieves a singular approval configuration that matches the given ID
+ * @summary Get Approval Config
+ * @param {ApprovalsV2025ApiGetApprovalsConfigRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getApprovalsConfig = (requestParameters: sdk.ApprovalsV2025ApiGetApprovalsConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ApprovalConfigV2025>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.getApprovalsConfig(requestParameters));
+}
+/**
+ * Bulk reassigns specified approval requests on behalf of the caller
+ * @summary Post Bulk Reassign Approvals
+ * @param {ApprovalsV2025ApiMoveApprovalRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const moveApproval = (requestParameters: sdk.ApprovalsV2025ApiMoveApprovalRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.moveApproval(requestParameters));
+}
+/**
+ * Upserts a singular approval configuration that matches the given configID and configScope. If id and scope are not provided, it will default to setting the tenant config.
+ * @summary Put Approval Config
+ * @param {ApprovalsV2025ApiPutApprovalsConfigRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const putApprovalsConfig = (requestParameters: sdk.ApprovalsV2025ApiPutApprovalsConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ApprovalConfigV2025>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.putApprovalsConfig(requestParameters));
 }
 /**
  * Currently this endpoint only supports Entitlement Description Approvals. Rejects a specified approval request on behalf of the caller. If called by an admin and the admin is not listed as an approver, the approval request will be reassigned from a random approver to the admin user.
@@ -752,6 +902,17 @@ export const getApprovals = (requestParameters: sdk.ApprovalsV2025ApiGetApproval
 export const rejectApproval = (requestParameters: sdk.ApprovalsV2025ApiRejectApprovalRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
     const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
     return handleApiCall(() => approvalsv2025api.rejectApproval(requestParameters));
+}
+/**
+ * Bulk reject specified approval requests on behalf of the caller
+ * @summary Post Bulk Reject Approvals
+ * @param {ApprovalsV2025ApiRejectApprovalInBulkRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const rejectApprovalInBulk = (requestParameters: sdk.ApprovalsV2025ApiRejectApprovalInBulkRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const approvalsv2025api = new sdk.ApprovalsV2025Api(apiConfig);
+    return handleApiCall(() => approvalsv2025api.rejectApprovalInBulk(requestParameters));
 }
 /**
  * Currently this endpoint only supports Entitlement Description Approvals. Allows for the edit/addition/removal of the key/value pair additional attributes map for an existing approval request.
@@ -1409,7 +1570,7 @@ export const getCertificationTask = (requestParameters: sdk.CertificationsV2025A
     return handleApiCall(() => certificationsv2025api.getCertificationTask(requestParameters));
 }
 /**
- * This API returns a single identity campaign certification by its ID. Reviewers for this certification can also call this API. This API does not support requests for certifications assigned to Governance Groups.
+ * This API returns a single identity campaign certification by its ID. Reviewers for this certification can also call this API.
  * @summary Identity certification by id
  * @param {CertificationsV2025ApiGetIdentityCertificationRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -1598,7 +1759,7 @@ export const createScheduledAction = (requestParameters: sdk.ConfigurationHubV20
     return handleApiCall(() => configurationhubv2025api.createScheduledAction(requestParameters));
 }
 /**
- * This API uploads a JSON configuration file into a tenant.  Configuration files can be managed and deployed via Configuration Hub by uploading a json file which contains configuration data. The JSON file should be the same as the one used by our import endpoints. The object types supported by upload configuration file functionality are the same as the ones supported by our regular backup functionality.  Refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects) for more information about supported objects.
+ * This API uploads a JSON configuration file into a tenant.  Configuration files can be managed and deployed via Configuration Hub by uploading a json file which contains configuration data. The JSON file should be the same as the one used by our import endpoints. The object types supported by upload configuration file functionality are the same as the ones supported by our regular backup functionality.  Refer to [SaaS Configuration](https://developer.sailpoint.com/docs/extensibility/configuration-management/saas-configuration#supported-objects) for more information about supported objects.
  * @summary Upload a configuration
  * @param {ConfigurationHubV2025ApiCreateUploadedConfigurationRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -2216,14 +2377,15 @@ export const searchFormElementDataByElementID = (requestParameters: sdk.CustomFo
     return handleApiCall(() => customformsv2025api.searchFormElementDataByElementID(requestParameters));
 }
 /**
- * No parameters required.
+ * Returns a list of form instances for the tenant. Optionally filter by form definition ID.
  * @summary List form instances by tenant.
+ * @param {CustomFormsV2025ApiSearchFormInstancesByTenantRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
  * @throws {RequiredError}
  */
-export const searchFormInstancesByTenant = (apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>>> => {
+export const searchFormInstancesByTenant = (requestParameters: sdk.CustomFormsV2025ApiSearchFormInstancesByTenantRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>>> => {
     const customformsv2025api = new sdk.CustomFormsV2025Api(apiConfig);
-    return handleApiCall(() => customformsv2025api.searchFormInstancesByTenant());
+    return handleApiCall(() => customformsv2025api.searchFormInstancesByTenant(requestParameters));
 }
 /**
  * No parameters required.
@@ -2326,6 +2488,17 @@ export const listAllAuthorizationRightSets = (requestParameters: sdk.CustomUserL
     return handleApiCall(() => customuserlevelsv2025api.listAllAuthorizationRightSets(requestParameters));
 }
 /**
+ * List of identities associated with a user level.
+ * @summary List user level identities
+ * @param {CustomUserLevelsV2025ApiListUserLevelIdentitiesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const listUserLevelIdentities = (requestParameters: sdk.CustomUserLevelsV2025ApiListUserLevelIdentitiesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.AuthUserSlimResponseV2025>>> => {
+    const customuserlevelsv2025api = new sdk.CustomUserLevelsV2025Api(apiConfig);
+    return handleApiCall(() => customuserlevelsv2025api.listUserLevelIdentities(requestParameters));
+}
+/**
  * Retrieves a list of user levels for the tenant.
  * @summary List user levels
  * @param {CustomUserLevelsV2025ApiListUserLevelsRequest} requestParameters Request parameters.
@@ -2348,6 +2521,17 @@ export const publishCustomUserLevel = (requestParameters: sdk.CustomUserLevelsV2
     return handleApiCall(() => customuserlevelsv2025api.publishCustomUserLevel(requestParameters));
 }
 /**
+ * List of user levels along with the number of identities associated to it.
+ * @summary Count user levels identities
+ * @param {CustomUserLevelsV2025ApiShowUserLevelCountsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const showUserLevelCounts = (requestParameters: sdk.CustomUserLevelsV2025ApiShowUserLevelCountsRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.AuthUserLevelsIdentityCountV2025>>> => {
+    const customuserlevelsv2025api = new sdk.CustomUserLevelsV2025Api(apiConfig);
+    return handleApiCall(() => customuserlevelsv2025api.showUserLevelCounts(requestParameters));
+}
+/**
  * Updates the details of a specific user level using JSON Patch.
  * @summary Update a user level
  * @param {CustomUserLevelsV2025ApiUpdateUserLevelRequest} requestParameters Request parameters.
@@ -2357,6 +2541,238 @@ export const publishCustomUserLevel = (requestParameters: sdk.CustomUserLevelsV2
 export const updateUserLevel = (requestParameters: sdk.CustomUserLevelsV2025ApiUpdateUserLevelRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UserLevelSummaryDTOV2025>> => {
     const customuserlevelsv2025api = new sdk.CustomUserLevelsV2025Api(apiConfig);
     return handleApiCall(() => customuserlevelsv2025api.updateUserLevel(requestParameters));
+}
+
+/**
+ * This end-point sends a request to cancel a task in Data Access Security.
+ * @summary Cancel a DAS task.
+ * @param {DataAccessSecurityV2025ApiCancelTaskRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const cancelTask = (requestParameters: sdk.DataAccessSecurityV2025ApiCancelTaskRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.cancelTask(requestParameters));
+}
+/**
+ * This endpoint creates a new application in Data Access Security with the specified configuration.
+ * @summary Create application
+ * @param {DataAccessSecurityV2025ApiCreateApplicationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createApplication = (requestParameters: sdk.DataAccessSecurityV2025ApiCreateApplicationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.createApplication(requestParameters));
+}
+/**
+ * 
+ * @summary Create a new schedule.
+ * @param {DataAccessSecurityV2025ApiCreateScheduleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSchedule = (requestParameters: sdk.DataAccessSecurityV2025ApiCreateScheduleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<number>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.createSchedule(requestParameters));
+}
+/**
+ * 
+ * @summary Assign owner to application resource.
+ * @param {DataAccessSecurityV2025ApiDasOwnersAssignPostRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const dasOwnersAssignPost = (requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersAssignPostRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<number>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.dasOwnersAssignPost(requestParameters));
+}
+/**
+ * 
+ * @summary List resources for owner.
+ * @param {DataAccessSecurityV2025ApiDasOwnersOwnerIdentityIdResourcesGetRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const dasOwnersOwnerIdentityIdResourcesGet = (requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersOwnerIdentityIdResourcesGetRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ResourceModelV2025>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.dasOwnersOwnerIdentityIdResourcesGet(requestParameters));
+}
+/**
+ * 
+ * @summary Re-elect resource owner.
+ * @param {DataAccessSecurityV2025ApiDasOwnersReelectPostRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const dasOwnersReelectPost = (requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersReelectPostRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<number>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.dasOwnersReelectPost(requestParameters));
+}
+/**
+ * 
+ * @summary List owners for resource.
+ * @param {DataAccessSecurityV2025ApiDasOwnersResourcesResourceIdGetRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const dasOwnersResourcesResourceIdGet = (requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersResourcesResourceIdGetRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<string>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.dasOwnersResourcesResourceIdGet(requestParameters));
+}
+/**
+ * 
+ * @summary Reassign resource owner.
+ * @param {DataAccessSecurityV2025ApiDasOwnersSourceIdentityIdReassignDestinationIdentityIdPostRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const dasOwnersSourceIdentityIdReassignDestinationIdentityIdPost = (requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersSourceIdentityIdReassignDestinationIdentityIdPostRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<number>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.dasOwnersSourceIdentityIdReassignDestinationIdentityIdPost(requestParameters));
+}
+/**
+ * This endpoint deletes an application from Data Access Security by its unique identifier.
+ * @summary Delete an application by identifier.
+ * @param {DataAccessSecurityV2025ApiDeleteApplicationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteApplication = (requestParameters: sdk.DataAccessSecurityV2025ApiDeleteApplicationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.deleteApplication(requestParameters));
+}
+/**
+ * This end-point sends a request to delete a schedule in Data Access Security.
+ * @summary Delete a DAS schedule.
+ * @param {DataAccessSecurityV2025ApiDeleteScheduleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteSchedule = (requestParameters: sdk.DataAccessSecurityV2025ApiDeleteScheduleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.deleteSchedule(requestParameters));
+}
+/**
+ * This end-point sends a request to delete a task in Data Access Security. 
+ * @summary Delete a DAS task.
+ * @param {DataAccessSecurityV2025ApiDeleteTaskRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteTask = (requestParameters: sdk.DataAccessSecurityV2025ApiDeleteTaskRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.deleteTask(requestParameters));
+}
+/**
+ * This endpoint retrieves the details of a specific application in Data Access Security by its unique identifier.
+ * @summary Retrieve application details by identifier.
+ * @param {DataAccessSecurityV2025ApiGetApplicationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getApplication = (requestParameters: sdk.DataAccessSecurityV2025ApiGetApplicationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ApplicationItemV2025>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getApplication(requestParameters));
+}
+/**
+ * This endpoint lists all the applications in Data Access Security with optional filtering.
+ * @summary Search applications in DAS.
+ * @param {DataAccessSecurityV2025ApiGetApplicationsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getApplications = (requestParameters: sdk.DataAccessSecurityV2025ApiGetApplicationsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ApplicationItemV2025>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getApplications(requestParameters));
+}
+/**
+ * 
+ * @summary Retrieve owners per application.
+ * @param {DataAccessSecurityV2025ApiGetOwnersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getOwners = (requestParameters: sdk.DataAccessSecurityV2025ApiGetOwnersRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.DataOwnerModelV2025>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getOwners(requestParameters));
+}
+/**
+ * This end-point gets a schedule in Data Access Security.
+ * @summary Get a DAS schedule.
+ * @param {DataAccessSecurityV2025ApiGetScheduleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSchedule = (requestParameters: sdk.DataAccessSecurityV2025ApiGetScheduleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ScheduleInfoV2025>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getSchedule(requestParameters));
+}
+/**
+ * This end-point lists all the schedules in Data Access Security.
+ * @summary List all schedules.
+ * @param {DataAccessSecurityV2025ApiGetSchedulesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSchedules = (requestParameters: sdk.DataAccessSecurityV2025ApiGetSchedulesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ScheduleInfoV2025>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getSchedules(requestParameters));
+}
+/**
+ * This end-point gets a task in Data Access Security.
+ * @summary Get a DAS task.
+ * @param {DataAccessSecurityV2025ApiGetTaskRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getTask = (requestParameters: sdk.DataAccessSecurityV2025ApiGetTaskRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.TaskInfoV2025>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getTask(requestParameters));
+}
+/**
+ * This end-point lists all the tasks in Data Access Security.
+ * @summary Lists all DAS tasks.
+ * @param {DataAccessSecurityV2025ApiGetTasksRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getTasks = (requestParameters: sdk.DataAccessSecurityV2025ApiGetTasksRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.TaskInfoV2025>>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.getTasks(requestParameters));
+}
+/**
+ * This endpoint updates an existing application in Data Access Security with the specified configuration.
+ * @summary Update application by identifier.
+ * @param {DataAccessSecurityV2025ApiPutApplicationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const putApplication = (requestParameters: sdk.DataAccessSecurityV2025ApiPutApplicationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.putApplication(requestParameters));
+}
+/**
+ * 
+ * @summary Update a schedule.
+ * @param {DataAccessSecurityV2025ApiPutScheduleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const putSchedule = (requestParameters: sdk.DataAccessSecurityV2025ApiPutScheduleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.putSchedule(requestParameters));
+}
+/**
+ * This end-point sends a request to re-run a task in Data Access Security.
+ * @summary Rerun a DAS task.
+ * @param {DataAccessSecurityV2025ApiStartTaskRerunRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const startTaskRerun = (requestParameters: sdk.DataAccessSecurityV2025ApiStartTaskRerunRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const dataaccesssecurityv2025api = new sdk.DataAccessSecurityV2025Api(apiConfig);
+    return handleApiCall(() => dataaccesssecurityv2025api.startTaskRerun(requestParameters));
 }
 
 /**
@@ -2446,6 +2862,18 @@ export const patchDataSegment = (requestParameters: sdk.DataSegmentationV2025Api
 export const publishDataSegment = (requestParameters: sdk.DataSegmentationV2025ApiPublishDataSegmentRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
     const datasegmentationv2025api = new sdk.DataSegmentationV2025Api(apiConfig);
     return handleApiCall(() => datasegmentationv2025api.publishDataSegment(requestParameters));
+}
+
+/**
+ * Use this API to declassify all the accounts from a source. A token with API, ORG_ADMIN, ROLE_ADMIN, ROLE_SUBADMIN, SOURCE_ADMIN, or SOURCE_SUBADMIN authority is required to call this API.
+ * @summary Declassify source\'s all accounts
+ * @param {DeclassifySourceV2025ApiSendDeclassifyMachineAccountFromSourceRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const sendDeclassifyMachineAccountFromSource = (requestParameters: sdk.DeclassifySourceV2025ApiSendDeclassifyMachineAccountFromSourceRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const declassifysourcev2025api = new sdk.DeclassifySourceV2025Api(apiConfig);
+    return handleApiCall(() => declassifysourcev2025api.sendDeclassifyMachineAccountFromSource(requestParameters));
 }
 
 /**
@@ -2660,7 +3088,7 @@ export const resetSourceEntitlements = (requestParameters: sdk.EntitlementsV2025
     return handleApiCall(() => entitlementsv2025api.resetSourceEntitlements(requestParameters));
 }
 /**
- * This API applies an update to every entitlement of the list.   The number of entitlements to update is limited to 50 items maximum.   The JsonPatch update follows the [JSON Patch](https://tools.ietf.org/html/rfc6902) standard. examples of allowed operations : `**{ \"op\": \"replace\", \"path\": \"/privileged\", \"value\": boolean }**` `**{ \"op\": \"replace\", \"path\": \"/requestable\",\"value\": boolean }**` `**{ \"op\": \"replace\", \"path\": \"/privilegeOverride/overrideLevel\",\"value\": string }**`  A token with ORG_ADMIN or API authority is required to call this API. 
+ * This API applies an update to every entitlement of the list.   The number of entitlements to update is limited to 50 items maximum.   The JsonPatch update follows the [JSON Patch](https://tools.ietf.org/html/rfc6902) standard. examples of allowed operations : `**{ \"op\": \"replace\", \"path\": \"/privileged\", \"value\": boolean }**` `**{ \"op\": \"replace\", \"path\": \"/requestable\",\"value\": boolean }**`  A token with ORG_ADMIN or API authority is required to call this API. 
  * @summary Bulk update an entitlement list
  * @param {EntitlementsV2025ApiUpdateEntitlementsInBulkRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -3414,14 +3842,14 @@ export const patchPotentialRole = (requestParameters: sdk.IAIRoleMiningV2025ApiP
 }
 /**
  * The method updates an existing potential role using.  The following fields can be modified:  * `description`  * `name`  * `saved`   >**NOTE: All other fields cannot be modified.** 
- * @summary Update a potential role
- * @param {IAIRoleMiningV2025ApiPatchPotentialRole0Request} requestParameters Request parameters.
+ * @summary Update a potential role session
+ * @param {IAIRoleMiningV2025ApiPatchPotentialRoleSessionRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
  * @throws {RequiredError}
  */
-export const patchPotentialRole_1 = (requestParameters: sdk.IAIRoleMiningV2025ApiPatchPotentialRole0Request, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+export const patchPotentialRoleSession = (requestParameters: sdk.IAIRoleMiningV2025ApiPatchPotentialRoleSessionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
     const iairoleminingv2025api = new sdk.IAIRoleMiningV2025Api(apiConfig);
-    return handleApiCall(() => iairoleminingv2025api.patchPotentialRole_1(requestParameters));
+    return handleApiCall(() => iairoleminingv2025api.patchPotentialRoleSession(requestParameters));
 }
 /**
  * The  method updates an existing role mining session using PATCH. Supports op in {\"replace\"} and changes to pruneThreshold and/or minNumIdentitiesInPotentialRole. The potential roles in this role mining session is then re-calculated.
@@ -4192,7 +4620,7 @@ export const createMachineAccountSubtype = (requestParameters: sdk.MachineAccoun
     return handleApiCall(() => machineaccountsv2025api.createMachineAccountSubtype(requestParameters));
 }
 /**
- * Delete a machine account subtype by its ID.
+ * Delete a machine account subtype by source ID and technical name.
  * @summary Delete subtype
  * @param {MachineAccountsV2025ApiDeleteMachineAccountSubtypeRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -4258,7 +4686,7 @@ export const listMachineAccounts = (requestParameters: sdk.MachineAccountsV2025A
     return handleApiCall(() => machineaccountsv2025api.listMachineAccounts(requestParameters));
 }
 /**
- * Update fields of a machine account subtype by its ID. Patchable fields include: `displayName`, `description`, `technicalName`.
+ * Update fields of a machine account subtype by source ID and technical name. Patchable fields include: `displayName`, `description`.
  * @summary Patch subtype
  * @param {MachineAccountsV2025ApiPatchMachineAccountSubtypeRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -5378,6 +5806,95 @@ export const patchOrgConfig = (requestParameters: sdk.OrgConfigV2025ApiPatchOrgC
 }
 
 /**
+ * Add a new parameter.
+ * @summary Add a new parameter.
+ * @param {ParameterStorageV2025ApiCreateParameterRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createParameter = (requestParameters: sdk.ParameterStorageV2025ApiCreateParameterRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ParameterStorageParameterV2025>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.createParameter(requestParameters));
+}
+/**
+ * Delete a parameter. Will only delete parameters without existing references.
+ * @summary Delete a parameter.
+ * @param {ParameterStorageV2025ApiDeleteParameterRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteParameter = (requestParameters: sdk.ParameterStorageV2025ApiDeleteParameterRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.deleteParameter(requestParameters));
+}
+/**
+ * Get an attestation document containing a NIST P-384 service public key for an ECDHE handshake, enabling the end-to-end-encrypted transport of parameter private fields.
+ * @summary Get an attestation document.
+ * @param {ParameterStorageV2025ApiGetAttestationDocumentRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttestationDocument = (requestParameters: sdk.ParameterStorageV2025ApiGetAttestationDocumentRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ParameterStorageAttestationDocumentV2025>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.getAttestationDocument(requestParameters));
+}
+/**
+ * Get a parameter by ID. This will only return the public fields for the parameter.
+ * @summary Get a specific parameter.
+ * @param {ParameterStorageV2025ApiGetParameterRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getParameter = (requestParameters: sdk.ParameterStorageV2025ApiGetParameterRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ParameterStorageParameterV2025>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.getParameter(requestParameters));
+}
+/**
+ * Get the references for a given parameter.
+ * @summary Get parameter references.
+ * @param {ParameterStorageV2025ApiGetParameterReferencesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getParameterReferences = (requestParameters: sdk.ParameterStorageV2025ApiGetParameterReferencesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ParameterStorageReferenceV2025>>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.getParameterReferences(requestParameters));
+}
+/**
+ * Get the specifications for all parameter types. All parameters must conform to this specification document.
+ * @summary Get specifications for parameter types.
+ * @param {ParameterStorageV2025ApiGetParameterStorageSpecificationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getParameterStorageSpecification = (requestParameters: sdk.ParameterStorageV2025ApiGetParameterStorageSpecificationRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.getParameterStorageSpecification(requestParameters));
+}
+/**
+ * Query a stored parameter.
+ * @summary Query stored parameters.
+ * @param {ParameterStorageV2025ApiSearchParametersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const searchParameters = (requestParameters: sdk.ParameterStorageV2025ApiSearchParametersRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.ParameterStorageParameterV2025>>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.searchParameters(requestParameters));
+}
+/**
+ * Update a parameter. You cannot change a parameter\'s type once set. Only the name, owner, description, public fields, and private fields can be updated. Private field updates are made via JWE AES256 encrypted blobs.
+ * @summary Update a parameter.
+ * @param {ParameterStorageV2025ApiUpdateParameterRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateParameter = (requestParameters: sdk.ParameterStorageV2025ApiUpdateParameterRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.ParameterStorageParameterV2025>> => {
+    const parameterstoragev2025api = new sdk.ParameterStorageV2025Api(apiConfig);
+    return handleApiCall(() => parameterstoragev2025api.updateParameter(requestParameters));
+}
+
+/**
  * This API creates the password org config. Unspecified fields will use default value. To be able to use the custom password instructions, you must set the `customInstructionsEnabled` field to \"true\". Requires ORG_ADMIN, API role or authorization scope of \'idn:password-org-config:write\'
  * @summary Create password org config
  * @param {PasswordConfigurationV2025ApiCreatePasswordOrgConfigRequest} requestParameters Request parameters.
@@ -5590,7 +6107,7 @@ export const updatePasswordSyncGroup = (requestParameters: sdk.PasswordSyncGroup
 }
 
 /**
- * This creates a personal access token.
+ * This creates a personal access token. **expirationDate and userAwareTokenNeverExpires Relationship:** **Important:** When `expirationDate` is `null` or empty (not included in the request body), the token will never expire. **Required Validation:** If `expirationDate` is `null` or empty, `userAwareTokenNeverExpires` must be set to `true`. This is a required validation rule. The valid values for `expirationDate` depend on the value provided for `userAwareTokenNeverExpires`: * **When `userAwareTokenNeverExpires` is `true` (or required to be `true`):** `expirationDate` can be `null` or omitted from the request body. When `expirationDate` is `null` or empty, the token will never expire. This creates a PAT that never expires and serves as an explicit acknowledgment that the user is aware of the security implications of creating a non-expiring token. * **When `userAwareTokenNeverExpires` is `false` or omitted:** `expirationDate` must be provided and must be a valid date-time string representing a future date (there is no upper limit). `expirationDate` cannot be `null` in this case. In this scenario, `userAwareTokenNeverExpires` can be omitted. **Validation Rules:** * **If `expirationDate` is `null` or not included in the request body:** `userAwareTokenNeverExpires` must be set to `true` (required). The token will never expire. * **If `expirationDate` is provided and is not `null`:** `userAwareTokenNeverExpires` can be omitted. **Security Considerations:** The `userAwareTokenNeverExpires` field is designed to ensure that users explicitly acknowledge the security implications of creating tokens that never expire. Setting this field to `true` indicates that the user understands the increased security risks and has made an informed decision to proceed. **Note:** The `userAwareTokenNeverExpires` field indicates that the user acknowledges they are creating a token that will never expire. It does not affect token behavior beyond indicating this acknowledgment.
  * @summary Create personal access token
  * @param {PersonalAccessTokensV2025ApiCreatePersonalAccessTokenRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -5623,7 +6140,7 @@ export const listPersonalAccessTokens = (requestParameters: sdk.PersonalAccessTo
     return handleApiCall(() => personalaccesstokensv2025api.listPersonalAccessTokens(requestParameters));
 }
 /**
- * This performs a targeted update to the field(s) of a Personal Access Token. Changing scopes for a Personal Access Token does not impact existing bearer tokens. You will need to create a new bearer token to have the new scopes. Please note that it can take up to 20 minutes for scope changes to be seen on new bearer tokens.
+ * This performs a targeted update to the field(s) of a Personal Access Token. Changing scopes for a Personal Access Token does not impact existing bearer tokens. You will need to create a new bearer token to have the new scopes. Please note that it can take up to 20 minutes for scope changes to be seen on new bearer tokens. **expirationDate and userAwareTokenNeverExpires Relationship:** **Important:** When `expirationDate` is `null` or empty (replaced to `null` or omitted from the patch request), the token will never expire. **Required Validation:** If `expirationDate` is being replaced to `null` or is empty, `userAwareTokenNeverExpires` must be set to `true` in the patch request. This is a required validation rule. When patching `expirationDate` and `userAwareTokenNeverExpires`, the valid values for `expirationDate` depend on the value provided for `userAwareTokenNeverExpires`: * **When `userAwareTokenNeverExpires` is being set to `true` (or required to be `true`):** `expirationDate` can be replaced to `null` or omitted from the patch request. When `expirationDate` is `null` or empty, the token will never expire. This sets the PAT to never expire and serves as an explicit acknowledgment that the user is aware of the security implications of creating a non-expiring token. * **When `userAwareTokenNeverExpires` is `false` or omitted:** `expirationDate` must be provided and must be a valid date-time string representing a future date (there is no upper limit). `expirationDate` cannot be `null` in this case. In this scenario, `userAwareTokenNeverExpires` can be omitted. **Validation Rules:** * **If `expirationDate` is being replaced to `null`:** `userAwareTokenNeverExpires` must also be present in the patch request with a value of `true` (required). The token will never expire. * **If `expirationDate` is not being replaced to `null` (i.e., set to a future date):** `userAwareTokenNeverExpires` can be omitted. **Security Considerations:** The `userAwareTokenNeverExpires` field is designed to ensure that users explicitly acknowledge the security implications of creating tokens that never expire. Setting this field to `true` indicates that the user understands the increased security risks and has made an informed decision to proceed. **Note:** The `userAwareTokenNeverExpires` field indicates that the user acknowledges they are creating a token that will never expire. It does not affect token behavior beyond indicating this acknowledgment.
  * @summary Patch personal access token
  * @param {PersonalAccessTokensV2025ApiPatchPersonalAccessTokenRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -5632,6 +6149,96 @@ export const listPersonalAccessTokens = (requestParameters: sdk.PersonalAccessTo
 export const patchPersonalAccessToken = (requestParameters: sdk.PersonalAccessTokensV2025ApiPatchPersonalAccessTokenRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPersonalAccessTokenResponseV2025>> => {
     const personalaccesstokensv2025api = new sdk.PersonalAccessTokensV2025Api(apiConfig);
     return handleApiCall(() => personalaccesstokensv2025api.patchPersonalAccessToken(requestParameters));
+}
+
+/**
+ * Use this API to create a custom privilege criteria
+ * @summary Create custom privilege criteria
+ * @param {PrivilegeCriteriaV2025ApiCreateCustomPrivilegeCriteriaRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createCustomPrivilegeCriteria = (requestParameters: sdk.PrivilegeCriteriaV2025ApiCreateCustomPrivilegeCriteriaRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PrivilegeCriteriaDTOV2025>> => {
+    const privilegecriteriav2025api = new sdk.PrivilegeCriteriaV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriav2025api.createCustomPrivilegeCriteria(requestParameters));
+}
+/**
+ * Use this API to delete a specific custom privilege criteria.
+ * @summary Delete privilege criteria
+ * @param {PrivilegeCriteriaV2025ApiDeleteCustomPrivilegeCriteriaRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteCustomPrivilegeCriteria = (requestParameters: sdk.PrivilegeCriteriaV2025ApiDeleteCustomPrivilegeCriteriaRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const privilegecriteriav2025api = new sdk.PrivilegeCriteriaV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriav2025api.deleteCustomPrivilegeCriteria(requestParameters));
+}
+/**
+ * Use this API to get a specific privilege criteria.
+ * @summary Get privilege criteria
+ * @param {PrivilegeCriteriaV2025ApiGetPrivilegeCriteriaRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPrivilegeCriteria = (requestParameters: sdk.PrivilegeCriteriaV2025ApiGetPrivilegeCriteriaRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PrivilegeCriteriaDTOV2025>> => {
+    const privilegecriteriav2025api = new sdk.PrivilegeCriteriaV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriav2025api.getPrivilegeCriteria(requestParameters));
+}
+/**
+ * Use this API to list all privilege criteria matching a filter
+ * @summary List privilege criteria
+ * @param {PrivilegeCriteriaV2025ApiListPrivilegeCriteriaRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const listPrivilegeCriteria = (requestParameters: sdk.PrivilegeCriteriaV2025ApiListPrivilegeCriteriaRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.PrivilegeCriteriaDTOV2025>>> => {
+    const privilegecriteriav2025api = new sdk.PrivilegeCriteriaV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriav2025api.listPrivilegeCriteria(requestParameters));
+}
+/**
+ * Use this API to update a specific custom privilege criteria by overwriting the information with new information.
+ * @summary Update privilege criteria
+ * @param {PrivilegeCriteriaV2025ApiPutCustomPrivilegeCriteriaValueRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const putCustomPrivilegeCriteriaValue = (requestParameters: sdk.PrivilegeCriteriaV2025ApiPutCustomPrivilegeCriteriaValueRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PrivilegeCriteriaDTOV2025>> => {
+    const privilegecriteriav2025api = new sdk.PrivilegeCriteriaV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriav2025api.putCustomPrivilegeCriteriaValue(requestParameters));
+}
+
+/**
+ * Use this API to get the privilege criteria configuration by Id.
+ * @summary Get privilege criteria config
+ * @param {PrivilegeCriteriaConfigurationV2025ApiGetPrivilegeCriteriaConfigRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPrivilegeCriteriaConfig = (requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiGetPrivilegeCriteriaConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PrivilegeCriteriaConfigDTOV2025>> => {
+    const privilegecriteriaconfigurationv2025api = new sdk.PrivilegeCriteriaConfigurationV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriaconfigurationv2025api.getPrivilegeCriteriaConfig(requestParameters));
+}
+/**
+ * Use this API to list the privilege criteria configuration.
+ * @summary List privilege criteria config
+ * @param {PrivilegeCriteriaConfigurationV2025ApiListPrivilegeCriteriaConfigRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const listPrivilegeCriteriaConfig = (requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiListPrivilegeCriteriaConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.PrivilegeCriteriaConfigDTOV2025>>> => {
+    const privilegecriteriaconfigurationv2025api = new sdk.PrivilegeCriteriaConfigurationV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriaconfigurationv2025api.listPrivilegeCriteriaConfig(requestParameters));
+}
+/**
+ * Use this API to update the privilege criteria configuration.
+ * @summary Update privilege criteria configuration
+ * @param {PrivilegeCriteriaConfigurationV2025ApiPatchPrivilegeCriteriaConfigRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchPrivilegeCriteriaConfig = (requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiPatchPrivilegeCriteriaConfigRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PrivilegeCriteriaConfigDTOV2025>> => {
+    const privilegecriteriaconfigurationv2025api = new sdk.PrivilegeCriteriaConfigurationV2025Api(apiConfig);
+    return handleApiCall(() => privilegecriteriaconfigurationv2025api.patchPrivilegeCriteriaConfig(requestParameters));
 }
 
 /**
@@ -5825,6 +6432,51 @@ export const getRoleInsightsRequests = (requestParameters: sdk.RoleInsightsV2025
 export const getRoleInsightsSummary = (requestParameters: sdk.RoleInsightsV2025ApiGetRoleInsightsSummaryRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.RoleInsightsSummaryV2025>> => {
     const roleinsightsv2025api = new sdk.RoleInsightsV2025Api(apiConfig);
     return handleApiCall(() => roleinsightsv2025api.getRoleInsightsSummary(requestParameters));
+}
+
+/**
+ * This endpoint terminates the ongoing role change propagation process for a tenant.
+ * @summary Terminate Role Propagation process
+ * @param {RolePropagationV2025ApiCancelRolePropagationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const cancelRolePropagation = (requestParameters: sdk.RolePropagationV2025ApiCancelRolePropagationRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const rolepropagationv2025api = new sdk.RolePropagationV2025Api(apiConfig);
+    return handleApiCall(() => rolepropagationv2025api.cancelRolePropagation(requestParameters));
+}
+/**
+ * This endpoint returns the information of ongoing role change propagation process for a tenant. It returns the information whether the role propagation process is currently running or not, If it is running it returns the details of the ongoing role propagation process. The execution stage of the role propagation process can be one of the following: - PENDING - The role propagation process is queued to be executed. - DATA_AGGREGATION_RUNNING - The role propagation process is currently aggregating data. - LAUNCH_PROVISIONING - The role propagation process has started to provision the access to the identities. - SUCCEEDED - The role propagation process has successfully completed. - FAILED - The role propagation process has failed. - TERMINATED - The role propagation process was externally terminated.
+ * @summary Get ongoing Role Propagation process
+ * @param {RolePropagationV2025ApiGetOngoingRolePropagationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getOngoingRolePropagation = (requestParameters: sdk.RolePropagationV2025ApiGetOngoingRolePropagationRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.RolePropagationOngoingResponseV2025>> => {
+    const rolepropagationv2025api = new sdk.RolePropagationV2025Api(apiConfig);
+    return handleApiCall(() => rolepropagationv2025api.getOngoingRolePropagation(requestParameters));
+}
+/**
+ * This endpoint returns the information of the specified role change propagation process. The execution stage of the role propagation process can be one of the following:     - PENDING - The role propagation process is queued to be executed.     - DATA_AGGREGATION_RUNNING - The role propagation process is currently aggregating data.     - LAUNCH_PROVISIONING - The role propagation process has started to provision the access to the identities.     - SUCCEEDED - The role propagation process has successfully completed.     - FAILED - The role propagation process has failed.     - TERMINATED - The role propagation process was externally terminated.
+ * @summary Get status of Role-Propagation process
+ * @param {RolePropagationV2025ApiGetRolePropagationStatusRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRolePropagationStatus = (requestParameters: sdk.RolePropagationV2025ApiGetRolePropagationStatusRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.RolePropagationStatusResponseV2025>> => {
+    const rolepropagationv2025api = new sdk.RolePropagationV2025Api(apiConfig);
+    return handleApiCall(() => rolepropagationv2025api.getRolePropagationStatus(requestParameters));
+}
+/**
+ * This endpoint initiates a role change propagation process for a tenant asynchronously.  If all preconditions are met, the request is accepted and a rolePropagationId is returned which  can be used to view the status. API throws 4xx if any of the following conditions are met - Role propagation feature is disabled  - There is an ongoing role propagation for the tenant - Role refresh needs to be kicked off as part of the role propagation (skipRoleRefresh=false) and there is an ongoing refresh for the tenant
+ * @summary Initiate Role Propagation process
+ * @param {RolePropagationV2025ApiStartRolePropagationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const startRolePropagation = (requestParameters: sdk.RolePropagationV2025ApiStartRolePropagationRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.RolePropagationResponseV2025>> => {
+    const rolepropagationv2025api = new sdk.RolePropagationV2025Api(apiConfig);
+    return handleApiCall(() => rolepropagationv2025api.startRolePropagation(requestParameters));
 }
 
 /**
@@ -6292,7 +6944,7 @@ export const startViolationCheck = (requestParameters: sdk.SODViolationsV2025Api
 }
 
 /**
- * This post will export objects from the tenant to a JSON configuration file. For more information about the object types that currently support export functionality, refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects).
+ * This post will export objects from the tenant to a JSON configuration file. For more information about the object types that currently support export functionality, refer to [SaaS Configuration](https://developer.sailpoint.com/docs/extensibility/configuration-management/saas-configuration#supported-objects).
  * @summary Initiates configuration objects export job
  * @param {SPConfigV2025ApiExportSpConfigRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -6336,7 +6988,7 @@ export const getSpConfigImport = (requestParameters: sdk.SPConfigV2025ApiGetSpCo
     return handleApiCall(() => spconfigv2025api.getSpConfigImport(requestParameters));
 }
 /**
- * \'This gets the status of the import job identified by the `id` parameter.   For more information about the object types that currently support import functionality,  refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects).\' 
+ * \'This gets the status of the import job identified by the `id` parameter.   For more information about the object types that currently support import functionality,  refer to [SaaS Configuration](https://developer.sailpoint.com/docs/extensibility/configuration-management/saas-configuration#supported-objects).\' 
  * @summary Get import job status
  * @param {SPConfigV2025ApiGetSpConfigImportStatusRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -6347,7 +6999,7 @@ export const getSpConfigImportStatus = (requestParameters: sdk.SPConfigV2025ApiG
     return handleApiCall(() => spconfigv2025api.getSpConfigImportStatus(requestParameters));
 }
 /**
- * This post will import objects from a JSON configuration file into a tenant. By default, every import will first export all existing objects supported by sp-config as a backup before the import is attempted. The backup is provided so that the state of the configuration prior to the import is available for inspection or restore if needed. The backup can be skipped by setting \"excludeBackup\" to true in the import options. If a backup is performed, the id of the backup will be provided in the ImportResult as the \"exportJobId\". This can be downloaded  using the `/sp-config/export/{exportJobId}/download` endpoint.  You cannot currently import from the Non-Employee Lifecycle Management (NELM) source. You cannot use this endpoint to back up or store NELM data.   For more information about the object types that currently support import functionality, refer to [SaaS Configuration](https://developer.sailpoint.com/idn/docs/saas-configuration/#supported-objects). 
+ * This post will import objects from a JSON configuration file into a tenant. By default, every import will first export all existing objects supported by sp-config as a backup before the import is attempted. The backup is provided so that the state of the configuration prior to the import is available for inspection or restore if needed. The backup can be skipped by setting \"excludeBackup\" to true in the import options. If a backup is performed, the id of the backup will be provided in the ImportResult as the \"exportJobId\". This can be downloaded  using the `/sp-config/export/{exportJobId}/download` endpoint.  You cannot currently import from the Non-Employee Lifecycle Management (NELM) source. You cannot use this endpoint to back up or store NELM data.   For more information about the object types that currently support import functionality, refer to [SaaS Configuration](https://developer.sailpoint.com/docs/extensibility/configuration-management/saas-configuration#supported-objects). 
  * @summary Initiates configuration objects import job
  * @param {SPConfigV2025ApiImportSpConfigRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -6536,7 +7188,7 @@ export const searchGet = (requestParameters: sdk.SearchV2025ApiSearchGetRequest,
     return handleApiCall(() => searchv2025api.searchGet(requestParameters));
 }
 /**
- * Perform a search with the provided query and return a matching result collection. To page past 10,000 records, you can use `searchAfter` paging.  Refer to [Paginating Search Queries](https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-search-queries) for more information about how to implement `searchAfter` paging. 
+ * Perform a search with the provided query and return a matching result collection. To page past 10,000 records, you can use `searchAfter` paging.  Refer to [Paginating Search Queries](https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-search-queries) for more information about how to implement `searchAfter` paging. The search query itself has a size limitation of approximately 800 objects when filtering by large lists of IDs or values (e.g., using `terms` filters with extensive lists).
  * @summary Perform search
  * @param {SearchV2025ApiSearchPostRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -6769,6 +7421,115 @@ export const updateStatusCheckDetails = (requestParameters: sdk.ServiceDeskInteg
 }
 
 /**
+ * An SSF stream is associated with the client ID of the OAuth 2.0 access token used to create the stream. One SSF stream is allowed for each client ID.  You can create a maximum of 10 SSF stream configurations for one org. 
+ * @summary Create stream
+ * @param {SharedSignalsFrameworkSSFV2025ApiCreateStreamRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createStream = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiCreateStreamRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.StreamConfigResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.createStream(requestParameters));
+}
+/**
+ * Deletes a stream by its ID. There is no request body; the stream is identified by the required query parameter `stream_id`. On success the response has no body (204 No Content).  The associated stream with the client ID (through the request OAuth 2.0 access token) is deleted. 
+ * @summary Delete stream
+ * @param {SharedSignalsFrameworkSSFV2025ApiDeleteStreamRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteStream = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiDeleteStreamRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.deleteStream(requestParameters));
+}
+/**
+ * Returns the transmitter\'s JSON Web Key Set (JWKS) for verifying signed delivery requests.
+ * @summary Get JWKS
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getJWKSData = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.JWKSV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.getJWKSData());
+}
+/**
+ * Returns the SSF transmitter discovery metadata (well-known configuration).
+ * @summary Get SSF configuration
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSSFConfiguration = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.TransmitterMetadataV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.getSSFConfiguration());
+}
+/**
+ * Retrieves either a list of all SSF stream configurations or the individual configuration if specified by ID.  As stream configurations are tied to a client ID, you can only view the stream associated with the client ID of the request OAuth 2.0 access token.  Query parameter `aud` (co filter) can be used to filter by audience. 
+ * @summary Get stream(s)
+ * @param {SharedSignalsFrameworkSSFV2025ApiGetStreamRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getStream = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetStream200ResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.getStream(requestParameters));
+}
+/**
+ * Returns the status (enabled, paused, disabled) and optional reason for the stream associated with the client ID of the request\'s OAuth 2.0 access token. The stream_id query parameter is required.
+ * @summary Get stream status
+ * @param {SharedSignalsFrameworkSSFV2025ApiGetStreamStatusRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getStreamStatus = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamStatusRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.StreamStatusResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.getStreamStatus(requestParameters));
+}
+/**
+ * Verifies an SSF stream by publishing a verification event requested by a security events provider.
+ * @summary Verify stream
+ * @param {SharedSignalsFrameworkSSFV2025ApiSendStreamVerificationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const sendStreamVerification = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiSendStreamVerificationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.sendStreamVerification(requestParameters));
+}
+/**
+ * Replaces a stream\'s configuration (PUT). stream_id and delivery are required; full receiver-supplied properties.  The associated stream with the client ID (through the request OAuth 2.0 access token) is replaced. 
+ * @summary Replace stream configuration
+ * @param {SharedSignalsFrameworkSSFV2025ApiSetStreamConfigurationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const setStreamConfiguration = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiSetStreamConfigurationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UpdateStreamConfigResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.setStreamConfiguration(requestParameters));
+}
+/**
+ * Partially updates a stream\'s configuration (PATCH). Only provided fields are updated.  The associated stream with the client ID (through the request OAuth 2.0 access token) is updated. 
+ * @summary Update stream configuration
+ * @param {SharedSignalsFrameworkSSFV2025ApiUpdateStreamConfigurationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateStreamConfiguration = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamConfigurationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UpdateStreamConfigResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.updateStreamConfiguration(requestParameters));
+}
+/**
+ * Updates the operational status (enabled, paused, disabled) with an optional reason for the stream associated with the client ID of the request\'s OAuth 2.0 access token.
+ * @summary Update stream status
+ * @param {SharedSignalsFrameworkSSFV2025ApiUpdateStreamStatusRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateStreamStatus = (requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamStatusRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.StreamStatusResponseV2025>> => {
+    const sharedsignalsframeworkssfv2025api = new sdk.SharedSignalsFrameworkSSFV2025Api(apiConfig);
+    return handleApiCall(() => sharedsignalsframeworkssfv2025api.updateStreamStatus(requestParameters));
+}
+
+/**
  * This API returns the status of the source usage insights setup by IDN source ID.
  * @summary Finds status of source usage
  * @param {SourceUsagesV2025ApiGetStatusBySourceIdRequest} requestParameters Request parameters.
@@ -6792,7 +7553,7 @@ export const getUsagesBySourceId = (requestParameters: sdk.SourceUsagesV2025ApiG
 }
 
 /**
- * This API generates a create policy/template based on field value transforms. This API is intended for use when setting up JDBC Provisioning type sources, but it will also work on other source types. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/idn/docs/transforms/guides/transforms-in-provisioning-policies) for more information.
+ * This API generates a create policy/template based on field value transforms. This API is intended for use when setting up JDBC Provisioning type sources, but it will also work on other source types. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/docs/extensibility/transforms/guides/transforms-in-provisioning-policies) for more information.
  * @summary Create provisioning policy
  * @param {SourcesV2025ApiCreateProvisioningPolicyRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7133,6 +7894,17 @@ export const importUncorrelatedAccounts = (requestParameters: sdk.SourcesV2025Ap
     return handleApiCall(() => sourcesv2025api.importUncorrelatedAccounts(requestParameters));
 }
 /**
+ * This API can be used to get Password Policy in IdentityNow for the specified Source. Source must support PASSWORD feature. 
+ * @summary Get Password Policy for source
+ * @param {SourcesV2025ApiListPasswordPolicyHoldersOnSourceRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const listPasswordPolicyHoldersOnSource = (requestParameters: sdk.SourcesV2025ApiListPasswordPolicyHoldersOnSourceRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.PasswordPolicyHoldersDtoInnerV2025>>> => {
+    const sourcesv2025api = new sdk.SourcesV2025Api(apiConfig);
+    return handleApiCall(() => sourcesv2025api.listPasswordPolicyHoldersOnSource(requestParameters));
+}
+/**
  * This end-point lists all the ProvisioningPolicies in IdentityNow.
  * @summary Lists provisioningpolicies
  * @param {SourcesV2025ApiListProvisioningPoliciesRequest} requestParameters Request parameters.
@@ -7188,7 +7960,7 @@ export const putNativeChangeDetectionConfig = (requestParameters: sdk.SourcesV20
     return handleApiCall(() => sourcesv2025api.putNativeChangeDetectionConfig(requestParameters));
 }
 /**
- * This end-point updates the provisioning policy with the specified usage on the specified source in IdentityNow. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/idn/docs/transforms/guides/transforms-in-provisioning-policies) for more information.
+ * This end-point updates the provisioning policy with the specified usage on the specified source in IdentityNow. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/docs/extensibility/transforms/guides/transforms-in-provisioning-policies) for more information.
  * @summary Update provisioning policy by usagetype
  * @param {SourcesV2025ApiPutProvisioningPolicyRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7298,7 +8070,7 @@ export const updateProvisioningPoliciesInBulk = (requestParameters: sdk.SourcesV
     return handleApiCall(() => sourcesv2025api.updateProvisioningPoliciesInBulk(requestParameters));
 }
 /**
- * This API selectively updates an existing Provisioning Policy using a JSONPatch payload. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/idn/docs/transforms/guides/transforms-in-provisioning-policies) for more information.
+ * This API selectively updates an existing Provisioning Policy using a JSONPatch payload. Transforms can be used in the provisioning policy to create a new attribute that you only need during provisioning. Refer to [Transforms in Provisioning Policies](https://developer.sailpoint.com/docs/extensibility/transforms/guides/transforms-in-provisioning-policies) for more information.
  * @summary Partial update of provisioning policy
  * @param {SourcesV2025ApiUpdateProvisioningPolicyRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7420,7 +8192,7 @@ export const submitSedAssignment = (requestParameters: sdk.SuggestedEntitlementD
     return handleApiCall(() => suggestedentitlementdescriptionv2025api.submitSedAssignment(requestParameters));
 }
 /**
- * Submit Sed Batch Request. Request body has one of the following: - a list of entitlement Ids - a list of SED Ids that user wants to have description generated by LLM. API responses with batchId that groups Ids together
+ * Submit Sed Batch Request. Request body has one of the following: - a list of entitlement Ids - a list of SED Ids that user wants to have description generated by LLM.  API responses with batchId that groups Ids together
  * @summary Submit sed batch request
  * @param {SuggestedEntitlementDescriptionV2025ApiSubmitSedBatchRequestRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7465,7 +8237,7 @@ export const getTaggedObject = (requestParameters: sdk.TaggedObjectsV2025ApiGetT
     return handleApiCall(() => taggedobjectsv2025api.getTaggedObject(requestParameters));
 }
 /**
- * This API returns a list of all tagged objects.  Any authenticated token may be used to call this API.
+ * This API returns a list of all tagged objects.
  * @summary List tagged objects
  * @param {TaggedObjectsV2025ApiListTaggedObjectsRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7476,7 +8248,7 @@ export const listTaggedObjects = (requestParameters: sdk.TaggedObjectsV2025ApiLi
     return handleApiCall(() => taggedobjectsv2025api.listTaggedObjects(requestParameters));
 }
 /**
- * This API returns a list of all tagged objects by type.  Any authenticated token may be used to call this API.
+ * This API returns a list of all tagged objects by type.
  * @summary List tagged objects by type
  * @param {TaggedObjectsV2025ApiListTaggedObjectsByTypeRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7498,7 +8270,7 @@ export const putTaggedObject = (requestParameters: sdk.TaggedObjectsV2025ApiPutT
     return handleApiCall(() => taggedobjectsv2025api.putTaggedObject(requestParameters));
 }
 /**
- * This adds a tag to an object.  Any authenticated token may be used to call this API.
+ * This adds a tag to an object.
  * @summary Add tag to object
  * @param {TaggedObjectsV2025ApiSetTagToObjectRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7566,10 +8338,11 @@ export const listTags = (requestParameters: sdk.TagsV2025ApiListTagsRequest = {}
 }
 
 /**
- * Responds with headers only for list of task statuses for pending tasks.
+ * This API is being deprecated. Please use the [task-status-list](https://developer.sailpoint.com/docs/api/v2025/get-task-status-list) endpoint with isnull filtering on the completionStatus field and count=true. Example: /v2025/task-status?count=true&filters=completionStatus isnull  Responds with headers only for list of task statuses for pending tasks. 
  * @summary Retrieve pending task list headers
  * @param {TaskManagementV2025ApiGetPendingTaskHeadersRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const getPendingTaskHeaders = (requestParameters: sdk.TaskManagementV2025ApiGetPendingTaskHeadersRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
@@ -7577,10 +8350,11 @@ export const getPendingTaskHeaders = (requestParameters: sdk.TaskManagementV2025
     return handleApiCall(() => taskmanagementv2025api.getPendingTaskHeaders(requestParameters));
 }
 /**
- * Retrieve a list of statuses for pending tasks. Types of tasks include account and entitlement aggregation and other general background processing tasks.  Data for tasks older than 90 days will not be returned.
+ * This API is being deprecated. Please use the [task-status-list](https://developer.sailpoint.com/docs/api/v2025/get-task-status-list) endpoint with isnull filtering on the completionStatus field to retrieve pending tasks. Example: /v2025/task-status?filters=completionStatus isnull  Retrieve a list of statuses for pending tasks. Types of tasks include account and entitlement aggregation and other general background processing tasks.  Data for tasks older than 90 days will not be returned. 
  * @summary Retrieve pending task status list
  * @param {TaskManagementV2025ApiGetPendingTasksRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
+ * @deprecated
  * @throws {RequiredError}
  */
 export const getPendingTasks = (requestParameters: sdk.TaskManagementV2025ApiGetPendingTasksRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.TaskStatusV2025>>> => {
@@ -7599,7 +8373,7 @@ export const getTaskStatus = (requestParameters: sdk.TaskManagementV2025ApiGetTa
     return handleApiCall(() => taskmanagementv2025api.getTaskStatus(requestParameters));
 }
 /**
- * Use this endpoint to get a list of statuses for **completed** tasks. Types of tasks include account and entitlement aggregation and other general background processing tasks.  Data for tasks older than 90 days will not be returned. To get a list of statuses for **in-progress** tasks, please use the [retrieve pending task status list](https://developer.sailpoint.com/docs/api/v2024/get-pending-tasks) endpoint. 
+ * Use this endpoint to get a list of statuses for **all** tasks, including completed, in-progress, terminated, and errored tasks. Types of tasks include account and entitlement aggregation and other general background processing tasks. Data for tasks older than 90 days will not be returned. For a list of **in-progress** tasks, use the [retrieve pending task status list](https://developer.sailpoint.com/docs/api/v2025/get-pending-tasks) endpoint or apply the isnull filter to the Completion Status field. 
  * @summary Retrieve task status list
  * @param {TaskManagementV2025ApiGetTaskStatusListRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -7843,39 +8617,6 @@ export const getTenantUiMetadata = (requestParameters: sdk.UIMetadataV2025ApiGet
 export const setTenantUiMetadata = (requestParameters: sdk.UIMetadataV2025ApiSetTenantUiMetadataRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.TenantUiMetadataItemResponseV2025>> => {
     const uimetadatav2025api = new sdk.UIMetadataV2025Api(apiConfig);
     return handleApiCall(() => uimetadatav2025api.setTenantUiMetadata(requestParameters));
-}
-
-/**
- * Create a new mapping between a SaaS vendor and an ISC connector to establish correlation paths. 
- * @summary Create vendor connector mapping
- * @param {VendorConnectorMappingsV2025ApiCreateVendorConnectorMappingRequest} requestParameters Request parameters.
- * @param {*} [axiosOptions] Override http request option.
- * @throws {RequiredError}
- */
-export const createVendorConnectorMapping = (requestParameters: sdk.VendorConnectorMappingsV2025ApiCreateVendorConnectorMappingRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.VendorConnectorMappingV2025>> => {
-    const vendorconnectormappingsv2025api = new sdk.VendorConnectorMappingsV2025Api(apiConfig);
-    return handleApiCall(() => vendorconnectormappingsv2025api.createVendorConnectorMapping(requestParameters));
-}
-/**
- * Soft delete a mapping between a SaaS vendor and an ISC connector, removing the established correlation. 
- * @summary Delete vendor connector mapping
- * @param {VendorConnectorMappingsV2025ApiDeleteVendorConnectorMappingRequest} requestParameters Request parameters.
- * @param {*} [axiosOptions] Override http request option.
- * @throws {RequiredError}
- */
-export const deleteVendorConnectorMapping = (requestParameters: sdk.VendorConnectorMappingsV2025ApiDeleteVendorConnectorMappingRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteVendorConnectorMapping200ResponseV2025>> => {
-    const vendorconnectormappingsv2025api = new sdk.VendorConnectorMappingsV2025Api(apiConfig);
-    return handleApiCall(() => vendorconnectormappingsv2025api.deleteVendorConnectorMapping(requestParameters));
-}
-/**
- * Get a list of mappings between SaaS vendors and ISC connectors, detailing the connections established for correlation. 
- * @summary List vendor connector mappings
- * @param {*} [axiosOptions] Override http request option.
- * @throws {RequiredError}
- */
-export const getVendorConnectorMappings = (apiConfig: sdk.Configuration): Promise<ApiResponse<Array<sdk.VendorConnectorMappingV2025>>> => {
-    const vendorconnectormappingsv2025api = new sdk.VendorConnectorMappingsV2025Api(apiConfig);
-    return handleApiCall(() => vendorconnectormappingsv2025api.getVendorConnectorMappings());
 }
 
 /**
@@ -8319,7 +9060,7 @@ export const testExternalExecuteWorkflow = (requestParameters: sdk.WorkflowsV202
     return handleApiCall(() => workflowsv2025api.testExternalExecuteWorkflow(requestParameters));
 }
 /**
- * :::info  Workflow must be disabled in order to use this endpoint.  :::  Test a workflow with the provided input data.  The input data should resemble the input that the trigger will send the workflow.  See the [event trigger documentation](https://developer.sailpoint.com/idn/docs/event-triggers/available) for an example input for the trigger that initiates this workflow.  This endpoint will return an execution ID, which can be used to lookup more information about the execution using the `Get a Workflow Execution` endpoint.  **This will cause a live run of the workflow, which could result in unintended modifications to your IDN tenant.** 
+ * :::info  Workflow must be disabled in order to use this endpoint.  :::  Test a workflow with the provided input data.  The input data should resemble the input that the trigger will send the workflow.  See the [event trigger documentation](https://developer.sailpoint.com/docs/extensibility/event-triggers/available) for an example input for the trigger that initiates this workflow.  This endpoint will return an execution ID, which can be used to lookup more information about the execution using the `Get a Workflow Execution` endpoint.  **This will cause a live run of the workflow, which could result in unintended modifications to your IDN tenant.** 
  * @summary Test workflow by id
  * @param {WorkflowsV2025ApiTestWorkflowRequest} requestParameters Request parameters.
  * @param {*} [axiosOptions] Override http request option.
@@ -8330,6 +9071,2194 @@ export const testWorkflow = (requestParameters: sdk.WorkflowsV2025ApiTestWorkflo
     return handleApiCall(() => workflowsv2025api.testWorkflow(requestParameters));
 }
 
+
+
+/**
+ * Get saved advanced search queries
+ * @summary Get saved advanced search queries
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAdvancedSearchNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetAdvancedSearch200ResponseNERM>> => {
+    const advancedsearchnermapi = new sdk.AdvancedSearchNERMApi(apiConfig);
+    return handleApiCall(() => advancedsearchnermapi.getAdvancedSearch());
+}
+/**
+ * Update a saved advanced search query
+ * @summary Update a saved advanced search
+ * @param {AdvancedSearchNERMApiPatchAdvancedSearchRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchAdvancedSearchNerm = (requestParameters: sdk.AdvancedSearchNERMApiPatchAdvancedSearchRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAdvancedSearch200ResponseNERM>> => {
+    const advancedsearchnermapi = new sdk.AdvancedSearchNERMApi(apiConfig);
+    return handleApiCall(() => advancedsearchnermapi.patchAdvancedSearch(requestParameters));
+}
+/**
+ * Run an advanced search for profiles, without saving the query
+ * @summary Run profiles advanced search
+ * @param {AdvancedSearchNERMApiSearchAdvancedSearchRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const searchAdvancedSearchNerm = (requestParameters: sdk.AdvancedSearchNERMApiSearchAdvancedSearchRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SearchAdvancedSearch200ResponseNERM>> => {
+    const advancedsearchnermapi = new sdk.AdvancedSearchNERMApi(apiConfig);
+    return handleApiCall(() => advancedsearchnermapi.searchAdvancedSearch(requestParameters));
+}
+/**
+ * Run a saved advanced search query
+ * @summary Run a saved advanced search
+ * @param {AdvancedSearchNERMApiSearchAdvancedSearchbyIDRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const searchAdvancedSearchbyIDNerm = (requestParameters: sdk.AdvancedSearchNERMApiSearchAdvancedSearchbyIDRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SearchAdvancedSearch200ResponseNERM>> => {
+    const advancedsearchnermapi = new sdk.AdvancedSearchNERMApi(apiConfig);
+    return handleApiCall(() => advancedsearchnermapi.searchAdvancedSearchbyID(requestParameters));
+}
+/**
+ * Save an advanced search query for later use
+ * @summary Save an advanced search query
+ * @param {AdvancedSearchNERMApiSubmitAdvancedSearchRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitAdvancedSearchNerm = (requestParameters: sdk.AdvancedSearchNERMApiSubmitAdvancedSearchRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAdvancedSearch200ResponseNERM>> => {
+    const advancedsearchnermapi = new sdk.AdvancedSearchNERMApi(apiConfig);
+    return handleApiCall(() => advancedsearchnermapi.submitAdvancedSearch(requestParameters));
+}
+
+/**
+ * Delete a option based attribute value by id
+ * @summary Delete option based attribute value
+ * @param {AttributeOptionsNERMApiDeleteAttributeOptionByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteAttributeOptionByIdNerm = (requestParameters: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteAttributeOptionById200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.deleteAttributeOptionById(requestParameters));
+}
+/**
+ * Delete a option based attribute value by UID (user-specified identifier)
+ * @summary Delete option value
+ * @param {AttributeOptionsNERMApiDeleteAttributeOptionByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteAttributeOptionByUidNerm = (requestParameters: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteAttributeOptionById200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.deleteAttributeOptionByUid(requestParameters));
+}
+/**
+ * Info for a specific option based attribute value by id
+ * @summary Find option based attribute value
+ * @param {AttributeOptionsNERMApiGetAttributeOptionByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributeOptionByIdNerm = (requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOption200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.getAttributeOptionById(requestParameters));
+}
+/**
+ * Get a specific option based attribute value by UID (user-specified identifier)
+ * @summary Find option attribute value
+ * @param {AttributeOptionsNERMApiGetAttributeOptionByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributeOptionByUidNerm = (requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOption200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.getAttributeOptionByUid(requestParameters));
+}
+/**
+ * Get option based attribute values
+ * @summary Get option based attribute values
+ * @param {AttributeOptionsNERMApiGetAttributeOptionsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributeOptionsNerm = (requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetAttributeOptions200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.getAttributeOptions(requestParameters));
+}
+/**
+ * Update a option based attribute value by id
+ * @summary Update option based attribute value
+ * @param {AttributeOptionsNERMApiPatchAttributeOptionByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchAttributeOptionByIdNerm = (requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOption200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.patchAttributeOptionById(requestParameters));
+}
+/**
+ * Update a option based attribute value by UID (user-specified identifier)
+ * @summary Update option value
+ * @param {AttributeOptionsNERMApiPatchAttributeOptionByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchAttributeOptionByUidNerm = (requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOption200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.patchAttributeOptionByUid(requestParameters));
+}
+/**
+ * Update multiple option based attribute values
+ * @summary Update multiple option values
+ * @param {AttributeOptionsNERMApiPatchAttributeOptionsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchAttributeOptionsNerm = (requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionsRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOptions200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.patchAttributeOptions(requestParameters));
+}
+/**
+ * Adds a value to an option based attribute
+ * @summary Add value to option
+ * @param {AttributeOptionsNERMApiSubmitAttributeOptionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitAttributeOptionNerm = (requestParameters: sdk.AttributeOptionsNERMApiSubmitAttributeOptionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOption200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.submitAttributeOption(requestParameters));
+}
+/**
+ * Create multiple new option based attribute values
+ * @summary Create multiple option values
+ * @param {AttributeOptionsNERMApiSubmitAttributeOptionsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitAttributeOptionsNerm = (requestParameters: sdk.AttributeOptionsNERMApiSubmitAttributeOptionsRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitAttributeOptions200ResponseNERM>> => {
+    const attributeoptionsnermapi = new sdk.AttributeOptionsNERMApi(apiConfig);
+    return handleApiCall(() => attributeoptionsnermapi.submitAttributeOptions(requestParameters));
+}
+
+/**
+ * This endpoint can create an attribute
+ * @summary Create an attribute
+ * @param {AttributesNERMApiCreateAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAttributeNerm = (requestParameters: sdk.AttributesNERMApiCreateAttributeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.createAttribute(requestParameters));
+}
+/**
+ * Delete attribute by id
+ * @summary Delete attribute by id
+ * @param {AttributesNERMApiDeleteAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteAttributeByIdNerm = (requestParameters: sdk.AttributesNERMApiDeleteAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.deleteAttributeById(requestParameters));
+}
+/**
+ * Delete attribute by UID (user-specified identifier)
+ * @summary Delete attribute
+ * @param {AttributesNERMApiDeleteAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteAttributeByUidNerm = (requestParameters: sdk.AttributesNERMApiDeleteAttributeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.deleteAttributeByUid(requestParameters));
+}
+/**
+ * Info for a specific attribute
+ * @summary Find attribute data by id
+ * @param {AttributesNERMApiGetAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributeByIdNerm = (requestParameters: sdk.AttributesNERMApiGetAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.getAttributeById(requestParameters));
+}
+/**
+ * Info for a specific attribute by UID (user-specified identifier)
+ * @summary Find attribute data
+ * @param {AttributesNERMApiGetAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributeByUidNerm = (requestParameters: sdk.AttributesNERMApiGetAttributeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.getAttributeByUid(requestParameters));
+}
+/**
+ * This endpoint can retrieve attribute data in bulk from Lifecycle or you can search for attributes using parameters
+ * @summary Get attribute data in bulk
+ * @param {AttributesNERMApiGetAttributesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getAttributesNerm = (requestParameters: sdk.AttributesNERMApiGetAttributesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetAttributes200ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.getAttributes(requestParameters));
+}
+/**
+ * Update info for a specific attribute
+ * @summary Update attribute data by id
+ * @param {AttributesNERMApiUpdateAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateAttributeByIdNerm = (requestParameters: sdk.AttributesNERMApiUpdateAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.updateAttributeById(requestParameters));
+}
+/**
+ * Update info for a specific attribute by UID (user-specified identifier)
+ * @summary Update attribute data
+ * @param {AttributesNERMApiUpdateAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateAttributeByUidNerm = (requestParameters: sdk.AttributesNERMApiUpdateAttributeByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const attributesnermapi = new sdk.AttributesNERMApi(apiConfig);
+    return handleApiCall(() => attributesnermapi.updateAttributeByUid(requestParameters));
+}
+
+/**
+ * This endpoint provides a search engine for Audit Events by optionally combining subject_type, type, and subject_id to narrow down the audit events. A Subject Type of Profile links up to the AuditableProfile types. An Subject Type of WorkflowSession links up to the AuditableWorkflow types. An Subject Type of Get/Post/Patch/Delete links up to the AuditableApi types. The remaining Subject Types link up to the ActiveRecord types (configuration changes).  - Any workflow audit event created as of 10/11/2024 will be able to be queried by workflow name, workflow uid, or workflow profile type. - Any profile audit event created as of 10/11/2024 will be able to be queried by profile type. - The entity_type parameter has been updated to subject_type, which now matches what is in the response object. - With the additional query filters added, there is a max of 5 filter parameters at one time (aside from pagination parameters)  To accommodate these changes, an API contract change was required.  Please read the updated API documentation for the new request syntax.
+ * @summary Query for Audit events
+ * @param {AuditsNERMApiSearchRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const searchNerm = (requestParameters: sdk.AuditsNERMApiSearchRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.Search200ResponseNERM>> => {
+    const auditsnermapi = new sdk.AuditsNERMApi(apiConfig);
+    return handleApiCall(() => auditsnermapi.search(requestParameters));
+}
+
+/**
+ * Consolidation is a deprecated feature, this endpoint provides a mechanism to delete a master record to assist customers.
+ * @summary Delete a master record
+ * @param {ConsolidationNERMApiDeleteMasterRecordRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteMasterRecordNerm = (requestParameters: sdk.ConsolidationNERMApiDeleteMasterRecordRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const consolidationnermapi = new sdk.ConsolidationNERMApi(apiConfig);
+    return handleApiCall(() => consolidationnermapi.deleteMasterRecord(requestParameters));
+}
+/**
+ * Consolidation is a deprecated feature, this endpoint provides a mechanism to reassign a data record to a new master record to assist customers.
+ * @summary Reassign data record
+ * @param {ConsolidationNERMApiPatchDataRecordRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchDataRecordNerm = (requestParameters: sdk.ConsolidationNERMApiPatchDataRecordRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const consolidationnermapi = new sdk.ConsolidationNERMApi(apiConfig);
+    return handleApiCall(() => consolidationnermapi.patchDataRecord(requestParameters));
+}
+
+/**
+ * Returns a list of delegation records, optionally filtered by delegate, delegator, or expiration status.
+ * @summary List delegations
+ * @param {DelegationsNERMApiDelegationsGetRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const delegationsGetNerm = (requestParameters: sdk.DelegationsNERMApiDelegationsGetRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DelegationsGet200ResponseNERM>> => {
+    const delegationsnermapi = new sdk.DelegationsNERMApi(apiConfig);
+    return handleApiCall(() => delegationsnermapi.delegationsGet(requestParameters));
+}
+/**
+ * Delete an existing delegation record.
+ * @summary Delete a delegation
+ * @param {DelegationsNERMApiDelegationsIdDeleteRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const delegationsIdDeleteNerm = (requestParameters: sdk.DelegationsNERMApiDelegationsIdDeleteRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const delegationsnermapi = new sdk.DelegationsNERMApi(apiConfig);
+    return handleApiCall(() => delegationsnermapi.delegationsIdDelete(requestParameters));
+}
+/**
+ * Returns a single delegation record by its ID.
+ * @summary Get a single delegation
+ * @param {DelegationsNERMApiDelegationsIdGetRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const delegationsIdGetNerm = (requestParameters: sdk.DelegationsNERMApiDelegationsIdGetRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DelegationsPost201ResponseNERM>> => {
+    const delegationsnermapi = new sdk.DelegationsNERMApi(apiConfig);
+    return handleApiCall(() => delegationsnermapi.delegationsIdGet(requestParameters));
+}
+/**
+ * Update an existing delegation record.
+ * @summary Update a delegation
+ * @param {DelegationsNERMApiDelegationsIdPatchRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const delegationsIdPatchNerm = (requestParameters: sdk.DelegationsNERMApiDelegationsIdPatchRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DelegationsPost201ResponseNERM>> => {
+    const delegationsnermapi = new sdk.DelegationsNERMApi(apiConfig);
+    return handleApiCall(() => delegationsnermapi.delegationsIdPatch(requestParameters));
+}
+/**
+ * Create a new delegation record.
+ * @summary Create a delegation
+ * @param {DelegationsNERMApiDelegationsPostRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const delegationsPostNerm = (requestParameters: sdk.DelegationsNERMApiDelegationsPostRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DelegationsPost201ResponseNERM>> => {
+    const delegationsnermapi = new sdk.DelegationsNERMApi(apiConfig);
+    return handleApiCall(() => delegationsnermapi.delegationsPost(requestParameters));
+}
+
+/**
+ * This endpoint can create a form attribute
+ * @summary Create a form attribute
+ * @param {FormAttributesNERMApiCreateFormAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createFormAttributeNerm = (requestParameters: sdk.FormAttributesNERMApiCreateFormAttributeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.createFormAttribute(requestParameters));
+}
+/**
+ * Delete form attribute by id
+ * @summary Delete form attribute
+ * @param {FormAttributesNERMApiDeleteFormAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteFormAttributeByIdNerm = (requestParameters: sdk.FormAttributesNERMApiDeleteFormAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.deleteFormAttributeById(requestParameters));
+}
+/**
+ * Delete form attribute by UID
+ * @summary Delete form attribute
+ * @param {FormAttributesNERMApiDeleteFormAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteFormAttributeByUidNerm = (requestParameters: sdk.FormAttributesNERMApiDeleteFormAttributeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.deleteFormAttributeByUid(requestParameters));
+}
+/**
+ * Gets info for a specific form attribute by ID
+ * @summary Get form attribute data
+ * @param {FormAttributesNERMApiGetFormAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormAttributeByIdNerm = (requestParameters: sdk.FormAttributesNERMApiGetFormAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.getFormAttributeById(requestParameters));
+}
+/**
+ * Get info for a specific form attribute by UID
+ * @summary Get form attribute data
+ * @param {FormAttributesNERMApiGetFormAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormAttributeByUidNerm = (requestParameters: sdk.FormAttributesNERMApiGetFormAttributeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.getFormAttributeByUid(requestParameters));
+}
+/**
+ * Get defined form attribute in the system
+ * @summary Get form attributes
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormAttributesNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.getFormAttributes());
+}
+/**
+ * Update info for a specific form attribute by ID
+ * @summary Update form attribute data
+ * @param {FormAttributesNERMApiUpdateFormAttributeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateFormAttributeByIdNerm = (requestParameters: sdk.FormAttributesNERMApiUpdateFormAttributeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.updateFormAttributeById(requestParameters));
+}
+/**
+ * Update info for a specific form attribute by UID
+ * @summary Update form attribute data
+ * @param {FormAttributesNERMApiUpdateFormAttributeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateFormAttributeByUidNerm = (requestParameters: sdk.FormAttributesNERMApiUpdateFormAttributeByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetFormAttributes200ResponseNERM>> => {
+    const formattributesnermapi = new sdk.FormAttributesNERMApi(apiConfig);
+    return handleApiCall(() => formattributesnermapi.updateFormAttributeByUid(requestParameters));
+}
+
+/**
+ * This endpoint can create a form
+ * @summary Create a form
+ * @param {FormsNERMApiCreateFormRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createFormNerm = (requestParameters: sdk.FormsNERMApiCreateFormRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetForms200ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.createForm(requestParameters));
+}
+/**
+ * Delete form by id
+ * @summary Delete form by id
+ * @param {FormsNERMApiDeleteFormByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteFormByIdNerm = (requestParameters: sdk.FormsNERMApiDeleteFormByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.deleteFormById(requestParameters));
+}
+/**
+ * Delete form by UID
+ * @summary Delete form by UID
+ * @param {FormsNERMApiDeleteFormByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteFormByUidNerm = (requestParameters: sdk.FormsNERMApiDeleteFormByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.deleteFormByUid(requestParameters));
+}
+/**
+ * Info for a specific form
+ * @summary Get form data by Id
+ * @param {FormsNERMApiGetFormByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormByIdNerm = (requestParameters: sdk.FormsNERMApiGetFormByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetForms200ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.getFormById(requestParameters));
+}
+/**
+ * Info for a specific form
+ * @summary Get form data by UID
+ * @param {FormsNERMApiGetFormByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormByUidNerm = (requestParameters: sdk.FormsNERMApiGetFormByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetForms200ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.getFormByUid(requestParameters));
+}
+/**
+ * Get defined forms in the system
+ * @summary Get forms
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getFormsNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetForms200ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.getForms());
+}
+/**
+ * Update info for a specific form
+ * @summary Update form data by id
+ * @param {FormsNERMApiUpdateFormByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateFormByIdNerm = (requestParameters: sdk.FormsNERMApiUpdateFormByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.updateFormById(requestParameters));
+}
+/**
+ * Update info for a specific form
+ * @summary Update form data by UID
+ * @param {FormsNERMApiUpdateFormByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateFormByUidNerm = (requestParameters: sdk.FormsNERMApiUpdateFormByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateAttribute201ResponseNERM>> => {
+    const formsnermapi = new sdk.FormsNERMApi(apiConfig);
+    return handleApiCall(() => formsnermapi.updateFormByUid(requestParameters));
+}
+
+/**
+ * Retrieves identity proofing result data in bulk from Lifecycle
+ * @summary Get identity proofing result data
+ * @param {IdentityProofingResultsNERMApiGetIdentityProofingResultsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getIdentityProofingResultsNerm = (requestParameters: sdk.IdentityProofingResultsNERMApiGetIdentityProofingResultsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetIdentityProofingResults200ResponseNERM>> => {
+    const identityproofingresultsnermapi = new sdk.IdentityProofingResultsNERMApi(apiConfig);
+    return handleApiCall(() => identityproofingresultsnermapi.getIdentityProofingResults(requestParameters));
+}
+
+/**
+ * Retrieve schema-mapped profiles collection. It returns a collection of stored profiles, optionally using schema-mapped field names if requested.
+ * @summary Get Profiles
+ * @param {IscAccountsNERMApiGetSchemaMappedProfilesCollectionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSchemaMappedProfilesCollectionNerm = (requestParameters: sdk.IscAccountsNERMApiGetSchemaMappedProfilesCollectionRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM>> => {
+    const iscaccountsnermapi = new sdk.IscAccountsNERMApi(apiConfig);
+    return handleApiCall(() => iscaccountsnermapi.getSchemaMappedProfilesCollection(requestParameters));
+}
+/**
+ * It returns a single stored profile, optionally with schema-mapped field names.
+ * @summary Get Profile
+ * @param {IscAccountsNERMApiGetSingleSchemaMappedProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSingleSchemaMappedProfileNerm = (requestParameters: sdk.IscAccountsNERMApiGetSingleSchemaMappedProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM>> => {
+    const iscaccountsnermapi = new sdk.IscAccountsNERMApi(apiConfig);
+    return handleApiCall(() => iscaccountsnermapi.getSingleSchemaMappedProfile(requestParameters));
+}
+/**
+ * Updates a profile only through ISC schema-mapped attributes, performs a reverse mapping to match the NERM attributes to update.
+ * @summary Update Profile
+ * @param {IscAccountsNERMApiUpdateProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updateProfileNerm = (requestParameters: sdk.IscAccountsNERMApiUpdateProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM>> => {
+    const iscaccountsnermapi = new sdk.IscAccountsNERMApi(apiConfig);
+    return handleApiCall(() => iscaccountsnermapi.updateProfile(requestParameters));
+}
+
+/**
+ * Retrieve the status of a bulk job
+ * @summary Get bulk job status
+ * @param {JobStatusNERMApiGetJobStatusRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getJobStatusNerm = (requestParameters: sdk.JobStatusNERMApiGetJobStatusRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetJobStatus200ResponseNERM>> => {
+    const jobstatusnermapi = new sdk.JobStatusNERMApi(apiConfig);
+    return handleApiCall(() => jobstatusnermapi.getJobStatus(requestParameters));
+}
+
+/**
+ * Update a language by locale
+ * @summary Update a language by locale
+ * @param {LanguagesNERMApiPatchLanguageRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchLanguageNerm = (requestParameters: sdk.LanguagesNERMApiPatchLanguageRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.PatchLanguageRequestNERM>> => {
+    const languagesnermapi = new sdk.LanguagesNERMApi(apiConfig);
+    return handleApiCall(() => languagesnermapi.patchLanguage(requestParameters));
+}
+
+/**
+ * Create a page content translation record.
+ * @summary Create page content translation
+ * @param {PageContentTranslationsNERMApiCreatePageContentTranslationRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPageContentTranslationNerm = (requestParameters: sdk.PageContentTranslationsNERMApiCreatePageContentTranslationRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.createPageContentTranslation(requestParameters));
+}
+/**
+ * Delete page content translation by id
+ * @summary Delete page content translation
+ * @param {PageContentTranslationsNERMApiDeletePageContentTranslationByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageContentTranslationByIdNerm = (requestParameters: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.deletePageContentTranslationById(requestParameters));
+}
+/**
+ * Delete page content translation by UID (user-specified identifier)
+ * @summary Delete page content translation
+ * @param {PageContentTranslationsNERMApiDeletePageContentTranslationByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageContentTranslationByUidNerm = (requestParameters: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.deletePageContentTranslationByUid(requestParameters));
+}
+/**
+ * This endpoint can retrieve page content translation data.
+ * @summary Get page contents translation
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentTranslationNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.getPageContentTranslation());
+}
+/**
+ * Info for a specific page content translation record by Id
+ * @summary Find page content translation
+ * @param {PageContentTranslationsNERMApiGetPageContentTranslationByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentTranslationByIdNerm = (requestParameters: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.getPageContentTranslationById(requestParameters));
+}
+/**
+ * Info for a specific page content translation record by UID (user-specified identifier)
+ * @summary Find page content translation
+ * @param {PageContentTranslationsNERMApiGetPageContentTranslationByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentTranslationByUidNerm = (requestParameters: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.getPageContentTranslationByUid(requestParameters));
+}
+/**
+ * Update info for a specific page content translation record by id
+ * @summary Update page content translation
+ * @param {PageContentTranslationsNERMApiUpdatePageContentTranslationByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageContentTranslationByIdNerm = (requestParameters: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.updatePageContentTranslationById(requestParameters));
+}
+/**
+ * Update info for a specific page content translation record by UID (user-specified identifier)
+ * @summary Update page content translation
+ * @param {PageContentTranslationsNERMApiUpdatePageContentTranslationByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageContentTranslationByUidNerm = (requestParameters: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContentTranslation200ResponseNERM>> => {
+    const pagecontenttranslationsnermapi = new sdk.PageContentTranslationsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontenttranslationsnermapi.updatePageContentTranslationByUid(requestParameters));
+}
+
+/**
+ * This endpoint can create page content
+ * @summary Create a page content entry
+ * @param {PageContentsNERMApiCreatePageContentRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPageContentNerm = (requestParameters: sdk.PageContentsNERMApiCreatePageContentRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.createPageContent(requestParameters));
+}
+/**
+ * Delete page content by id
+ * @summary Delete page content record
+ * @param {PageContentsNERMApiDeletePageContentByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageContentByIdNerm = (requestParameters: sdk.PageContentsNERMApiDeletePageContentByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.deletePageContentById(requestParameters));
+}
+/**
+ * Delete page content by by UID (user-specified identifier)
+ * @summary Delete page content record
+ * @param {PageContentsNERMApiDeletePageContentByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageContentByUidNerm = (requestParameters: sdk.PageContentsNERMApiDeletePageContentByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.deletePageContentByUid(requestParameters));
+}
+/**
+ * Info for a specific page content record
+ * @summary Find page content record
+ * @param {PageContentsNERMApiGetPageContentByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentByIdNerm = (requestParameters: sdk.PageContentsNERMApiGetPageContentByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.getPageContentById(requestParameters));
+}
+/**
+ * Info for a specific page content record by UID (user-specified identifier)
+ * @summary Find a page content record
+ * @param {PageContentsNERMApiGetPageContentByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentByUidNerm = (requestParameters: sdk.PageContentsNERMApiGetPageContentByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.getPageContentByUid(requestParameters));
+}
+/**
+ * This endpoint can retrieve page content data.
+ * @summary Get page contents data
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageContentsNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.getPageContents());
+}
+/**
+ * Update info for a specific page content record by id
+ * @summary Update page content record
+ * @param {PageContentsNERMApiUpdatePageContentByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageContentByIdNerm = (requestParameters: sdk.PageContentsNERMApiUpdatePageContentByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.updatePageContentById(requestParameters));
+}
+/**
+ * Update info for a specific page content record by UID (user-specified identifier)
+ * @summary Update page content record
+ * @param {PageContentsNERMApiUpdatePageContentByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageContentByUidNerm = (requestParameters: sdk.PageContentsNERMApiUpdatePageContentByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageContents200ResponseNERM>> => {
+    const pagecontentsnermapi = new sdk.PageContentsNERMApi(apiConfig);
+    return handleApiCall(() => pagecontentsnermapi.updatePageContentByUid(requestParameters));
+}
+
+/**
+ * Creates a page element.
+ * @summary Create a page element entry
+ * @param {PageElementsNERMApiCreatePageElementRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPageElementNerm = (requestParameters: sdk.PageElementsNERMApiCreatePageElementRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.createPageElement(requestParameters));
+}
+/**
+ * Delete page element by id
+ * @summary Delete page element
+ * @param {PageElementsNERMApiDeletePageElementByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageElementByIdNerm = (requestParameters: sdk.PageElementsNERMApiDeletePageElementByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.deletePageElementById(requestParameters));
+}
+/**
+ * Delete page element by UID (user-specified identifier)
+ * @summary Delete page element
+ * @param {PageElementsNERMApiDeletePageElementByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deletePageElementByUidNerm = (requestParameters: sdk.PageElementsNERMApiDeletePageElementByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.deletePageElementByUid(requestParameters));
+}
+/**
+ * Info for a specific page element record
+ * @summary Find a page element
+ * @param {PageElementsNERMApiGetPageElementByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageElementByIdNerm = (requestParameters: sdk.PageElementsNERMApiGetPageElementByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.getPageElementById(requestParameters));
+}
+/**
+ * Info for a specific page element record by UID (user-specified identifier)
+ * @summary Find page element
+ * @param {PageElementsNERMApiGetPageElementByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageElementByUidNerm = (requestParameters: sdk.PageElementsNERMApiGetPageElementByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.getPageElementByUid(requestParameters));
+}
+/**
+ * Retrieves page elements data.
+ * @summary Get page element data
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getPageElementsNerm = (apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.getPageElements());
+}
+/**
+ * Update info for a specific page element record by id
+ * @summary Update page element
+ * @param {PageElementsNERMApiUpdatePageElementByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageElementByIdNerm = (requestParameters: sdk.PageElementsNERMApiUpdatePageElementByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.updatePageElementById(requestParameters));
+}
+/**
+ * Update info for a specific page element record by UID (user-specified identifier)
+ * @summary Update page element
+ * @param {PageElementsNERMApiUpdatePageElementByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const updatePageElementByUidNerm = (requestParameters: sdk.PageElementsNERMApiUpdatePageElementByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetPageElements200ResponseNERM>> => {
+    const pageelementsnermapi = new sdk.PageElementsNERMApi(apiConfig);
+    return handleApiCall(() => pageelementsnermapi.updatePageElementByUid(requestParameters));
+}
+
+/**
+ * Create a profile page
+ * @summary Create a profile page
+ * @param {PagesNERMApiCreateProfilePageRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createProfilePageNerm = (requestParameters: sdk.PagesNERMApiCreateProfilePageRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateProfilePage200ResponseNERM>> => {
+    const pagesnermapi = new sdk.PagesNERMApi(apiConfig);
+    return handleApiCall(() => pagesnermapi.createProfilePage(requestParameters));
+}
+/**
+ * Create a workflow page
+ * @summary Create a workflow page
+ * @param {PagesNERMApiCreateWorkflowPageRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createWorkflowPageNerm = (requestParameters: sdk.PagesNERMApiCreateWorkflowPageRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateProfilePage200ResponseNERM>> => {
+    const pagesnermapi = new sdk.PagesNERMApi(apiConfig);
+    return handleApiCall(() => pagesnermapi.createWorkflowPage(requestParameters));
+}
+
+/**
+ * This endpoint can create permissions for Lifecycle, Consolidation, and Collaboration
+ * @summary Create a permission
+ * @param {PermissionsNERMApiCreatePermissionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPermissionNerm = (requestParameters: sdk.PermissionsNERMApiCreatePermissionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreatePermission200ResponseNERM>> => {
+    const permissionsnermapi = new sdk.PermissionsNERMApi(apiConfig);
+    return handleApiCall(() => permissionsnermapi.createPermission(requestParameters));
+}
+
+/**
+ * This endpoint can create a profile type role. NOTE- The ability to toggle Allow/Block is done through the Profile Type
+ * @summary Create a profile type role
+ * @param {ProfileTypeRolesNERMApiCreateProfileTypeRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createProfileTypeRoleNerm = (requestParameters: sdk.ProfileTypeRolesNERMApiCreateProfileTypeRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateProfileTypeRole200ResponseNERM>> => {
+    const profiletyperolesnermapi = new sdk.ProfileTypeRolesNERMApi(apiConfig);
+    return handleApiCall(() => profiletyperolesnermapi.createProfileTypeRole(requestParameters));
+}
+
+/**
+ * Delete a profile type. All profiles of that type must first be destroyed before the profile type can be destroyed.
+ * @summary Delete profile type
+ * @param {ProfileTypesNERMApiDeleteProfileTypeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteProfileTypeByIdNerm = (requestParameters: sdk.ProfileTypesNERMApiDeleteProfileTypeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteProfileTypeById200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.deleteProfileTypeById(requestParameters));
+}
+/**
+ * Delete a profile type by UID (user-specified identifier). All profiles of that type must first be destroyed before the profile type can be destroyed.
+ * @summary Delete profile type
+ * @param {ProfileTypesNERMApiDeleteProfileTypeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteProfileTypeByUidNerm = (requestParameters: sdk.ProfileTypesNERMApiDeleteProfileTypeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteProfileTypeById200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.deleteProfileTypeByUid(requestParameters));
+}
+/**
+ * Find profile type by id
+ * @summary Find profile type
+ * @param {ProfileTypesNERMApiGetProfileTypeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileTypeByIdNerm = (requestParameters: sdk.ProfileTypesNERMApiGetProfileTypeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitProfileType200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.getProfileTypeById(requestParameters));
+}
+/**
+ * Find profile type by UID (user-specified identifier)
+ * @summary Find profile type
+ * @param {ProfileTypesNERMApiGetProfileTypeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileTypeByUidNerm = (requestParameters: sdk.ProfileTypesNERMApiGetProfileTypeByUidRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitProfileType200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.getProfileTypeByUid(requestParameters));
+}
+/**
+ * Get option based attribute values
+ * @summary Get profile types
+ * @param {ProfileTypesNERMApiGetProfileTypesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileTypesNerm = (requestParameters: sdk.ProfileTypesNERMApiGetProfileTypesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetProfileTypes200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.getProfileTypes(requestParameters));
+}
+/**
+ * Update a profile type by id
+ * @summary Update a profile type
+ * @param {ProfileTypesNERMApiPatchProfileTypeByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchProfileTypeByIdNerm = (requestParameters: sdk.ProfileTypesNERMApiPatchProfileTypeByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitProfileType200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.patchProfileTypeById(requestParameters));
+}
+/**
+ * Update a profile type by UID (user-specified identifier)
+ * @summary Update a profile type
+ * @param {ProfileTypesNERMApiPatchProfileTypeByUidRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchProfileTypeByUidNerm = (requestParameters: sdk.ProfileTypesNERMApiPatchProfileTypeByUidRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitProfileType200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.patchProfileTypeByUid(requestParameters));
+}
+/**
+ * Create a profile type
+ * @summary Create a profile type
+ * @param {ProfileTypesNERMApiSubmitProfileTypeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitProfileTypeNerm = (requestParameters: sdk.ProfileTypesNERMApiSubmitProfileTypeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitProfileType200ResponseNERM>> => {
+    const profiletypesnermapi = new sdk.ProfileTypesNERMApi(apiConfig);
+    return handleApiCall(() => profiletypesnermapi.submitProfileType(requestParameters));
+}
+
+/**
+ * Create multiple profiles
+ * @summary Create multiple profiles
+ * @param {ProfilesNERMApiCreateProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createProfilesNerm = (requestParameters: sdk.ProfilesNERMApiCreateProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SearchAdvancedSearch200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.createProfiles(requestParameters));
+}
+/**
+ * Delete a single profile
+ * @summary Delete a single profile
+ * @param {ProfilesNERMApiDeleteProfileByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteProfileByIdNerm = (requestParameters: sdk.ProfilesNERMApiDeleteProfileByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<void>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.deleteProfileById(requestParameters));
+}
+/**
+ * Delete multiple profiles
+ * @summary Delete multiple profiles
+ * @param {ProfilesNERMApiDeleteProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteProfilesNerm = (requestParameters: sdk.ProfilesNERMApiDeleteProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteProfiles200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.deleteProfiles(requestParameters));
+}
+/**
+ * Retrieves the URL of the profile avatar
+ * @summary Retrieves profile avatar URL
+ * @param {ProfilesNERMApiGetProfileAvatarRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileAvatarNerm = (requestParameters: sdk.ProfilesNERMApiGetProfileAvatarRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.getProfileAvatar(requestParameters));
+}
+/**
+ * Find profile by id
+ * @summary Find profile by id
+ * @param {ProfilesNERMApiGetProfileByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileByIdNerm = (requestParameters: sdk.ProfilesNERMApiGetProfileByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.getProfileById(requestParameters));
+}
+/**
+ * Retrieves the URL of an attachment attribute value from a profile
+ * @summary Retrieves profile attribute attachment URL
+ * @param {ProfilesNERMApiGetProfileUploadRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileUploadNerm = (requestParameters: sdk.ProfilesNERMApiGetProfileUploadRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.getProfileUpload(requestParameters));
+}
+/**
+ * Get profiles
+ * @summary Get profiles
+ * @param {ProfilesNERMApiGetProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfilesNerm = (requestParameters: sdk.ProfilesNERMApiGetProfilesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.getProfiles(requestParameters));
+}
+/**
+ * Update a profile by id
+ * @summary Update a profile by id
+ * @param {ProfilesNERMApiPatchProfileByIdRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchProfileByIdNerm = (requestParameters: sdk.ProfilesNERMApiPatchProfileByIdRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.patchProfileById(requestParameters));
+}
+/**
+ * Update multiple profiles
+ * @summary Update multiple profiles
+ * @param {ProfilesNERMApiPatchProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchProfilesNerm = (requestParameters: sdk.ProfilesNERMApiPatchProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SearchAdvancedSearch200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.patchProfiles(requestParameters));
+}
+/**
+ * Create a profile
+ * @summary Create a profile
+ * @param {ProfilesNERMApiSubmitProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitProfileNerm = (requestParameters: sdk.ProfilesNERMApiSubmitProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.submitProfile(requestParameters));
+}
+/**
+ * Uploads a new profile avatar
+ * @summary Uploads new profile avatar
+ * @param {ProfilesNERMApiSubmitProfileAvatarRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitProfileAvatarNerm = (requestParameters: sdk.ProfilesNERMApiSubmitProfileAvatarRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.submitProfileAvatar(requestParameters));
+}
+/**
+ * Uploads a new attachment attribute value to a profile. The upload must be a FORM data type; this is not a JSON API. The upload must include the binary content of the payload under the \'file\' named form element. The upload must not attempt to include the file name or its content type as a other form or JSON as parameters. The upload must not attempt to upload the file body as the POST body payload; it has to arrive as a FORM parameter. Do not use a `File/Binary` payload type for the POST operation in your API client. 
+ * @summary Uploads profile attachment attribute
+ * @param {ProfilesNERMApiSubmitProfileUploadRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitProfileUploadNerm = (requestParameters: sdk.ProfilesNERMApiSubmitProfileUploadRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const profilesnermapi = new sdk.ProfilesNERMApi(apiConfig);
+    return handleApiCall(() => profilesnermapi.submitProfileUpload(requestParameters));
+}
+
+/**
+ * Find risk level data by id
+ * @summary Find risk level data
+ * @param {RiskLevelsNERMApiGetRiskLevelRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRiskLevelNerm = (requestParameters: sdk.RiskLevelsNERMApiGetRiskLevelRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRiskLevel200ResponseNERM>> => {
+    const risklevelsnermapi = new sdk.RiskLevelsNERMApi(apiConfig);
+    return handleApiCall(() => risklevelsnermapi.getRiskLevel(requestParameters));
+}
+/**
+ * This endpoint can retrieve risk level data in bulk from Lifecycle
+ * @summary Get risk level data
+ * @param {RiskLevelsNERMApiGetRiskLevelsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRiskLevelsNerm = (requestParameters: sdk.RiskLevelsNERMApiGetRiskLevelsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRiskLevels200ResponseNERM>> => {
+    const risklevelsnermapi = new sdk.RiskLevelsNERMApi(apiConfig);
+    return handleApiCall(() => risklevelsnermapi.getRiskLevels(requestParameters));
+}
+
+/**
+ * Find risk score data by id
+ * @summary Find risk score data
+ * @param {RiskScoresNERMApiGetRiskScoreRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRiskScoreNerm = (requestParameters: sdk.RiskScoresNERMApiGetRiskScoreRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRiskScore200ResponseNERM>> => {
+    const riskscoresnermapi = new sdk.RiskScoresNERMApi(apiConfig);
+    return handleApiCall(() => riskscoresnermapi.getRiskScore(requestParameters));
+}
+/**
+ * This endpoint can retrieve risk score data in bulk from Lifecycle
+ * @summary Get risk score data
+ * @param {RiskScoresNERMApiGetRiskScoresRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRiskScoresNerm = (requestParameters: sdk.RiskScoresNERMApiGetRiskScoresRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRiskScores200ResponseNERM>> => {
+    const riskscoresnermapi = new sdk.RiskScoresNERMApi(apiConfig);
+    return handleApiCall(() => riskscoresnermapi.getRiskScores(requestParameters));
+}
+
+/**
+ * Delete a role profile assignment
+ * @summary Delete a role profile assignment
+ * @param {RoleProfilesNERMApiDeleteRoleProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteRoleProfileNerm = (requestParameters: sdk.RoleProfilesNERMApiDeleteRoleProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.deleteRoleProfile(requestParameters));
+}
+/**
+ * Find role-profile contributor relationship by id
+ * @summary Find role-profile contributor relationship
+ * @param {RoleProfilesNERMApiGetRoleProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRoleProfileNerm = (requestParameters: sdk.RoleProfilesNERMApiGetRoleProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoleProfile200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.getRoleProfile(requestParameters));
+}
+/**
+ * Get role-profile contributor relationships
+ * @summary Get role-profile contributor relationships
+ * @param {RoleProfilesNERMApiGetRoleProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRoleProfilesNerm = (requestParameters: sdk.RoleProfilesNERMApiGetRoleProfilesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRoleProfiles200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.getRoleProfiles(requestParameters));
+}
+/**
+ * Update a role-profile contributor relationship by id
+ * @summary Update a role-profile contributor relationship
+ * @param {RoleProfilesNERMApiPatchRoleProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchRoleProfileNerm = (requestParameters: sdk.RoleProfilesNERMApiPatchRoleProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoleProfile200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.patchRoleProfile(requestParameters));
+}
+/**
+ * Update multiple role-profile contributor relationships
+ * @summary Update multiple role-profile contributor relationships
+ * @param {RoleProfilesNERMApiPatchRoleProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchRoleProfilesNerm = (requestParameters: sdk.RoleProfilesNERMApiPatchRoleProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoleProfiles200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.patchRoleProfiles(requestParameters));
+}
+/**
+ * Create a role-profile contributor relationship
+ * @summary Create a role-profile contributor relationship
+ * @param {RoleProfilesNERMApiSubmitRoleProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitRoleProfileNerm = (requestParameters: sdk.RoleProfilesNERMApiSubmitRoleProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoleProfile200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.submitRoleProfile(requestParameters));
+}
+/**
+ * Create multiple role-profile contributor relationships
+ * @summary Create multiple role-profile contributor relationships
+ * @param {RoleProfilesNERMApiSubmitRoleProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitRoleProfilesNerm = (requestParameters: sdk.RoleProfilesNERMApiSubmitRoleProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoleProfiles200ResponseNERM>> => {
+    const roleprofilesnermapi = new sdk.RoleProfilesNERMApi(apiConfig);
+    return handleApiCall(() => roleprofilesnermapi.submitRoleProfiles(requestParameters));
+}
+
+/**
+ * Info for a specific user role
+ * @summary Find role by id
+ * @param {RolesNERMApiGetRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRoleNerm = (requestParameters: sdk.RolesNERMApiGetRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRole200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.getRole(requestParameters));
+}
+/**
+ * This endpoint can retrieve roles from NERM. Optionally you can provide parameters to filter results.
+ * @summary Get roles
+ * @param {RolesNERMApiGetRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getRolesNerm = (requestParameters: sdk.RolesNERMApiGetRolesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetRoles200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.getRoles(requestParameters));
+}
+/**
+ * Update an existing role
+ * @summary Update an existing role
+ * @param {RolesNERMApiPatchRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchRoleNerm = (requestParameters: sdk.RolesNERMApiPatchRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRole200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.patchRole(requestParameters));
+}
+/**
+ * Update multiple users
+ * @summary Update multiple roles
+ * @param {RolesNERMApiPatchRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchRolesNerm = (requestParameters: sdk.RolesNERMApiPatchRolesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoles200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.patchRoles(requestParameters));
+}
+/**
+ * Create a new role
+ * @summary Create a new role
+ * @param {RolesNERMApiSubmitRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitRoleNerm = (requestParameters: sdk.RolesNERMApiSubmitRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRole200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.submitRole(requestParameters));
+}
+/**
+ * Create multiple new users
+ * @summary Create multiple new roles
+ * @param {RolesNERMApiSubmitRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitRolesNerm = (requestParameters: sdk.RolesNERMApiSubmitRolesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitRoles200ResponseNERM>> => {
+    const rolesnermapi = new sdk.RolesNERMApi(apiConfig);
+    return handleApiCall(() => rolesnermapi.submitRoles(requestParameters));
+}
+
+/**
+ * Create synced attribute
+ * @summary Create a synced attribute
+ * @param {SyncedAttributesNERMApiCreateSyncedAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSyncedAttributeNerm = (requestParameters: sdk.SyncedAttributesNERMApiCreateSyncedAttributeRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateSyncedAttribute201ResponseNERM>> => {
+    const syncedattributesnermapi = new sdk.SyncedAttributesNERMApi(apiConfig);
+    return handleApiCall(() => syncedattributesnermapi.createSyncedAttribute(requestParameters));
+}
+/**
+ * Delete a synced attribute.
+ * @summary Delete synced attribute
+ * @param {SyncedAttributesNERMApiDeleteSyncedAttributeRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteSyncedAttributeNerm = (requestParameters: sdk.SyncedAttributesNERMApiDeleteSyncedAttributeRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteProfileTypeById200ResponseNERM>> => {
+    const syncedattributesnermapi = new sdk.SyncedAttributesNERMApi(apiConfig);
+    return handleApiCall(() => syncedattributesnermapi.deleteSyncedAttribute(requestParameters));
+}
+/**
+ * Get ne attributes and synced attribute relationship to profile type.
+ * @summary profile_types/ne_attributes synced status
+ * @param {SyncedAttributesNERMApiGetProfileTypeAttributesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getProfileTypeAttributesNerm = (requestParameters: sdk.SyncedAttributesNERMApiGetProfileTypeAttributesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetProfileTypeAttributes200ResponseNERM>> => {
+    const syncedattributesnermapi = new sdk.SyncedAttributesNERMApi(apiConfig);
+    return handleApiCall(() => syncedattributesnermapi.getProfileTypeAttributes(requestParameters));
+}
+
+/**
+ * This endpoint can create system role permissions for Lifecycle System Roles
+ * @summary Create a system role permission
+ * @param {SystemRolePermissionsNERMApiCreateSystemRolePermissionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSystemRolePermissionNerm = (requestParameters: sdk.SystemRolePermissionsNERMApiCreateSystemRolePermissionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateSystemRolePermission200ResponseNERM>> => {
+    const systemrolepermissionsnermapi = new sdk.SystemRolePermissionsNERMApi(apiConfig);
+    return handleApiCall(() => systemrolepermissionsnermapi.createSystemRolePermission(requestParameters));
+}
+
+/**
+ * This endpoint can retrieve system roles from NERM. Optionally you can provide parameters to filter results.
+ * @summary Get system roles
+ * @param {SystemRolesNERMApiGetSystemRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getSystemRolesNerm = (requestParameters: sdk.SystemRolesNERMApiGetSystemRolesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetSystemRoles200ResponseNERM>> => {
+    const systemrolesnermapi = new sdk.SystemRolesNERMApi(apiConfig);
+    return handleApiCall(() => systemrolesnermapi.getSystemRoles(requestParameters));
+}
+
+/**
+ * Info for a specific user-manager relationship
+ * @summary Find user-manager relationship
+ * @param {UserManagersNERMApiGetUserManagerRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserManagerNerm = (requestParameters: sdk.UserManagersNERMApiGetUserManagerRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserManager200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.getUserManager(requestParameters));
+}
+/**
+ * This endpoint can retrieve user-manager relationships from Lifecycle or you can search for user-manager relationships using parameters
+ * @summary Get user-manager relationships
+ * @param {UserManagersNERMApiGetUserManagersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserManagersNerm = (requestParameters: sdk.UserManagersNERMApiGetUserManagersRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetUserManagers200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.getUserManagers(requestParameters));
+}
+/**
+ * Update a user-manager relationship by id
+ * @summary Update a user-manager relationship
+ * @param {UserManagersNERMApiPatchUserManagerRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserManagerNerm = (requestParameters: sdk.UserManagersNERMApiPatchUserManagerRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserManager200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.patchUserManager(requestParameters));
+}
+/**
+ * Update multiple user-manager relationships
+ * @summary Update multiple user-manager relationships
+ * @param {UserManagersNERMApiPatchUserManagersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserManagersNerm = (requestParameters: sdk.UserManagersNERMApiPatchUserManagersRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserManagers200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.patchUserManagers(requestParameters));
+}
+/**
+ * Create a new user-manager relationship
+ * @summary Create a new user-manager relationship
+ * @param {UserManagersNERMApiSubmitUserManagerRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserManagerNerm = (requestParameters: sdk.UserManagersNERMApiSubmitUserManagerRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserManager200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.submitUserManager(requestParameters));
+}
+/**
+ * Create multiple new user-manager relationships
+ * @summary Create multiple new user-manager relationships
+ * @param {UserManagersNERMApiSubmitUserManagersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserManagersNerm = (requestParameters: sdk.UserManagersNERMApiSubmitUserManagersRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserManagers200ResponseNERM>> => {
+    const usermanagersnermapi = new sdk.UserManagersNERMApi(apiConfig);
+    return handleApiCall(() => usermanagersnermapi.submitUserManagers(requestParameters));
+}
+
+/**
+ * Create multiple user-profile contributor relationships
+ * @summary Create multiple user-profile contributor relationships
+ * @param {UserProfilesNERMApiCreateUserProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createUserProfilesNerm = (requestParameters: sdk.UserProfilesNERMApiCreateUserProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateUserProfiles200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.createUserProfiles(requestParameters));
+}
+/**
+ * Delete a user profile assignment
+ * @summary Delete a user profile assignment
+ * @param {UserProfilesNERMApiDeleteUserProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteUserProfileNerm = (requestParameters: sdk.UserProfilesNERMApiDeleteUserProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.deleteUserProfile(requestParameters));
+}
+/**
+ * Delete multiple user-profile contributor relationships
+ * @summary Delete multiple user-profile contributor relationships
+ * @param {UserProfilesNERMApiDeleteUserProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteUserProfilesNerm = (requestParameters: sdk.UserProfilesNERMApiDeleteUserProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateUserProfiles200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.deleteUserProfiles(requestParameters));
+}
+/**
+ * Find user-profile contributor relationship by id
+ * @summary Find user-profile contributor relationship
+ * @param {UserProfilesNERMApiGetUserProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserProfileNerm = (requestParameters: sdk.UserProfilesNERMApiGetUserProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserProfile200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.getUserProfile(requestParameters));
+}
+/**
+ * Get user-profile contributor relationships
+ * @summary Get user-profile contributor relationships
+ * @param {UserProfilesNERMApiGetUserProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserProfilesNerm = (requestParameters: sdk.UserProfilesNERMApiGetUserProfilesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetUserProfiles200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.getUserProfiles(requestParameters));
+}
+/**
+ * Update a user-profile contributor relationship by id
+ * @summary Update a user-profile contributor relationship
+ * @param {UserProfilesNERMApiPatchUserProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserProfileNerm = (requestParameters: sdk.UserProfilesNERMApiPatchUserProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserProfile200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.patchUserProfile(requestParameters));
+}
+/**
+ * Update multiple user-profile contributor relationships
+ * @summary Update multiple user-profile contributor relationships
+ * @param {UserProfilesNERMApiPatchUserProfilesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserProfilesNerm = (requestParameters: sdk.UserProfilesNERMApiPatchUserProfilesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateUserProfiles200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.patchUserProfiles(requestParameters));
+}
+/**
+ * Create a user-profile contributor relationship
+ * @summary Create a user-profile contributor relationship
+ * @param {UserProfilesNERMApiSubmitUserProfileRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserProfileNerm = (requestParameters: sdk.UserProfilesNERMApiSubmitUserProfileRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserProfile200ResponseNERM>> => {
+    const userprofilesnermapi = new sdk.UserProfilesNERMApi(apiConfig);
+    return handleApiCall(() => userprofilesnermapi.submitUserProfile(requestParameters));
+}
+
+/**
+ * Delete a user role assignment
+ * @summary Delete a user role assignment
+ * @param {UserRolesNERMApiDeleteUserRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteUserRoleNerm = (requestParameters: sdk.UserRolesNERMApiDeleteUserRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<object>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.deleteUserRole(requestParameters));
+}
+/**
+ * Info for a specific user role pairing
+ * @summary Find user role pairing
+ * @param {UserRolesNERMApiGetUserRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserRoleNerm = (requestParameters: sdk.UserRolesNERMApiGetUserRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserRole200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.getUserRole(requestParameters));
+}
+/**
+ * This endpoint can retrieve user role pairings from Lifecycle or you can search for user role pairings using parameters
+ * @summary Get user role pairings
+ * @param {UserRolesNERMApiGetUserRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserRolesNerm = (requestParameters: sdk.UserRolesNERMApiGetUserRolesRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetUserRoles200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.getUserRoles(requestParameters));
+}
+/**
+ * Update a user role pairing by id
+ * @summary Update a user role pairing
+ * @param {UserRolesNERMApiPatchUserRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserRoleNerm = (requestParameters: sdk.UserRolesNERMApiPatchUserRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserRole200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.patchUserRole(requestParameters));
+}
+/**
+ * Update multiple user role pairings
+ * @summary Update multiple user role pairings
+ * @param {UserRolesNERMApiPatchUserRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserRolesNerm = (requestParameters: sdk.UserRolesNERMApiPatchUserRolesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserRoles200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.patchUserRoles(requestParameters));
+}
+/**
+ * Assign a new role to a user
+ * @summary Assign new role to user
+ * @param {UserRolesNERMApiSubmitUserRoleRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserRoleNerm = (requestParameters: sdk.UserRolesNERMApiSubmitUserRoleRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserRole200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.submitUserRole(requestParameters));
+}
+/**
+ * Create multiple new user role pairings
+ * @summary Create new user role pairings
+ * @param {UserRolesNERMApiSubmitUserRolesRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserRolesNerm = (requestParameters: sdk.UserRolesNERMApiSubmitUserRolesRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUserRoles200ResponseNERM>> => {
+    const userrolesnermapi = new sdk.UserRolesNERMApi(apiConfig);
+    return handleApiCall(() => userrolesnermapi.submitUserRoles(requestParameters));
+}
+
+/**
+ * Delete a user
+ * @summary Delete a user
+ * @param {UsersNERMApiDeleteUserRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const deleteUserNerm = (requestParameters: sdk.UsersNERMApiDeleteUserRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.DeleteProfileTypeById200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.deleteUser(requestParameters));
+}
+/**
+ * Info for a specific user
+ * @summary Find user by id
+ * @param {UsersNERMApiGetUserRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserNerm = (requestParameters: sdk.UsersNERMApiGetUserRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUser200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.getUser(requestParameters));
+}
+/**
+ * Retrieves the URL of the user avatar
+ * @summary Retrieves  URL user avatar
+ * @param {UsersNERMApiGetUserAvatarRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUserAvatarNerm = (requestParameters: sdk.UsersNERMApiGetUserAvatarRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.getUserAvatar(requestParameters));
+}
+/**
+ * This endpoint can retrieve users from Lifecycle or you can search for users using parameters
+ * @summary Get users
+ * @param {UsersNERMApiGetUsersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getUsersNerm = (requestParameters: sdk.UsersNERMApiGetUsersRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetUsers200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.getUsers(requestParameters));
+}
+/**
+ * Update a user by id
+ * @summary Update a user by id
+ * @param {UsersNERMApiPatchUserRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUserNerm = (requestParameters: sdk.UsersNERMApiPatchUserRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUser200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.patchUser(requestParameters));
+}
+/**
+ * Update multiple users
+ * @summary Update multiple users
+ * @param {UsersNERMApiPatchUsersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchUsersNerm = (requestParameters: sdk.UsersNERMApiPatchUsersRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUsers200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.patchUsers(requestParameters));
+}
+/**
+ * Create a new user
+ * @summary Create a new user
+ * @param {UsersNERMApiSubmitUserRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserNerm = (requestParameters: sdk.UsersNERMApiSubmitUserRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUser200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.submitUser(requestParameters));
+}
+/**
+ * Uploads a new user avatar
+ * @summary Uploads new user avatar
+ * @param {UsersNERMApiSubmitUserAvatarRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUserAvatarNerm = (requestParameters: sdk.UsersNERMApiSubmitUserAvatarRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.submitUserAvatar(requestParameters));
+}
+/**
+ * Create multiple new users
+ * @summary Create multiple new users
+ * @param {UsersNERMApiSubmitUsersRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitUsersNerm = (requestParameters: sdk.UsersNERMApiSubmitUsersRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitUsers200ResponseNERM>> => {
+    const usersnermapi = new sdk.UsersNERMApi(apiConfig);
+    return handleApiCall(() => usersnermapi.submitUsers(requestParameters));
+}
+
+/**
+ * Create a workflow action performer for an existing workflow action
+ * @summary Create a workflow action performer
+ * @param {WorkflowActionPerformerNERMApiCreateWorkflowActionPerformerRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createWorkflowActionPerformerNerm = (requestParameters: sdk.WorkflowActionPerformerNERMApiCreateWorkflowActionPerformerRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateWorkflowActionPerformer200ResponseNERM>> => {
+    const workflowactionperformernermapi = new sdk.WorkflowActionPerformerNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionperformernermapi.createWorkflowActionPerformer(requestParameters));
+}
+
+/**
+ * Create an approval action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_performers, workflow_action_roles, workflow_action_performer_notification_email, workflow_action_approval_email, workflow_action_rejection_email. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create an approval action
+ * @param {WorkflowActionsNERMApiCreateApprovalActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createApprovalActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateApprovalActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createApprovalAction(requestParameters));
+}
+/**
+ * Create an ask security question action
+ * @summary Create ask security question action
+ * @param {WorkflowActionsNERMApiCreateAskSecurityQuestionActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAskSecurityQuestionActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateAskSecurityQuestionActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createAskSecurityQuestionAction(requestParameters));
+}
+/**
+ * Create an auto assign action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_roles. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create an auto assign action
+ * @param {WorkflowActionsNERMApiCreateAutoAssignActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAutoAssignActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateAutoAssignActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createAutoAssignAction(requestParameters));
+}
+/**
+ * Create a batch update action
+ * @summary Create a batch update action
+ * @param {WorkflowActionsNERMApiCreateBatchUpdateActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createBatchUpdateActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateBatchUpdateActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createBatchUpdateAction(requestParameters));
+}
+/**
+ * Create a close session action
+ * @summary Create a close session action
+ * @param {WorkflowActionsNERMApiCreateCloseSessionActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createCloseSessionActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateCloseSessionActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createCloseSessionAction(requestParameters));
+}
+/**
+ * Create a contributors action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_performers, workflow_action_roles, workflow_action_performer_notification_email. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a contributors action
+ * @param {WorkflowActionsNERMApiCreateContributorsActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createContributorsActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateContributorsActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createContributorsAction(requestParameters));
+}
+/**
+ * Create a create profile action
+ * @summary Create a create profile action
+ * @param {WorkflowActionsNERMApiCreateCreateProfileActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createCreateProfileActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateCreateProfileActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createCreateProfileAction(requestParameters));
+}
+/**
+ * Create a duplicate prevention action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - duplicatation_prevention_attributes, workflow_action_performers, workflow_action_roles, workflow_action_performer_notification_email. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a duplicate prevention action
+ * @param {WorkflowActionsNERMApiCreateDuplicatePreventionActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createDuplicatePreventionActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateDuplicatePreventionActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createDuplicatePreventionAction(requestParameters));
+}
+/**
+ * Create an email verification action
+ * @summary Create an email verification action
+ * @param {WorkflowActionsNERMApiCreateEmailVerificationActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createEmailVerificationActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateEmailVerificationActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createEmailVerificationAction(requestParameters));
+}
+/**
+ * Create a fulfillment action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_performers, workflow_action_roles, workflow_action_performer_notification_email. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a fulfillment action
+ * @param {WorkflowActionsNERMApiCreateFulfillmentActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createFulfillmentActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateFulfillmentActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createFulfillmentAction(requestParameters));
+}
+/**
+ * Create an identity proofing action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - identity_proofing_action_configuration, identity_proofing_action_mappings. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create an identity proofing action
+ * @param {WorkflowActionsNERMApiCreateIdentityProofingActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createIdentityProofingActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateIdentityProofingActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createIdentityProofingAction(requestParameters));
+}
+/**
+ * Create an invitation action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_pause_action. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create an invitation action
+ * @param {WorkflowActionsNERMApiCreateInvitationActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createInvitationActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateInvitationActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createInvitationAction(requestParameters));
+}
+/**
+ * Create a ldap action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_performers, workflow_action_roles. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a ldap action
+ * @param {WorkflowActionsNERMApiCreateLdapActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createLdapActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateLdapActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createLdapAction(requestParameters));
+}
+/**
+ * Create a notification action
+ * @summary Create a notification action
+ * @param {WorkflowActionsNERMApiCreateNotificationActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createNotificationActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateNotificationActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createNotificationAction(requestParameters));
+}
+/**
+ * Create a password reset action
+ * @summary Create a password reset action
+ * @param {WorkflowActionsNERMApiCreatePasswordResetActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPasswordResetActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreatePasswordResetActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createPasswordResetAction(requestParameters));
+}
+/**
+ * Create a profile check action
+ * @summary Create a profile check action
+ * @param {WorkflowActionsNERMApiCreateProfileCheckActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createProfileCheckActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateProfileCheckActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createProfileCheckAction(requestParameters));
+}
+/**
+ * Create a profile select action
+ * @summary Create a profile select action
+ * @param {WorkflowActionsNERMApiCreateProfileSelectActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createProfileSelectActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateProfileSelectActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createProfileSelectAction(requestParameters));
+}
+/**
+ * Create a request action
+ * @summary Create a request action
+ * @param {WorkflowActionsNERMApiCreateRequestActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createRequestActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateRequestActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createRequestAction(requestParameters));
+}
+/**
+ * Create a REST API action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - rest_api_action_configuration, api_configuration_attributes. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a REST API action
+ * @param {WorkflowActionsNERMApiCreateRestApiActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createRestApiActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateRestApiActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createRestApiAction(requestParameters));
+}
+/**
+ * Create a review action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_performer_notification_email. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a review action
+ * @param {WorkflowActionsNERMApiCreateReviewActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createReviewActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateReviewActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createReviewAction(requestParameters));
+}
+/**
+ * Create a run workflow action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - configuration_profile_attribute. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a run workflow action
+ * @param {WorkflowActionsNERMApiCreateRunWorkflowActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createRunWorkflowActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateRunWorkflowActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createRunWorkflowAction(requestParameters));
+}
+/**
+ * Create a set attributes action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_set_attributes. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a set attributes action
+ * @param {WorkflowActionsNERMApiCreateSetAttributesActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSetAttributesActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateSetAttributesActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createSetAttributesAction(requestParameters));
+}
+/**
+ * Create a set security question action
+ * @summary Create set security question action
+ * @param {WorkflowActionsNERMApiCreateSetSecurityQuestionActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSetSecurityQuestionActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateSetSecurityQuestionActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createSetSecurityQuestionAction(requestParameters));
+}
+/**
+ * Create a SOAP API action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - soap_api_action_configuration, api_configuration_attributes. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create a SOAP API action
+ * @param {WorkflowActionsNERMApiCreateSoapApiActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createSoapApiActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateSoapApiActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createSoapApiAction(requestParameters));
+}
+/**
+ * Create a status change action
+ * @summary Create a status change action
+ * @param {WorkflowActionsNERMApiCreateStatusChangeActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createStatusChangeActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateStatusChangeActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createStatusChangeAction(requestParameters));
+}
+/**
+ * Create an unassign action. The following supporting objects will need to be created after this action is created (which are tied together via workflow_action_id) - workflow_action_roles. These supporting objects must be created for this action to be complete (APIs for these supporting objects not yet implemented, use UI).
+ * @summary Create an unassign action
+ * @param {WorkflowActionsNERMApiCreateUnassignActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createUnassignActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateUnassignActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createUnassignAction(requestParameters));
+}
+/**
+ * Create an update profile action
+ * @summary Create an update profile action
+ * @param {WorkflowActionsNERMApiCreateUpdateProfileActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createUpdateProfileActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateUpdateProfileActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createUpdateProfileAction(requestParameters));
+}
+/**
+ * Create a username password action
+ * @summary Create a username password action
+ * @param {WorkflowActionsNERMApiCreateUsernamePasswordActionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createUsernamePasswordActionNerm = (requestParameters: sdk.WorkflowActionsNERMApiCreateUsernamePasswordActionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateApprovalAction200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.createUsernamePasswordAction(requestParameters));
+}
+/**
+ * This endpoint can retrieve workflow actions
+ * @summary Get Workflow Actions
+ * @param {WorkflowActionsNERMApiGetWorkflowActionsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getWorkflowActionsNerm = (requestParameters: sdk.WorkflowActionsNERMApiGetWorkflowActionsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetWorkflowActions200ResponseNERM>> => {
+    const workflowactionsnermapi = new sdk.WorkflowActionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowactionsnermapi.getWorkflowActions(requestParameters));
+}
+
+/**
+ * Find workflow session by id
+ * @summary Find workflow session
+ * @param {WorkflowSessionsNERMApiGetWorkflowSessionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getWorkflowSessionNerm = (requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitWorkflowSession200ResponseNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.getWorkflowSession(requestParameters));
+}
+/**
+ * Retrieves the URL of an attachment attribute value from a workflow session
+ * @summary Retrieves workflow session attachment URL
+ * @param {WorkflowSessionsNERMApiGetWorkflowSessionUploadRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getWorkflowSessionUploadNerm = (requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionUploadRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.getWorkflowSessionUpload(requestParameters));
+}
+/**
+ * Get workflow sessions
+ * @summary Get workflow sessions
+ * @param {WorkflowSessionsNERMApiGetWorkflowSessionsRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const getWorkflowSessionsNerm = (requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionsRequest = {}, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.GetWorkflowSessions200ResponseNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.getWorkflowSessions(requestParameters));
+}
+/**
+ * Update a workflow session by id
+ * @summary Update a workflow session
+ * @param {WorkflowSessionsNERMApiPatchWorkflowSessionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const patchWorkflowSessionNerm = (requestParameters: sdk.WorkflowSessionsNERMApiPatchWorkflowSessionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitWorkflowSession200ResponseNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.patchWorkflowSession(requestParameters));
+}
+/**
+ * Create a workflow session
+ * @summary Create a workflow session
+ * @param {WorkflowSessionsNERMApiSubmitWorkflowSessionRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitWorkflowSessionNerm = (requestParameters: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.SubmitWorkflowSession200ResponseNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.submitWorkflowSession(requestParameters));
+}
+/**
+ * Uploads a new attachment attribute value to a workflow session. The upload must be a FORM data type; this is not a JSON API. The upload must include the binary content of the payload under the \'file\' named form element. The upload must not attempt to include the file name or its content type as a other form or JSON as parameters. The upload must not attempt to upload the file body as the POST body payload; it has to arrive as a FORM parameter. Do not use a `File/Binary` payload type for the POST operation in your API client. 
+ * @summary Uploads workflow session attachment
+ * @param {WorkflowSessionsNERMApiSubmitWorkflowSessionUploadRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const submitWorkflowSessionUploadNerm = (requestParameters: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionUploadRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.UrlNERM>> => {
+    const workflowsessionsnermapi = new sdk.WorkflowSessionsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsessionsnermapi.submitWorkflowSessionUpload(requestParameters));
+}
+
+/**
+ * Create an automated workflow
+ * @summary Create an automated workflow
+ * @param {WorkflowsNERMApiCreateAutomatedWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createAutomatedWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateAutomatedWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createAutomatedWorkflow(requestParameters));
+}
+/**
+ * Create a batch workflow
+ * @summary Create a batch workflow
+ * @param {WorkflowsNERMApiCreateBatchWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createBatchWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateBatchWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createBatchWorkflow(requestParameters));
+}
+/**
+ * Create a create workflow
+ * @summary Create a create workflow
+ * @param {WorkflowsNERMApiCreateCreateWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createCreateWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateCreateWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createCreateWorkflow(requestParameters));
+}
+/**
+ * Create a login workflow
+ * @summary Create a login workflow
+ * @param {WorkflowsNERMApiCreateLoginWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createLoginWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateLoginWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createLoginWorkflow(requestParameters));
+}
+/**
+ * Create a password reset workflow
+ * @summary Create a password reset workflow
+ * @param {WorkflowsNERMApiCreatePasswordUpdateWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createPasswordUpdateWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreatePasswordUpdateWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createPasswordUpdateWorkflow(requestParameters));
+}
+/**
+ * Create a registration workflow
+ * @summary Create a registration workflow
+ * @param {WorkflowsNERMApiCreateRegistrationWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createRegistrationWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateRegistrationWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createRegistrationWorkflow(requestParameters));
+}
+/**
+ * Create an update workflow
+ * @summary Create an update workflow
+ * @param {WorkflowsNERMApiCreateUpdateWorkflowRequest} requestParameters Request parameters.
+ * @param {*} [axiosOptions] Override http request option.
+ * @throws {RequiredError}
+ */
+export const createUpdateWorkflowNerm = (requestParameters: sdk.WorkflowsNERMApiCreateUpdateWorkflowRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<sdk.CreateCreateWorkflow200ResponseNERM>> => {
+    const workflowsnermapi = new sdk.WorkflowsNERMApi(apiConfig);
+    return handleApiCall(() => workflowsnermapi.createUpdateWorkflow(requestParameters));
+}
+
+// --- GENERATED SDK METHODS END ---
 
 export const genericGet = (requestParameters: sdk.DefaultApiGenericGetRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<any>> => {
     const axiosInstance = new sdk.DefaultApi(apiConfig);

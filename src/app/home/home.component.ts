@@ -39,6 +39,7 @@ type Tenant = {
   active: boolean;
   apiUrl: string;
   tenantUrl: string;
+  nermBaseUrl?: string;
   clientId?: string;
   clientSecret?: string;
   name: string;
@@ -97,6 +98,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     active: false,
     apiUrl: '',
     tenantUrl: '',
+    nermBaseUrl: '',
     name: '',
     authtype: 'oauth',
     tenantName: '',
@@ -501,6 +503,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         environmentName: this.state.actualTenant.name,
         tenantUrl: this.state.actualTenant.tenantUrl,
         baseUrl: this.state.actualTenant.apiUrl,
+        nermBaseUrl: this.state.actualTenant.nermBaseUrl,
         authtype: this.state.actualTenant.authtype as 'oauth' | 'pat',
         clientId: clientId,
         clientSecret: clientSecret,
@@ -550,6 +553,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.state.selectedTenant === 'new' && this.state.actualTenant?.tenantName) {
       this.state.actualTenant.tenantUrl = `https://${this.state.actualTenant.tenantName}.identitynow.com`;
       this.state.actualTenant.apiUrl = `https://${this.state.actualTenant.tenantName}.api.identitynow.com`;
+      this.state.actualTenant.nermBaseUrl = `https://${this.state.actualTenant.tenantName}.nonemployee.com/api`;
 
       if (this.state.actualTenant.authtype === 'oauth') {
         void this.testOAuthConnection();

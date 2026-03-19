@@ -190,6 +190,13 @@
             Colab
           </a>
         }
+        @if (isComponentEnabled('nerm-report')) {
+          <a mat-list-item class="sidebar-link" routerLink="/nerm-report" routerLinkActive="active-link"
+            [class.disabled]="!isConnected" (click)="onNavItemClick($event)">
+            <mat-icon class="card-icon">dashboard</mat-icon>
+            Nerm Report
+          </a>
+        }
       </mat-nav-list>
     </mat-sidenav>
   }

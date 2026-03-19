@@ -1,0 +1,25 @@
+templateDir: ./mustache_templates
+files:
+  electron-sdk-wrapper.mustache:
+    templateType: SupportingFiles
+    destinationFilename: temp/nerm/sailpoint-sdk.ts
+  electron-icp-handlers.mustache:
+    templateType: SupportingFiles
+    destinationFilename: temp/nerm/ipc-handlers.ts
+  electron-preload.mustache:
+    templateType: SupportingFiles
+    destinationFilename: temp/nerm/sdk-preload.ts
+  web-sdk-wrapper.mustache:
+    templateType: SupportingFiles
+    destinationFilename: temp/nerm/sailpoint-sdk-web.ts
+  sailpoint-sdk-service.mustache:
+    templateType: SupportingFiles
+    destinationFilename: temp/nerm/sailpoint-sdk.service.ts
+npmName: sailpoint-sdk
+npmRepository: sailpoint.com
+npmVersion: 1.6.6
+useSingleRequestParameter: true
+apiVersion: nerm
+enumNameSuffix: Nerm
+operationSuffix: Nerm
+nerm: true

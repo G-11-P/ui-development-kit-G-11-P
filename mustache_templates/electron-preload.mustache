@@ -1,8 +1,10 @@
 const { ipcRenderer } = require('electron');
 
 const sdkPreload = {
-    {{#apiInfo}}{{#apis}}{{#operations}}{{#operation}}{{operationId}}: ({{#allParams.0}}request{{/allParams.0}}) => ipcRenderer.invoke('{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}'{{#allParams.0}}, request{{/allParams.0}}),
+    // --- GENERATED SDK METHODS START ---
+    {{#apiInfo}}{{#apis}}{{#operations}}{{#operation}}{{operationId}}{{operationSuffix}}: ({{#allParams.0}}request{{/allParams.0}}) => ipcRenderer.invoke('{{#lambda.kebabcase}}{{operationId}}{{operationSuffix}}{{/lambda.kebabcase}}'{{#allParams.0}}, request{{/allParams.0}}),
     {{/operation}}{{/operations}}{{/apis}}{{/apiInfo}}
+    // --- GENERATED SDK METHODS END ---
 
     genericGet: (request) => ipcRenderer.invoke('generic-get', request),
     genericPost: (request) => ipcRenderer.invoke('generic-post', request),

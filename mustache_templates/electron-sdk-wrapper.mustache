@@ -62,6 +62,7 @@ function generateErrorResponse(error: unknown): ApiResponse<any> {
 }
 
 
+// --- GENERATED SDK METHODS START ---
 {{#apiInfo}}{{#apis}}
 {{#operations}}
 {{#operation}}
@@ -85,7 +86,7 @@ function generateErrorResponse(error: unknown): ApiResponse<any> {
  * @throws {RequiredError}
  */
 {{#useSingleRequestParameter}}
-export const {{nickname}} = ({{#allParams.0}}requestParameters: sdk.{{classname}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}apiConfig: sdk.Configuration): Promise<ApiResponse<{{#isArray}}Array<{{#returnProperty}}{{^isPrimitiveType}}sdk.{{/isPrimitiveType}}{{/returnProperty}}{{returnBaseType}}>{{/isArray}}{{^isArray}}{{#returnProperty}}{{#isPrimitiveType}}{{returnType}}{{/isPrimitiveType}}{{/returnProperty}}{{#returnProperty}}{{^isPrimitiveType}}sdk.{{returnType}}{{/isPrimitiveType}}{{/returnProperty}}{{/isArray}}{{^returnType}}void{{/returnType}}>> => {
+export const {{nickname}}{{operationSuffix}} = ({{#allParams.0}}requestParameters: sdk.{{classname}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}apiConfig: sdk.Configuration): Promise<ApiResponse<{{#isArray}}Array<{{#returnProperty}}{{^isPrimitiveType}}sdk.{{/isPrimitiveType}}{{/returnProperty}}{{returnBaseType}}>{{/isArray}}{{^isArray}}{{#returnProperty}}{{#isPrimitiveType}}{{returnType}}{{/isPrimitiveType}}{{/returnProperty}}{{#returnProperty}}{{^isPrimitiveType}}sdk.{{returnType}}{{/isPrimitiveType}}{{/returnProperty}}{{/isArray}}{{^returnType}}void{{/returnType}}>> => {
     const {{#lambda.lowercase}}{{classname}}{{/lambda.lowercase}} = new sdk.{{classname}}(apiConfig);
     return handleApiCall(() => {{#lambda.lowercase}}{{classname}}{{/lambda.lowercase}}.{{nickname}}({{#allParams.0}}requestParameters{{/allParams.0}}));
 }
@@ -93,6 +94,7 @@ export const {{nickname}} = ({{#allParams.0}}requestParameters: sdk.{{classname}
 {{/operation}}
 {{/operations}}
 {{/apis}}{{/apiInfo}}
+// --- GENERATED SDK METHODS END ---
 
 export const genericGet = (requestParameters: sdk.DefaultApiGenericGetRequest, apiConfig: sdk.Configuration): Promise<ApiResponse<any>> => {
     const axiosInstance = new sdk.DefaultApi(apiConfig);

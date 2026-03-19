@@ -1,5 +1,5 @@
-app/sailpoint-sdk/ipc-handlers.ts
-app/sailpoint-sdk/sailpoint-sdk.ts
-app/sailpoint-sdk/sdk-preload.ts
-projects/sailpoint-components/src/lib/sailpoint-sdk.service.ts
-server/sailpoint-sdk-web.ts
+temp/nerm/ipc-handlers.ts
+temp/nerm/sailpoint-sdk-web.ts
+temp/nerm/sailpoint-sdk.service.ts
+temp/nerm/sailpoint-sdk.ts
+temp/nerm/sdk-preload.ts

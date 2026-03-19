@@ -43,7 +43,16 @@ export class SailPointSDKService {
     }
   }
 
+// --- GENERATED SDK METHODS START ---
 
+async createAccessModelMetadataAttribute(requestParameters: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeRequest): Promise<AxiosResponse<sdk.AttributeDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAccessModelMetadataAttribute(requestParameters) as Promise<AxiosResponse<sdk.AttributeDTOV2025, any>>;
+}
+async createAccessModelMetadataAttributeValue(requestParameters: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeValueRequest): Promise<AxiosResponse<sdk.AttributeValueDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAccessModelMetadataAttributeValue(requestParameters) as Promise<AxiosResponse<sdk.AttributeValueDTOV2025, any>>;
+}
 async getAccessModelMetadataAttribute(requestParameters: sdk.AccessModelMetadataV2025ApiGetAccessModelMetadataAttributeRequest): Promise<AxiosResponse<sdk.AttributeDTOV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.getAccessModelMetadataAttribute(requestParameters) as Promise<AxiosResponse<sdk.AttributeDTOV2025, any>>;
@@ -59,6 +68,14 @@ async listAccessModelMetadataAttribute(requestParameters: sdk.AccessModelMetadat
 async listAccessModelMetadataAttributeValue(requestParameters: sdk.AccessModelMetadataV2025ApiListAccessModelMetadataAttributeValueRequest): Promise<AxiosResponse<Array<sdk.AttributeValueDTOV2025>, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.listAccessModelMetadataAttributeValue(requestParameters) as Promise<AxiosResponse<Array<sdk.AttributeValueDTOV2025>, any>>;
+}
+async updateAccessModelMetadataAttribute(requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeRequest): Promise<AxiosResponse<sdk.AttributeDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateAccessModelMetadataAttribute(requestParameters) as Promise<AxiosResponse<sdk.AttributeDTOV2025, any>>;
+}
+async updateAccessModelMetadataAttributeValue(requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeValueRequest): Promise<AxiosResponse<sdk.AttributeValueDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateAccessModelMetadataAttributeValue(requestParameters) as Promise<AxiosResponse<sdk.AttributeValueDTOV2025, any>>;
 }
 async updateAccessModelMetadataByFilter(requestParameters: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataByFilterRequest): Promise<AxiosResponse<sdk.AccessModelMetadataBulkUpdateResponseV2025, any>> {
     await this.checkSessionBeforeCall();
@@ -269,6 +286,15 @@ async updateAccount(requestParameters: sdk.AccountsV2025ApiUpdateAccountRequest)
     return this.electronAPI.updateAccount(requestParameters) as Promise<AxiosResponse<object, any>>;
 }
 
+async getTotalCount(requestParameters: sdk.ApiUsageV2025ApiGetTotalCountRequest = {}): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getTotalCount(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async listApiSummary(requestParameters: sdk.ApiUsageV2025ApiListApiSummaryRequest = {}): Promise<AxiosResponse<Array<sdk.SummaryResponseV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.listApiSummary(requestParameters) as Promise<AxiosResponse<Array<sdk.SummaryResponseV2025>, any>>;
+}
+
 async getDiscoveredApplications(requestParameters: sdk.ApplicationDiscoveryV2025ApiGetDiscoveredApplicationsRequest = {}): Promise<AxiosResponse<Array<sdk.GetDiscoveredApplications200ResponseInnerV2025>, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.getDiscoveredApplications(requestParameters) as Promise<AxiosResponse<Array<sdk.GetDiscoveredApplications200ResponseInnerV2025>, any>>;
@@ -281,10 +307,26 @@ async sendManualDiscoverApplicationsCsvTemplate(requestParameters: sdk.Applicati
     await this.checkSessionBeforeCall();
     return this.electronAPI.sendManualDiscoverApplicationsCsvTemplate(requestParameters) as Promise<AxiosResponse<void, any>>;
 }
+async startApplicationDiscovery(requestParameters: sdk.ApplicationDiscoveryV2025ApiStartApplicationDiscoveryRequest): Promise<AxiosResponse<sdk.ApplicationDiscoveryResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.startApplicationDiscovery(requestParameters) as Promise<AxiosResponse<sdk.ApplicationDiscoveryResponseV2025, any>>;
+}
 
 async approveApproval(requestParameters: sdk.ApprovalsV2025ApiApproveApprovalRequest): Promise<AxiosResponse<sdk.ApprovalV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.approveApproval(requestParameters) as Promise<AxiosResponse<sdk.ApprovalV2025, any>>;
+}
+async approveApprovalInBulk(requestParameters: sdk.ApprovalsV2025ApiApproveApprovalInBulkRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.approveApprovalInBulk(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async cancelApproval(requestParameters: sdk.ApprovalsV2025ApiCancelApprovalRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.cancelApproval(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async deleteApprovalConfigRequest(requestParameters: sdk.ApprovalsV2025ApiDeleteApprovalConfigRequestRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteApprovalConfigRequest(requestParameters) as Promise<AxiosResponse<void, any>>;
 }
 async getApproval(requestParameters: sdk.ApprovalsV2025ApiGetApprovalRequest): Promise<AxiosResponse<sdk.ApprovalV2025, any>> {
     await this.checkSessionBeforeCall();
@@ -294,9 +336,25 @@ async getApprovals(requestParameters: sdk.ApprovalsV2025ApiGetApprovalsRequest =
     await this.checkSessionBeforeCall();
     return this.electronAPI.getApprovals(requestParameters) as Promise<AxiosResponse<Array<sdk.ApprovalV2025>, any>>;
 }
+async getApprovalsConfig(requestParameters: sdk.ApprovalsV2025ApiGetApprovalsConfigRequest): Promise<AxiosResponse<sdk.ApprovalConfigV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getApprovalsConfig(requestParameters) as Promise<AxiosResponse<sdk.ApprovalConfigV2025, any>>;
+}
+async moveApproval(requestParameters: sdk.ApprovalsV2025ApiMoveApprovalRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.moveApproval(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async putApprovalsConfig(requestParameters: sdk.ApprovalsV2025ApiPutApprovalsConfigRequest): Promise<AxiosResponse<sdk.ApprovalConfigV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.putApprovalsConfig(requestParameters) as Promise<AxiosResponse<sdk.ApprovalConfigV2025, any>>;
+}
 async rejectApproval(requestParameters: sdk.ApprovalsV2025ApiRejectApprovalRequest): Promise<AxiosResponse<void, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.rejectApproval(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async rejectApprovalInBulk(requestParameters: sdk.ApprovalsV2025ApiRejectApprovalInBulkRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.rejectApprovalInBulk(requestParameters) as Promise<AxiosResponse<object, any>>;
 }
 async updateApprovalsAttributes(requestParameters: sdk.ApprovalsV2025ApiUpdateApprovalsAttributesRequest): Promise<AxiosResponse<sdk.ApprovalV2025, any>> {
     await this.checkSessionBeforeCall();
@@ -840,9 +898,9 @@ async searchFormElementDataByElementID(requestParameters: sdk.CustomFormsV2025Ap
     await this.checkSessionBeforeCall();
     return this.electronAPI.searchFormElementDataByElementID(requestParameters) as Promise<AxiosResponse<sdk.ListFormElementDataByElementIDResponseV2025, any>>;
 }
-async searchFormInstancesByTenant(): Promise<AxiosResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>, any>> {
+async searchFormInstancesByTenant(requestParameters: sdk.CustomFormsV2025ApiSearchFormInstancesByTenantRequest = {}): Promise<AxiosResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>, any>> {
     await this.checkSessionBeforeCall();
-    return this.electronAPI.searchFormInstancesByTenant() as Promise<AxiosResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>, any>>;
+    return this.electronAPI.searchFormInstancesByTenant(requestParameters) as Promise<AxiosResponse<Array<sdk.ListFormInstancesByTenantResponseV2025>, any>>;
 }
 async searchPreDefinedSelectOptions(): Promise<AxiosResponse<sdk.ListPredefinedSelectOptionsResponseV2025, any>> {
     await this.checkSessionBeforeCall();
@@ -882,6 +940,10 @@ async listAllAuthorizationRightSets(requestParameters: sdk.CustomUserLevelsV2025
     await this.checkSessionBeforeCall();
     return this.electronAPI.listAllAuthorizationRightSets(requestParameters) as Promise<AxiosResponse<Array<sdk.HierarchicalRightSetV2025>, any>>;
 }
+async listUserLevelIdentities(requestParameters: sdk.CustomUserLevelsV2025ApiListUserLevelIdentitiesRequest): Promise<AxiosResponse<Array<sdk.AuthUserSlimResponseV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.listUserLevelIdentities(requestParameters) as Promise<AxiosResponse<Array<sdk.AuthUserSlimResponseV2025>, any>>;
+}
 async listUserLevels(requestParameters: sdk.CustomUserLevelsV2025ApiListUserLevelsRequest = {}): Promise<AxiosResponse<Array<sdk.UserLevelSummaryDTOV2025>, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.listUserLevels(requestParameters) as Promise<AxiosResponse<Array<sdk.UserLevelSummaryDTOV2025>, any>>;
@@ -890,9 +952,98 @@ async publishCustomUserLevel(requestParameters: sdk.CustomUserLevelsV2025ApiPubl
     await this.checkSessionBeforeCall();
     return this.electronAPI.publishCustomUserLevel(requestParameters) as Promise<AxiosResponse<sdk.UserLevelPublishSummaryV2025, any>>;
 }
+async showUserLevelCounts(requestParameters: sdk.CustomUserLevelsV2025ApiShowUserLevelCountsRequest): Promise<AxiosResponse<Array<sdk.AuthUserLevelsIdentityCountV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.showUserLevelCounts(requestParameters) as Promise<AxiosResponse<Array<sdk.AuthUserLevelsIdentityCountV2025>, any>>;
+}
 async updateUserLevel(requestParameters: sdk.CustomUserLevelsV2025ApiUpdateUserLevelRequest): Promise<AxiosResponse<sdk.UserLevelSummaryDTOV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.updateUserLevel(requestParameters) as Promise<AxiosResponse<sdk.UserLevelSummaryDTOV2025, any>>;
+}
+
+async cancelTask(requestParameters: sdk.DataAccessSecurityV2025ApiCancelTaskRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.cancelTask(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async createApplication(requestParameters: sdk.DataAccessSecurityV2025ApiCreateApplicationRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createApplication(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async createSchedule(requestParameters: sdk.DataAccessSecurityV2025ApiCreateScheduleRequest): Promise<AxiosResponse<number, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSchedule(requestParameters) as Promise<AxiosResponse<number, any>>;
+}
+async dasOwnersAssignPost(requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersAssignPostRequest): Promise<AxiosResponse<number, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.dasOwnersAssignPost(requestParameters) as Promise<AxiosResponse<number, any>>;
+}
+async dasOwnersOwnerIdentityIdResourcesGet(requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersOwnerIdentityIdResourcesGetRequest): Promise<AxiosResponse<Array<sdk.ResourceModelV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.dasOwnersOwnerIdentityIdResourcesGet(requestParameters) as Promise<AxiosResponse<Array<sdk.ResourceModelV2025>, any>>;
+}
+async dasOwnersReelectPost(requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersReelectPostRequest): Promise<AxiosResponse<number, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.dasOwnersReelectPost(requestParameters) as Promise<AxiosResponse<number, any>>;
+}
+async dasOwnersResourcesResourceIdGet(requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersResourcesResourceIdGetRequest): Promise<AxiosResponse<Array<string>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.dasOwnersResourcesResourceIdGet(requestParameters) as Promise<AxiosResponse<Array<string>, any>>;
+}
+async dasOwnersSourceIdentityIdReassignDestinationIdentityIdPost(requestParameters: sdk.DataAccessSecurityV2025ApiDasOwnersSourceIdentityIdReassignDestinationIdentityIdPostRequest): Promise<AxiosResponse<number, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.dasOwnersSourceIdentityIdReassignDestinationIdentityIdPost(requestParameters) as Promise<AxiosResponse<number, any>>;
+}
+async deleteApplication(requestParameters: sdk.DataAccessSecurityV2025ApiDeleteApplicationRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteApplication(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async deleteSchedule(requestParameters: sdk.DataAccessSecurityV2025ApiDeleteScheduleRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteSchedule(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async deleteTask(requestParameters: sdk.DataAccessSecurityV2025ApiDeleteTaskRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteTask(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async getApplication(requestParameters: sdk.DataAccessSecurityV2025ApiGetApplicationRequest): Promise<AxiosResponse<sdk.ApplicationItemV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getApplication(requestParameters) as Promise<AxiosResponse<sdk.ApplicationItemV2025, any>>;
+}
+async getApplications(requestParameters: sdk.DataAccessSecurityV2025ApiGetApplicationsRequest = {}): Promise<AxiosResponse<Array<sdk.ApplicationItemV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getApplications(requestParameters) as Promise<AxiosResponse<Array<sdk.ApplicationItemV2025>, any>>;
+}
+async getOwners(requestParameters: sdk.DataAccessSecurityV2025ApiGetOwnersRequest): Promise<AxiosResponse<Array<sdk.DataOwnerModelV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getOwners(requestParameters) as Promise<AxiosResponse<Array<sdk.DataOwnerModelV2025>, any>>;
+}
+async getSchedule(requestParameters: sdk.DataAccessSecurityV2025ApiGetScheduleRequest): Promise<AxiosResponse<sdk.ScheduleInfoV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSchedule(requestParameters) as Promise<AxiosResponse<sdk.ScheduleInfoV2025, any>>;
+}
+async getSchedules(requestParameters: sdk.DataAccessSecurityV2025ApiGetSchedulesRequest = {}): Promise<AxiosResponse<Array<sdk.ScheduleInfoV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSchedules(requestParameters) as Promise<AxiosResponse<Array<sdk.ScheduleInfoV2025>, any>>;
+}
+async getTask(requestParameters: sdk.DataAccessSecurityV2025ApiGetTaskRequest): Promise<AxiosResponse<sdk.TaskInfoV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getTask(requestParameters) as Promise<AxiosResponse<sdk.TaskInfoV2025, any>>;
+}
+async getTasks(requestParameters: sdk.DataAccessSecurityV2025ApiGetTasksRequest = {}): Promise<AxiosResponse<Array<sdk.TaskInfoV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getTasks(requestParameters) as Promise<AxiosResponse<Array<sdk.TaskInfoV2025>, any>>;
+}
+async putApplication(requestParameters: sdk.DataAccessSecurityV2025ApiPutApplicationRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.putApplication(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async putSchedule(requestParameters: sdk.DataAccessSecurityV2025ApiPutScheduleRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.putSchedule(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async startTaskRerun(requestParameters: sdk.DataAccessSecurityV2025ApiStartTaskRerunRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.startTaskRerun(requestParameters) as Promise<AxiosResponse<void, any>>;
 }
 
 async createDataSegment(requestParameters: sdk.DataSegmentationV2025ApiCreateDataSegmentRequest): Promise<AxiosResponse<sdk.DataSegmentV2025, any>> {
@@ -926,6 +1077,11 @@ async patchDataSegment(requestParameters: sdk.DataSegmentationV2025ApiPatchDataS
 async publishDataSegment(requestParameters: sdk.DataSegmentationV2025ApiPublishDataSegmentRequest): Promise<AxiosResponse<void, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.publishDataSegment(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+
+async sendDeclassifyMachineAccountFromSource(requestParameters: sdk.DeclassifySourceV2025ApiSendDeclassifyMachineAccountFromSourceRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.sendDeclassifyMachineAccountFromSource(requestParameters) as Promise<AxiosResponse<void, any>>;
 }
 
 async createDimension(requestParameters: sdk.DimensionsV2025ApiCreateDimensionRequest): Promise<AxiosResponse<sdk.DimensionV2025, any>> {
@@ -1285,9 +1441,9 @@ async patchPotentialRole(requestParameters: sdk.IAIRoleMiningV2025ApiPatchPotent
     await this.checkSessionBeforeCall();
     return this.electronAPI.patchPotentialRole(requestParameters) as Promise<AxiosResponse<object, any>>;
 }
-async patchPotentialRole_1(requestParameters: sdk.IAIRoleMiningV2025ApiPatchPotentialRole0Request): Promise<AxiosResponse<object, any>> {
+async patchPotentialRoleSession(requestParameters: sdk.IAIRoleMiningV2025ApiPatchPotentialRoleSessionRequest): Promise<AxiosResponse<object, any>> {
     await this.checkSessionBeforeCall();
-    return this.electronAPI.patchPotentialRole_1(requestParameters) as Promise<AxiosResponse<object, any>>;
+    return this.electronAPI.patchPotentialRoleSession(requestParameters) as Promise<AxiosResponse<object, any>>;
 }
 async patchRoleMiningSession(requestParameters: sdk.IAIRoleMiningV2025ApiPatchRoleMiningSessionRequest): Promise<AxiosResponse<object, any>> {
     await this.checkSessionBeforeCall();
@@ -2015,6 +2171,39 @@ async patchOrgConfig(requestParameters: sdk.OrgConfigV2025ApiPatchOrgConfigReque
     return this.electronAPI.patchOrgConfig(requestParameters) as Promise<AxiosResponse<sdk.OrgConfigV2025, any>>;
 }
 
+async createParameter(requestParameters: sdk.ParameterStorageV2025ApiCreateParameterRequest = {}): Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createParameter(requestParameters) as Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>>;
+}
+async deleteParameter(requestParameters: sdk.ParameterStorageV2025ApiDeleteParameterRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteParameter(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async getAttestationDocument(requestParameters: sdk.ParameterStorageV2025ApiGetAttestationDocumentRequest): Promise<AxiosResponse<sdk.ParameterStorageAttestationDocumentV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttestationDocument(requestParameters) as Promise<AxiosResponse<sdk.ParameterStorageAttestationDocumentV2025, any>>;
+}
+async getParameter(requestParameters: sdk.ParameterStorageV2025ApiGetParameterRequest): Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getParameter(requestParameters) as Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>>;
+}
+async getParameterReferences(requestParameters: sdk.ParameterStorageV2025ApiGetParameterReferencesRequest): Promise<AxiosResponse<Array<sdk.ParameterStorageReferenceV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getParameterReferences(requestParameters) as Promise<AxiosResponse<Array<sdk.ParameterStorageReferenceV2025>, any>>;
+}
+async getParameterStorageSpecification(requestParameters: sdk.ParameterStorageV2025ApiGetParameterStorageSpecificationRequest = {}): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getParameterStorageSpecification(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async searchParameters(requestParameters: sdk.ParameterStorageV2025ApiSearchParametersRequest = {}): Promise<AxiosResponse<Array<sdk.ParameterStorageParameterV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.searchParameters(requestParameters) as Promise<AxiosResponse<Array<sdk.ParameterStorageParameterV2025>, any>>;
+}
+async updateParameter(requestParameters: sdk.ParameterStorageV2025ApiUpdateParameterRequest): Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateParameter(requestParameters) as Promise<AxiosResponse<sdk.ParameterStorageParameterV2025, any>>;
+}
+
 async createPasswordOrgConfig(requestParameters: sdk.PasswordConfigurationV2025ApiCreatePasswordOrgConfigRequest): Promise<AxiosResponse<sdk.PasswordOrgConfigV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.createPasswordOrgConfig(requestParameters) as Promise<AxiosResponse<sdk.PasswordOrgConfigV2025, any>>;
@@ -2113,6 +2302,40 @@ async patchPersonalAccessToken(requestParameters: sdk.PersonalAccessTokensV2025A
     return this.electronAPI.patchPersonalAccessToken(requestParameters) as Promise<AxiosResponse<sdk.GetPersonalAccessTokenResponseV2025, any>>;
 }
 
+async createCustomPrivilegeCriteria(requestParameters: sdk.PrivilegeCriteriaV2025ApiCreateCustomPrivilegeCriteriaRequest): Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createCustomPrivilegeCriteria(requestParameters) as Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>>;
+}
+async deleteCustomPrivilegeCriteria(requestParameters: sdk.PrivilegeCriteriaV2025ApiDeleteCustomPrivilegeCriteriaRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteCustomPrivilegeCriteria(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async getPrivilegeCriteria(requestParameters: sdk.PrivilegeCriteriaV2025ApiGetPrivilegeCriteriaRequest): Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPrivilegeCriteria(requestParameters) as Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>>;
+}
+async listPrivilegeCriteria(requestParameters: sdk.PrivilegeCriteriaV2025ApiListPrivilegeCriteriaRequest): Promise<AxiosResponse<Array<sdk.PrivilegeCriteriaDTOV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.listPrivilegeCriteria(requestParameters) as Promise<AxiosResponse<Array<sdk.PrivilegeCriteriaDTOV2025>, any>>;
+}
+async putCustomPrivilegeCriteriaValue(requestParameters: sdk.PrivilegeCriteriaV2025ApiPutCustomPrivilegeCriteriaValueRequest): Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.putCustomPrivilegeCriteriaValue(requestParameters) as Promise<AxiosResponse<sdk.PrivilegeCriteriaDTOV2025, any>>;
+}
+
+async getPrivilegeCriteriaConfig(requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiGetPrivilegeCriteriaConfigRequest): Promise<AxiosResponse<sdk.PrivilegeCriteriaConfigDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPrivilegeCriteriaConfig(requestParameters) as Promise<AxiosResponse<sdk.PrivilegeCriteriaConfigDTOV2025, any>>;
+}
+async listPrivilegeCriteriaConfig(requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiListPrivilegeCriteriaConfigRequest): Promise<AxiosResponse<Array<sdk.PrivilegeCriteriaConfigDTOV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.listPrivilegeCriteriaConfig(requestParameters) as Promise<AxiosResponse<Array<sdk.PrivilegeCriteriaConfigDTOV2025>, any>>;
+}
+async patchPrivilegeCriteriaConfig(requestParameters: sdk.PrivilegeCriteriaConfigurationV2025ApiPatchPrivilegeCriteriaConfigRequest): Promise<AxiosResponse<sdk.PrivilegeCriteriaConfigDTOV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchPrivilegeCriteriaConfig(requestParameters) as Promise<AxiosResponse<sdk.PrivilegeCriteriaConfigDTOV2025, any>>;
+}
+
 async getPublicIdentities(requestParameters: sdk.PublicIdentitiesV2025ApiGetPublicIdentitiesRequest = {}): Promise<AxiosResponse<Array<sdk.PublicIdentityV2025>, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.getPublicIdentities(requestParameters) as Promise<AxiosResponse<Array<sdk.PublicIdentityV2025>, any>>;
@@ -2184,6 +2407,23 @@ async getRoleInsightsRequests(requestParameters: sdk.RoleInsightsV2025ApiGetRole
 async getRoleInsightsSummary(requestParameters: sdk.RoleInsightsV2025ApiGetRoleInsightsSummaryRequest = {}): Promise<AxiosResponse<sdk.RoleInsightsSummaryV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.getRoleInsightsSummary(requestParameters) as Promise<AxiosResponse<sdk.RoleInsightsSummaryV2025, any>>;
+}
+
+async cancelRolePropagation(requestParameters: sdk.RolePropagationV2025ApiCancelRolePropagationRequest = {}): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.cancelRolePropagation(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async getOngoingRolePropagation(requestParameters: sdk.RolePropagationV2025ApiGetOngoingRolePropagationRequest = {}): Promise<AxiosResponse<sdk.RolePropagationOngoingResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getOngoingRolePropagation(requestParameters) as Promise<AxiosResponse<sdk.RolePropagationOngoingResponseV2025, any>>;
+}
+async getRolePropagationStatus(requestParameters: sdk.RolePropagationV2025ApiGetRolePropagationStatusRequest): Promise<AxiosResponse<sdk.RolePropagationStatusResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRolePropagationStatus(requestParameters) as Promise<AxiosResponse<sdk.RolePropagationStatusResponseV2025, any>>;
+}
+async startRolePropagation(requestParameters: sdk.RolePropagationV2025ApiStartRolePropagationRequest = {}): Promise<AxiosResponse<sdk.RolePropagationResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.startRolePropagation(requestParameters) as Promise<AxiosResponse<sdk.RolePropagationResponseV2025, any>>;
 }
 
 async createRole(requestParameters: sdk.RolesV2025ApiCreateRoleRequest): Promise<AxiosResponse<sdk.RoleV2025, any>> {
@@ -2537,6 +2777,47 @@ async updateStatusCheckDetails(requestParameters: sdk.ServiceDeskIntegrationV202
     return this.electronAPI.updateStatusCheckDetails(requestParameters) as Promise<AxiosResponse<sdk.QueuedCheckConfigDetailsV2025, any>>;
 }
 
+async createStream(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiCreateStreamRequest): Promise<AxiosResponse<sdk.StreamConfigResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createStream(requestParameters) as Promise<AxiosResponse<sdk.StreamConfigResponseV2025, any>>;
+}
+async deleteStream(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiDeleteStreamRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteStream(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async getJWKSData(): Promise<AxiosResponse<sdk.JWKSV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getJWKSData() as Promise<AxiosResponse<sdk.JWKSV2025, any>>;
+}
+async getSSFConfiguration(): Promise<AxiosResponse<sdk.TransmitterMetadataV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSSFConfiguration() as Promise<AxiosResponse<sdk.TransmitterMetadataV2025, any>>;
+}
+async getStream(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamRequest = {}): Promise<AxiosResponse<sdk.GetStream200ResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getStream(requestParameters) as Promise<AxiosResponse<sdk.GetStream200ResponseV2025, any>>;
+}
+async getStreamStatus(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamStatusRequest): Promise<AxiosResponse<sdk.StreamStatusResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getStreamStatus(requestParameters) as Promise<AxiosResponse<sdk.StreamStatusResponseV2025, any>>;
+}
+async sendStreamVerification(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiSendStreamVerificationRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.sendStreamVerification(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async setStreamConfiguration(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiSetStreamConfigurationRequest): Promise<AxiosResponse<sdk.UpdateStreamConfigResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.setStreamConfiguration(requestParameters) as Promise<AxiosResponse<sdk.UpdateStreamConfigResponseV2025, any>>;
+}
+async updateStreamConfiguration(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamConfigurationRequest): Promise<AxiosResponse<sdk.UpdateStreamConfigResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateStreamConfiguration(requestParameters) as Promise<AxiosResponse<sdk.UpdateStreamConfigResponseV2025, any>>;
+}
+async updateStreamStatus(requestParameters: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamStatusRequest): Promise<AxiosResponse<sdk.StreamStatusResponseV2025, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateStreamStatus(requestParameters) as Promise<AxiosResponse<sdk.StreamStatusResponseV2025, any>>;
+}
+
 async getStatusBySourceId(requestParameters: sdk.SourceUsagesV2025ApiGetStatusBySourceIdRequest): Promise<AxiosResponse<sdk.SourceUsageStatusV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.getStatusBySourceId(requestParameters) as Promise<AxiosResponse<sdk.SourceUsageStatusV2025, any>>;
@@ -2669,6 +2950,10 @@ async importEntitlementsSchema(requestParameters: sdk.SourcesV2025ApiImportEntit
 async importUncorrelatedAccounts(requestParameters: sdk.SourcesV2025ApiImportUncorrelatedAccountsRequest): Promise<AxiosResponse<sdk.LoadUncorrelatedAccountsTaskV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.importUncorrelatedAccounts(requestParameters) as Promise<AxiosResponse<sdk.LoadUncorrelatedAccountsTaskV2025, any>>;
+}
+async listPasswordPolicyHoldersOnSource(requestParameters: sdk.SourcesV2025ApiListPasswordPolicyHoldersOnSourceRequest): Promise<AxiosResponse<Array<sdk.PasswordPolicyHoldersDtoInnerV2025>, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.listPasswordPolicyHoldersOnSource(requestParameters) as Promise<AxiosResponse<Array<sdk.PasswordPolicyHoldersDtoInnerV2025>, any>>;
 }
 async listProvisioningPolicies(requestParameters: sdk.SourcesV2025ApiListProvisioningPoliciesRequest): Promise<AxiosResponse<Array<sdk.ProvisioningPolicyDtoV2025>, any>> {
     await this.checkSessionBeforeCall();
@@ -2936,19 +3221,6 @@ async setTenantUiMetadata(requestParameters: sdk.UIMetadataV2025ApiSetTenantUiMe
     return this.electronAPI.setTenantUiMetadata(requestParameters) as Promise<AxiosResponse<sdk.TenantUiMetadataItemResponseV2025, any>>;
 }
 
-async createVendorConnectorMapping(requestParameters: sdk.VendorConnectorMappingsV2025ApiCreateVendorConnectorMappingRequest): Promise<AxiosResponse<sdk.VendorConnectorMappingV2025, any>> {
-    await this.checkSessionBeforeCall();
-    return this.electronAPI.createVendorConnectorMapping(requestParameters) as Promise<AxiosResponse<sdk.VendorConnectorMappingV2025, any>>;
-}
-async deleteVendorConnectorMapping(requestParameters: sdk.VendorConnectorMappingsV2025ApiDeleteVendorConnectorMappingRequest): Promise<AxiosResponse<sdk.DeleteVendorConnectorMapping200ResponseV2025, any>> {
-    await this.checkSessionBeforeCall();
-    return this.electronAPI.deleteVendorConnectorMapping(requestParameters) as Promise<AxiosResponse<sdk.DeleteVendorConnectorMapping200ResponseV2025, any>>;
-}
-async getVendorConnectorMappings(): Promise<AxiosResponse<Array<sdk.VendorConnectorMappingV2025>, any>> {
-    await this.checkSessionBeforeCall();
-    return this.electronAPI.getVendorConnectorMappings() as Promise<AxiosResponse<Array<sdk.VendorConnectorMappingV2025>, any>>;
-}
-
 async approveApprovalItem(requestParameters: sdk.WorkItemsV2025ApiApproveApprovalItemRequest): Promise<AxiosResponse<sdk.WorkItemsV2025, any>> {
     await this.checkSessionBeforeCall();
     return this.electronAPI.approveApprovalItem(requestParameters) as Promise<AxiosResponse<sdk.WorkItemsV2025, any>>;
@@ -3116,6 +3388,828 @@ async testWorkflow(requestParameters: sdk.WorkflowsV2025ApiTestWorkflowRequest):
     return this.electronAPI.testWorkflow(requestParameters) as Promise<AxiosResponse<sdk.TestWorkflow200ResponseV2025, any>>;
 }
 
+
+
+async getAdvancedSearchNerm(): Promise<AxiosResponse<sdk.GetAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAdvancedSearchNerm() as Promise<AxiosResponse<sdk.GetAdvancedSearch200ResponseNERM, any>>;
+}
+async patchAdvancedSearchNerm(requestParameters: sdk.AdvancedSearchNERMApiPatchAdvancedSearchRequest): Promise<AxiosResponse<sdk.SubmitAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchAdvancedSearchNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAdvancedSearch200ResponseNERM, any>>;
+}
+async searchAdvancedSearchNerm(requestParameters: sdk.AdvancedSearchNERMApiSearchAdvancedSearchRequest): Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.searchAdvancedSearchNerm(requestParameters) as Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>>;
+}
+async searchAdvancedSearchbyIDNerm(requestParameters: sdk.AdvancedSearchNERMApiSearchAdvancedSearchbyIDRequest): Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.searchAdvancedSearchbyIDNerm(requestParameters) as Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>>;
+}
+async submitAdvancedSearchNerm(requestParameters: sdk.AdvancedSearchNERMApiSubmitAdvancedSearchRequest): Promise<AxiosResponse<sdk.SubmitAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitAdvancedSearchNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAdvancedSearch200ResponseNERM, any>>;
+}
+
+async deleteAttributeOptionByIdNerm(requestParameters: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByIdRequest): Promise<AxiosResponse<sdk.DeleteAttributeOptionById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteAttributeOptionByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteAttributeOptionById200ResponseNERM, any>>;
+}
+async deleteAttributeOptionByUidNerm(requestParameters: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByUidRequest = {}): Promise<AxiosResponse<sdk.DeleteAttributeOptionById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteAttributeOptionByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteAttributeOptionById200ResponseNERM, any>>;
+}
+async getAttributeOptionByIdNerm(requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionByIdRequest): Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributeOptionByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>>;
+}
+async getAttributeOptionByUidNerm(requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionByUidRequest = {}): Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributeOptionByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>>;
+}
+async getAttributeOptionsNerm(requestParameters: sdk.AttributeOptionsNERMApiGetAttributeOptionsRequest = {}): Promise<AxiosResponse<sdk.GetAttributeOptions200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributeOptionsNerm(requestParameters) as Promise<AxiosResponse<sdk.GetAttributeOptions200ResponseNERM, any>>;
+}
+async patchAttributeOptionByIdNerm(requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionByIdRequest): Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchAttributeOptionByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>>;
+}
+async patchAttributeOptionByUidNerm(requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionByUidRequest): Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchAttributeOptionByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>>;
+}
+async patchAttributeOptionsNerm(requestParameters: sdk.AttributeOptionsNERMApiPatchAttributeOptionsRequest): Promise<AxiosResponse<sdk.SubmitAttributeOptions200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchAttributeOptionsNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOptions200ResponseNERM, any>>;
+}
+async submitAttributeOptionNerm(requestParameters: sdk.AttributeOptionsNERMApiSubmitAttributeOptionRequest): Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitAttributeOptionNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOption200ResponseNERM, any>>;
+}
+async submitAttributeOptionsNerm(requestParameters: sdk.AttributeOptionsNERMApiSubmitAttributeOptionsRequest): Promise<AxiosResponse<sdk.SubmitAttributeOptions200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitAttributeOptionsNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitAttributeOptions200ResponseNERM, any>>;
+}
+
+async createAttributeNerm(requestParameters: sdk.AttributesNERMApiCreateAttributeRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAttributeNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async deleteAttributeByIdNerm(requestParameters: sdk.AttributesNERMApiDeleteAttributeByIdRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async deleteAttributeByUidNerm(requestParameters: sdk.AttributesNERMApiDeleteAttributeByUidRequest = {}): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async getAttributeByIdNerm(requestParameters: sdk.AttributesNERMApiGetAttributeByIdRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async getAttributeByUidNerm(requestParameters: sdk.AttributesNERMApiGetAttributeByUidRequest = {}): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async getAttributesNerm(requestParameters: sdk.AttributesNERMApiGetAttributesRequest = {}): Promise<AxiosResponse<sdk.GetAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getAttributesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetAttributes200ResponseNERM, any>>;
+}
+async updateAttributeByIdNerm(requestParameters: sdk.AttributesNERMApiUpdateAttributeByIdRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async updateAttributeByUidNerm(requestParameters: sdk.AttributesNERMApiUpdateAttributeByUidRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+
+async searchNerm(requestParameters: sdk.AuditsNERMApiSearchRequest): Promise<AxiosResponse<sdk.Search200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.searchNerm(requestParameters) as Promise<AxiosResponse<sdk.Search200ResponseNERM, any>>;
+}
+
+async deleteMasterRecordNerm(requestParameters: sdk.ConsolidationNERMApiDeleteMasterRecordRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteMasterRecordNerm(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async patchDataRecordNerm(requestParameters: sdk.ConsolidationNERMApiPatchDataRecordRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchDataRecordNerm(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+
+async delegationsGetNerm(requestParameters: sdk.DelegationsNERMApiDelegationsGetRequest = {}): Promise<AxiosResponse<sdk.DelegationsGet200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.delegationsGetNerm(requestParameters) as Promise<AxiosResponse<sdk.DelegationsGet200ResponseNERM, any>>;
+}
+async delegationsIdDeleteNerm(requestParameters: sdk.DelegationsNERMApiDelegationsIdDeleteRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.delegationsIdDeleteNerm(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async delegationsIdGetNerm(requestParameters: sdk.DelegationsNERMApiDelegationsIdGetRequest): Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.delegationsIdGetNerm(requestParameters) as Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>>;
+}
+async delegationsIdPatchNerm(requestParameters: sdk.DelegationsNERMApiDelegationsIdPatchRequest): Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.delegationsIdPatchNerm(requestParameters) as Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>>;
+}
+async delegationsPostNerm(requestParameters: sdk.DelegationsNERMApiDelegationsPostRequest): Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.delegationsPostNerm(requestParameters) as Promise<AxiosResponse<sdk.DelegationsPost201ResponseNERM, any>>;
+}
+
+async createFormAttributeNerm(requestParameters: sdk.FormAttributesNERMApiCreateFormAttributeRequest): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createFormAttributeNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async deleteFormAttributeByIdNerm(requestParameters: sdk.FormAttributesNERMApiDeleteFormAttributeByIdRequest): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteFormAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async deleteFormAttributeByUidNerm(requestParameters: sdk.FormAttributesNERMApiDeleteFormAttributeByUidRequest = {}): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteFormAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async getFormAttributeByIdNerm(requestParameters: sdk.FormAttributesNERMApiGetFormAttributeByIdRequest): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async getFormAttributeByUidNerm(requestParameters: sdk.FormAttributesNERMApiGetFormAttributeByUidRequest = {}): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async getFormAttributesNerm(): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormAttributesNerm() as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async updateFormAttributeByIdNerm(requestParameters: sdk.FormAttributesNERMApiUpdateFormAttributeByIdRequest): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateFormAttributeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+async updateFormAttributeByUidNerm(requestParameters: sdk.FormAttributesNERMApiUpdateFormAttributeByUidRequest): Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateFormAttributeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetFormAttributes200ResponseNERM, any>>;
+}
+
+async createFormNerm(requestParameters: sdk.FormsNERMApiCreateFormRequest): Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createFormNerm(requestParameters) as Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>>;
+}
+async deleteFormByIdNerm(requestParameters: sdk.FormsNERMApiDeleteFormByIdRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteFormByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async deleteFormByUidNerm(requestParameters: sdk.FormsNERMApiDeleteFormByUidRequest = {}): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteFormByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async getFormByIdNerm(requestParameters: sdk.FormsNERMApiGetFormByIdRequest): Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>>;
+}
+async getFormByUidNerm(requestParameters: sdk.FormsNERMApiGetFormByUidRequest = {}): Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>>;
+}
+async getFormsNerm(): Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getFormsNerm() as Promise<AxiosResponse<sdk.GetForms200ResponseNERM, any>>;
+}
+async updateFormByIdNerm(requestParameters: sdk.FormsNERMApiUpdateFormByIdRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateFormByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+async updateFormByUidNerm(requestParameters: sdk.FormsNERMApiUpdateFormByUidRequest): Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateFormByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateAttribute201ResponseNERM, any>>;
+}
+
+async getIdentityProofingResultsNerm(requestParameters: sdk.IdentityProofingResultsNERMApiGetIdentityProofingResultsRequest = {}): Promise<AxiosResponse<sdk.GetIdentityProofingResults200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getIdentityProofingResultsNerm(requestParameters) as Promise<AxiosResponse<sdk.GetIdentityProofingResults200ResponseNERM, any>>;
+}
+
+async getSchemaMappedProfilesCollectionNerm(requestParameters: sdk.IscAccountsNERMApiGetSchemaMappedProfilesCollectionRequest = {}): Promise<AxiosResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSchemaMappedProfilesCollectionNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM, any>>;
+}
+async getSingleSchemaMappedProfileNerm(requestParameters: sdk.IscAccountsNERMApiGetSingleSchemaMappedProfileRequest): Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSingleSchemaMappedProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>>;
+}
+async updateProfileNerm(requestParameters: sdk.IscAccountsNERMApiUpdateProfileRequest): Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updateProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>>;
+}
+
+async getJobStatusNerm(requestParameters: sdk.JobStatusNERMApiGetJobStatusRequest): Promise<AxiosResponse<sdk.GetJobStatus200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getJobStatusNerm(requestParameters) as Promise<AxiosResponse<sdk.GetJobStatus200ResponseNERM, any>>;
+}
+
+async patchLanguageNerm(requestParameters: sdk.LanguagesNERMApiPatchLanguageRequest): Promise<AxiosResponse<sdk.PatchLanguageRequestNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchLanguageNerm(requestParameters) as Promise<AxiosResponse<sdk.PatchLanguageRequestNERM, any>>;
+}
+
+async createPageContentTranslationNerm(requestParameters: sdk.PageContentTranslationsNERMApiCreatePageContentTranslationRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPageContentTranslationNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async deletePageContentTranslationByIdNerm(requestParameters: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByIdRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageContentTranslationByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async deletePageContentTranslationByUidNerm(requestParameters: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByUidRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageContentTranslationByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async getPageContentTranslationNerm(): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentTranslationNerm() as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async getPageContentTranslationByIdNerm(requestParameters: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByIdRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentTranslationByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async getPageContentTranslationByUidNerm(requestParameters: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByUidRequest = {}): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentTranslationByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async updatePageContentTranslationByIdNerm(requestParameters: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByIdRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageContentTranslationByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+async updatePageContentTranslationByUidNerm(requestParameters: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByUidRequest): Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageContentTranslationByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContentTranslation200ResponseNERM, any>>;
+}
+
+async createPageContentNerm(requestParameters: sdk.PageContentsNERMApiCreatePageContentRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPageContentNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async deletePageContentByIdNerm(requestParameters: sdk.PageContentsNERMApiDeletePageContentByIdRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageContentByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async deletePageContentByUidNerm(requestParameters: sdk.PageContentsNERMApiDeletePageContentByUidRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageContentByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async getPageContentByIdNerm(requestParameters: sdk.PageContentsNERMApiGetPageContentByIdRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async getPageContentByUidNerm(requestParameters: sdk.PageContentsNERMApiGetPageContentByUidRequest = {}): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async getPageContentsNerm(): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageContentsNerm() as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async updatePageContentByIdNerm(requestParameters: sdk.PageContentsNERMApiUpdatePageContentByIdRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageContentByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+async updatePageContentByUidNerm(requestParameters: sdk.PageContentsNERMApiUpdatePageContentByUidRequest): Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageContentByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageContents200ResponseNERM, any>>;
+}
+
+async createPageElementNerm(requestParameters: sdk.PageElementsNERMApiCreatePageElementRequest): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPageElementNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async deletePageElementByIdNerm(requestParameters: sdk.PageElementsNERMApiDeletePageElementByIdRequest): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageElementByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async deletePageElementByUidNerm(requestParameters: sdk.PageElementsNERMApiDeletePageElementByUidRequest = {}): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deletePageElementByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async getPageElementByIdNerm(requestParameters: sdk.PageElementsNERMApiGetPageElementByIdRequest): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageElementByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async getPageElementByUidNerm(requestParameters: sdk.PageElementsNERMApiGetPageElementByUidRequest = {}): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageElementByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async getPageElementsNerm(): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getPageElementsNerm() as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async updatePageElementByIdNerm(requestParameters: sdk.PageElementsNERMApiUpdatePageElementByIdRequest): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageElementByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+async updatePageElementByUidNerm(requestParameters: sdk.PageElementsNERMApiUpdatePageElementByUidRequest): Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.updatePageElementByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.GetPageElements200ResponseNERM, any>>;
+}
+
+async createProfilePageNerm(requestParameters: sdk.PagesNERMApiCreateProfilePageRequest): Promise<AxiosResponse<sdk.CreateProfilePage200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createProfilePageNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateProfilePage200ResponseNERM, any>>;
+}
+async createWorkflowPageNerm(requestParameters: sdk.PagesNERMApiCreateWorkflowPageRequest): Promise<AxiosResponse<sdk.CreateProfilePage200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createWorkflowPageNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateProfilePage200ResponseNERM, any>>;
+}
+
+async createPermissionNerm(requestParameters: sdk.PermissionsNERMApiCreatePermissionRequest): Promise<AxiosResponse<sdk.CreatePermission200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPermissionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreatePermission200ResponseNERM, any>>;
+}
+
+async createProfileTypeRoleNerm(requestParameters: sdk.ProfileTypeRolesNERMApiCreateProfileTypeRoleRequest): Promise<AxiosResponse<sdk.CreateProfileTypeRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createProfileTypeRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateProfileTypeRole200ResponseNERM, any>>;
+}
+
+async deleteProfileTypeByIdNerm(requestParameters: sdk.ProfileTypesNERMApiDeleteProfileTypeByIdRequest): Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteProfileTypeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>>;
+}
+async deleteProfileTypeByUidNerm(requestParameters: sdk.ProfileTypesNERMApiDeleteProfileTypeByUidRequest = {}): Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteProfileTypeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>>;
+}
+async getProfileTypeByIdNerm(requestParameters: sdk.ProfileTypesNERMApiGetProfileTypeByIdRequest): Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileTypeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>>;
+}
+async getProfileTypeByUidNerm(requestParameters: sdk.ProfileTypesNERMApiGetProfileTypeByUidRequest = {}): Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileTypeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>>;
+}
+async getProfileTypesNerm(requestParameters: sdk.ProfileTypesNERMApiGetProfileTypesRequest = {}): Promise<AxiosResponse<sdk.GetProfileTypes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileTypesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetProfileTypes200ResponseNERM, any>>;
+}
+async patchProfileTypeByIdNerm(requestParameters: sdk.ProfileTypesNERMApiPatchProfileTypeByIdRequest): Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchProfileTypeByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>>;
+}
+async patchProfileTypeByUidNerm(requestParameters: sdk.ProfileTypesNERMApiPatchProfileTypeByUidRequest): Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchProfileTypeByUidNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>>;
+}
+async submitProfileTypeNerm(requestParameters: sdk.ProfileTypesNERMApiSubmitProfileTypeRequest): Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitProfileTypeNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitProfileType200ResponseNERM, any>>;
+}
+
+async createProfilesNerm(requestParameters: sdk.ProfilesNERMApiCreateProfilesRequest): Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>>;
+}
+async deleteProfileByIdNerm(requestParameters: sdk.ProfilesNERMApiDeleteProfileByIdRequest): Promise<AxiosResponse<void, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteProfileByIdNerm(requestParameters) as Promise<AxiosResponse<void, any>>;
+}
+async deleteProfilesNerm(requestParameters: sdk.ProfilesNERMApiDeleteProfilesRequest): Promise<AxiosResponse<sdk.DeleteProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteProfiles200ResponseNERM, any>>;
+}
+async getProfileAvatarNerm(requestParameters: sdk.ProfilesNERMApiGetProfileAvatarRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileAvatarNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async getProfileByIdNerm(requestParameters: sdk.ProfilesNERMApiGetProfileByIdRequest): Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>>;
+}
+async getProfileUploadNerm(requestParameters: sdk.ProfilesNERMApiGetProfileUploadRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileUploadNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async getProfilesNerm(requestParameters: sdk.ProfilesNERMApiGetProfilesRequest = {}): Promise<AxiosResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSchemaMappedProfilesCollection200ResponseNERM, any>>;
+}
+async patchProfileByIdNerm(requestParameters: sdk.ProfilesNERMApiPatchProfileByIdRequest): Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchProfileByIdNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>>;
+}
+async patchProfilesNerm(requestParameters: sdk.ProfilesNERMApiPatchProfilesRequest): Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.SearchAdvancedSearch200ResponseNERM, any>>;
+}
+async submitProfileNerm(requestParameters: sdk.ProfilesNERMApiSubmitProfileRequest): Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSingleSchemaMappedProfile200ResponseNERM, any>>;
+}
+async submitProfileAvatarNerm(requestParameters: sdk.ProfilesNERMApiSubmitProfileAvatarRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitProfileAvatarNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async submitProfileUploadNerm(requestParameters: sdk.ProfilesNERMApiSubmitProfileUploadRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitProfileUploadNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+
+async getRiskLevelNerm(requestParameters: sdk.RiskLevelsNERMApiGetRiskLevelRequest): Promise<AxiosResponse<sdk.GetRiskLevel200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRiskLevelNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRiskLevel200ResponseNERM, any>>;
+}
+async getRiskLevelsNerm(requestParameters: sdk.RiskLevelsNERMApiGetRiskLevelsRequest = {}): Promise<AxiosResponse<sdk.GetRiskLevels200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRiskLevelsNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRiskLevels200ResponseNERM, any>>;
+}
+
+async getRiskScoreNerm(requestParameters: sdk.RiskScoresNERMApiGetRiskScoreRequest): Promise<AxiosResponse<sdk.GetRiskScore200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRiskScoreNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRiskScore200ResponseNERM, any>>;
+}
+async getRiskScoresNerm(requestParameters: sdk.RiskScoresNERMApiGetRiskScoresRequest = {}): Promise<AxiosResponse<sdk.GetRiskScores200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRiskScoresNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRiskScores200ResponseNERM, any>>;
+}
+
+async deleteRoleProfileNerm(requestParameters: sdk.RoleProfilesNERMApiDeleteRoleProfileRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteRoleProfileNerm(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async getRoleProfileNerm(requestParameters: sdk.RoleProfilesNERMApiGetRoleProfileRequest): Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRoleProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>>;
+}
+async getRoleProfilesNerm(requestParameters: sdk.RoleProfilesNERMApiGetRoleProfilesRequest = {}): Promise<AxiosResponse<sdk.GetRoleProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRoleProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRoleProfiles200ResponseNERM, any>>;
+}
+async patchRoleProfileNerm(requestParameters: sdk.RoleProfilesNERMApiPatchRoleProfileRequest): Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchRoleProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>>;
+}
+async patchRoleProfilesNerm(requestParameters: sdk.RoleProfilesNERMApiPatchRoleProfilesRequest): Promise<AxiosResponse<sdk.SubmitRoleProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchRoleProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoleProfiles200ResponseNERM, any>>;
+}
+async submitRoleProfileNerm(requestParameters: sdk.RoleProfilesNERMApiSubmitRoleProfileRequest): Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitRoleProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoleProfile200ResponseNERM, any>>;
+}
+async submitRoleProfilesNerm(requestParameters: sdk.RoleProfilesNERMApiSubmitRoleProfilesRequest): Promise<AxiosResponse<sdk.SubmitRoleProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitRoleProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoleProfiles200ResponseNERM, any>>;
+}
+
+async getRoleNerm(requestParameters: sdk.RolesNERMApiGetRoleRequest): Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>>;
+}
+async getRolesNerm(requestParameters: sdk.RolesNERMApiGetRolesRequest = {}): Promise<AxiosResponse<sdk.GetRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetRoles200ResponseNERM, any>>;
+}
+async patchRoleNerm(requestParameters: sdk.RolesNERMApiPatchRoleRequest): Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>>;
+}
+async patchRolesNerm(requestParameters: sdk.RolesNERMApiPatchRolesRequest): Promise<AxiosResponse<sdk.SubmitRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoles200ResponseNERM, any>>;
+}
+async submitRoleNerm(requestParameters: sdk.RolesNERMApiSubmitRoleRequest): Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRole200ResponseNERM, any>>;
+}
+async submitRolesNerm(requestParameters: sdk.RolesNERMApiSubmitRolesRequest): Promise<AxiosResponse<sdk.SubmitRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitRoles200ResponseNERM, any>>;
+}
+
+async createSyncedAttributeNerm(requestParameters: sdk.SyncedAttributesNERMApiCreateSyncedAttributeRequest): Promise<AxiosResponse<sdk.CreateSyncedAttribute201ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSyncedAttributeNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateSyncedAttribute201ResponseNERM, any>>;
+}
+async deleteSyncedAttributeNerm(requestParameters: sdk.SyncedAttributesNERMApiDeleteSyncedAttributeRequest = {}): Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteSyncedAttributeNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>>;
+}
+async getProfileTypeAttributesNerm(requestParameters: sdk.SyncedAttributesNERMApiGetProfileTypeAttributesRequest = {}): Promise<AxiosResponse<sdk.GetProfileTypeAttributes200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getProfileTypeAttributesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetProfileTypeAttributes200ResponseNERM, any>>;
+}
+
+async createSystemRolePermissionNerm(requestParameters: sdk.SystemRolePermissionsNERMApiCreateSystemRolePermissionRequest): Promise<AxiosResponse<sdk.CreateSystemRolePermission200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSystemRolePermissionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateSystemRolePermission200ResponseNERM, any>>;
+}
+
+async getSystemRolesNerm(requestParameters: sdk.SystemRolesNERMApiGetSystemRolesRequest = {}): Promise<AxiosResponse<sdk.GetSystemRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getSystemRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetSystemRoles200ResponseNERM, any>>;
+}
+
+async getUserManagerNerm(requestParameters: sdk.UserManagersNERMApiGetUserManagerRequest): Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserManagerNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>>;
+}
+async getUserManagersNerm(requestParameters: sdk.UserManagersNERMApiGetUserManagersRequest = {}): Promise<AxiosResponse<sdk.GetUserManagers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserManagersNerm(requestParameters) as Promise<AxiosResponse<sdk.GetUserManagers200ResponseNERM, any>>;
+}
+async patchUserManagerNerm(requestParameters: sdk.UserManagersNERMApiPatchUserManagerRequest): Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserManagerNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>>;
+}
+async patchUserManagersNerm(requestParameters: sdk.UserManagersNERMApiPatchUserManagersRequest): Promise<AxiosResponse<sdk.SubmitUserManagers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserManagersNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserManagers200ResponseNERM, any>>;
+}
+async submitUserManagerNerm(requestParameters: sdk.UserManagersNERMApiSubmitUserManagerRequest): Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserManagerNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserManager200ResponseNERM, any>>;
+}
+async submitUserManagersNerm(requestParameters: sdk.UserManagersNERMApiSubmitUserManagersRequest): Promise<AxiosResponse<sdk.SubmitUserManagers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserManagersNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserManagers200ResponseNERM, any>>;
+}
+
+async createUserProfilesNerm(requestParameters: sdk.UserProfilesNERMApiCreateUserProfilesRequest): Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createUserProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>>;
+}
+async deleteUserProfileNerm(requestParameters: sdk.UserProfilesNERMApiDeleteUserProfileRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteUserProfileNerm(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async deleteUserProfilesNerm(requestParameters: sdk.UserProfilesNERMApiDeleteUserProfilesRequest): Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteUserProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>>;
+}
+async getUserProfileNerm(requestParameters: sdk.UserProfilesNERMApiGetUserProfileRequest): Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>>;
+}
+async getUserProfilesNerm(requestParameters: sdk.UserProfilesNERMApiGetUserProfilesRequest = {}): Promise<AxiosResponse<sdk.GetUserProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetUserProfiles200ResponseNERM, any>>;
+}
+async patchUserProfileNerm(requestParameters: sdk.UserProfilesNERMApiPatchUserProfileRequest): Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>>;
+}
+async patchUserProfilesNerm(requestParameters: sdk.UserProfilesNERMApiPatchUserProfilesRequest): Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserProfilesNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateUserProfiles200ResponseNERM, any>>;
+}
+async submitUserProfileNerm(requestParameters: sdk.UserProfilesNERMApiSubmitUserProfileRequest): Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserProfileNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserProfile200ResponseNERM, any>>;
+}
+
+async deleteUserRoleNerm(requestParameters: sdk.UserRolesNERMApiDeleteUserRoleRequest): Promise<AxiosResponse<object, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteUserRoleNerm(requestParameters) as Promise<AxiosResponse<object, any>>;
+}
+async getUserRoleNerm(requestParameters: sdk.UserRolesNERMApiGetUserRoleRequest): Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>>;
+}
+async getUserRolesNerm(requestParameters: sdk.UserRolesNERMApiGetUserRolesRequest = {}): Promise<AxiosResponse<sdk.GetUserRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.GetUserRoles200ResponseNERM, any>>;
+}
+async patchUserRoleNerm(requestParameters: sdk.UserRolesNERMApiPatchUserRoleRequest): Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>>;
+}
+async patchUserRolesNerm(requestParameters: sdk.UserRolesNERMApiPatchUserRolesRequest): Promise<AxiosResponse<sdk.SubmitUserRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserRoles200ResponseNERM, any>>;
+}
+async submitUserRoleNerm(requestParameters: sdk.UserRolesNERMApiSubmitUserRoleRequest): Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserRoleNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserRole200ResponseNERM, any>>;
+}
+async submitUserRolesNerm(requestParameters: sdk.UserRolesNERMApiSubmitUserRolesRequest): Promise<AxiosResponse<sdk.SubmitUserRoles200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserRolesNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUserRoles200ResponseNERM, any>>;
+}
+
+async deleteUserNerm(requestParameters: sdk.UsersNERMApiDeleteUserRequest): Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.deleteUserNerm(requestParameters) as Promise<AxiosResponse<sdk.DeleteProfileTypeById200ResponseNERM, any>>;
+}
+async getUserNerm(requestParameters: sdk.UsersNERMApiGetUserRequest): Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>>;
+}
+async getUserAvatarNerm(requestParameters: sdk.UsersNERMApiGetUserAvatarRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUserAvatarNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async getUsersNerm(requestParameters: sdk.UsersNERMApiGetUsersRequest = {}): Promise<AxiosResponse<sdk.GetUsers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getUsersNerm(requestParameters) as Promise<AxiosResponse<sdk.GetUsers200ResponseNERM, any>>;
+}
+async patchUserNerm(requestParameters: sdk.UsersNERMApiPatchUserRequest): Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUserNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>>;
+}
+async patchUsersNerm(requestParameters: sdk.UsersNERMApiPatchUsersRequest): Promise<AxiosResponse<sdk.SubmitUsers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchUsersNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUsers200ResponseNERM, any>>;
+}
+async submitUserNerm(requestParameters: sdk.UsersNERMApiSubmitUserRequest): Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUser200ResponseNERM, any>>;
+}
+async submitUserAvatarNerm(requestParameters: sdk.UsersNERMApiSubmitUserAvatarRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUserAvatarNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async submitUsersNerm(requestParameters: sdk.UsersNERMApiSubmitUsersRequest): Promise<AxiosResponse<sdk.SubmitUsers200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitUsersNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitUsers200ResponseNERM, any>>;
+}
+
+async createWorkflowActionPerformerNerm(requestParameters: sdk.WorkflowActionPerformerNERMApiCreateWorkflowActionPerformerRequest): Promise<AxiosResponse<sdk.CreateWorkflowActionPerformer200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createWorkflowActionPerformerNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateWorkflowActionPerformer200ResponseNERM, any>>;
+}
+
+async createApprovalActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateApprovalActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createApprovalActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createAskSecurityQuestionActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateAskSecurityQuestionActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAskSecurityQuestionActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createAutoAssignActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateAutoAssignActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAutoAssignActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createBatchUpdateActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateBatchUpdateActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createBatchUpdateActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createCloseSessionActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateCloseSessionActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createCloseSessionActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createContributorsActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateContributorsActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createContributorsActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createCreateProfileActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateCreateProfileActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createCreateProfileActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createDuplicatePreventionActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateDuplicatePreventionActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createDuplicatePreventionActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createEmailVerificationActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateEmailVerificationActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createEmailVerificationActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createFulfillmentActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateFulfillmentActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createFulfillmentActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createIdentityProofingActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateIdentityProofingActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createIdentityProofingActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createInvitationActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateInvitationActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createInvitationActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createLdapActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateLdapActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createLdapActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createNotificationActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateNotificationActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createNotificationActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createPasswordResetActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreatePasswordResetActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPasswordResetActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createProfileCheckActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateProfileCheckActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createProfileCheckActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createProfileSelectActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateProfileSelectActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createProfileSelectActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createRequestActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateRequestActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createRequestActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createRestApiActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateRestApiActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createRestApiActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createReviewActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateReviewActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createReviewActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createRunWorkflowActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateRunWorkflowActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createRunWorkflowActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createSetAttributesActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateSetAttributesActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSetAttributesActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createSetSecurityQuestionActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateSetSecurityQuestionActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSetSecurityQuestionActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createSoapApiActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateSoapApiActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createSoapApiActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createStatusChangeActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateStatusChangeActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createStatusChangeActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createUnassignActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateUnassignActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createUnassignActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createUpdateProfileActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateUpdateProfileActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createUpdateProfileActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async createUsernamePasswordActionNerm(requestParameters: sdk.WorkflowActionsNERMApiCreateUsernamePasswordActionRequest): Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createUsernamePasswordActionNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateApprovalAction200ResponseNERM, any>>;
+}
+async getWorkflowActionsNerm(requestParameters: sdk.WorkflowActionsNERMApiGetWorkflowActionsRequest = {}): Promise<AxiosResponse<sdk.GetWorkflowActions200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getWorkflowActionsNerm(requestParameters) as Promise<AxiosResponse<sdk.GetWorkflowActions200ResponseNERM, any>>;
+}
+
+async getWorkflowSessionNerm(requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionRequest): Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getWorkflowSessionNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>>;
+}
+async getWorkflowSessionUploadNerm(requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionUploadRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getWorkflowSessionUploadNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+async getWorkflowSessionsNerm(requestParameters: sdk.WorkflowSessionsNERMApiGetWorkflowSessionsRequest = {}): Promise<AxiosResponse<sdk.GetWorkflowSessions200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.getWorkflowSessionsNerm(requestParameters) as Promise<AxiosResponse<sdk.GetWorkflowSessions200ResponseNERM, any>>;
+}
+async patchWorkflowSessionNerm(requestParameters: sdk.WorkflowSessionsNERMApiPatchWorkflowSessionRequest): Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.patchWorkflowSessionNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>>;
+}
+async submitWorkflowSessionNerm(requestParameters: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionRequest): Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitWorkflowSessionNerm(requestParameters) as Promise<AxiosResponse<sdk.SubmitWorkflowSession200ResponseNERM, any>>;
+}
+async submitWorkflowSessionUploadNerm(requestParameters: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionUploadRequest): Promise<AxiosResponse<sdk.UrlNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.submitWorkflowSessionUploadNerm(requestParameters) as Promise<AxiosResponse<sdk.UrlNERM, any>>;
+}
+
+async createAutomatedWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateAutomatedWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createAutomatedWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createBatchWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateBatchWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createBatchWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createCreateWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateCreateWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createCreateWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createLoginWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateLoginWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createLoginWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createPasswordUpdateWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreatePasswordUpdateWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createPasswordUpdateWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createRegistrationWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateRegistrationWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createRegistrationWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+async createUpdateWorkflowNerm(requestParameters: sdk.WorkflowsNERMApiCreateUpdateWorkflowRequest): Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>> {
+    await this.checkSessionBeforeCall();
+    return this.electronAPI.createUpdateWorkflowNerm(requestParameters) as Promise<AxiosResponse<sdk.CreateCreateWorkflow200ResponseNERM, any>>;
+}
+
+// --- GENERATED SDK METHODS END ---
 
 async genericGet(requestParameters: sdk.DefaultApiGenericGetRequest): Promise<AxiosResponse<any, any>> {
     await this.checkSessionBeforeCall();

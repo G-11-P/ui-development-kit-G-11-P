@@ -5,7 +5,14 @@ import { apiConfig } from '../authentication/auth';
 
 export function setupSailPointSDKHandlers() {
 
+// --- GENERATED SDK METHODS START ---
 
+ipcMain.handle('create-access-model-metadata-attribute', async (event, request: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeRequest) => {
+    return await sdkWrapper.createAccessModelMetadataAttribute(request, apiConfig);
+});
+ipcMain.handle('create-access-model-metadata-attribute-value', async (event, request: sdk.AccessModelMetadataV2025ApiCreateAccessModelMetadataAttributeValueRequest) => {
+    return await sdkWrapper.createAccessModelMetadataAttributeValue(request, apiConfig);
+});
 ipcMain.handle('get-access-model-metadata-attribute', async (event, request: sdk.AccessModelMetadataV2025ApiGetAccessModelMetadataAttributeRequest) => {
     return await sdkWrapper.getAccessModelMetadataAttribute(request, apiConfig);
 });
@@ -17,6 +24,12 @@ ipcMain.handle('list-access-model-metadata-attribute', async (event, request: sd
 });
 ipcMain.handle('list-access-model-metadata-attribute-value', async (event, request: sdk.AccessModelMetadataV2025ApiListAccessModelMetadataAttributeValueRequest) => {
     return await sdkWrapper.listAccessModelMetadataAttributeValue(request, apiConfig);
+});
+ipcMain.handle('update-access-model-metadata-attribute', async (event, request: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeRequest) => {
+    return await sdkWrapper.updateAccessModelMetadataAttribute(request, apiConfig);
+});
+ipcMain.handle('update-access-model-metadata-attribute-value', async (event, request: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataAttributeValueRequest) => {
+    return await sdkWrapper.updateAccessModelMetadataAttributeValue(request, apiConfig);
 });
 ipcMain.handle('update-access-model-metadata-by-filter', async (event, request: sdk.AccessModelMetadataV2025ApiUpdateAccessModelMetadataByFilterRequest) => {
     return await sdkWrapper.updateAccessModelMetadataByFilter(request, apiConfig);
@@ -177,6 +190,13 @@ ipcMain.handle('update-account', async (event, request: sdk.AccountsV2025ApiUpda
     return await sdkWrapper.updateAccount(request, apiConfig);
 });
 
+ipcMain.handle('get-total-count', async (event, request: sdk.ApiUsageV2025ApiGetTotalCountRequest = {}) => {
+    return await sdkWrapper.getTotalCount(request, apiConfig);
+});
+ipcMain.handle('list-api-summary', async (event, request: sdk.ApiUsageV2025ApiListApiSummaryRequest = {}) => {
+    return await sdkWrapper.listApiSummary(request, apiConfig);
+});
+
 ipcMain.handle('get-discovered-applications', async (event, request: sdk.ApplicationDiscoveryV2025ApiGetDiscoveredApplicationsRequest = {}) => {
     return await sdkWrapper.getDiscoveredApplications(request, apiConfig);
 });
@@ -186,9 +206,21 @@ ipcMain.handle('get-manual-discover-applications-csv-template', async (event, ) 
 ipcMain.handle('send-manual-discover-applications-csv-template', async (event, request: sdk.ApplicationDiscoveryV2025ApiSendManualDiscoverApplicationsCsvTemplateRequest) => {
     return await sdkWrapper.sendManualDiscoverApplicationsCsvTemplate(request, apiConfig);
 });
+ipcMain.handle('start-application-discovery', async (event, request: sdk.ApplicationDiscoveryV2025ApiStartApplicationDiscoveryRequest) => {
+    return await sdkWrapper.startApplicationDiscovery(request, apiConfig);
+});
 
 ipcMain.handle('approve-approval', async (event, request: sdk.ApprovalsV2025ApiApproveApprovalRequest) => {
     return await sdkWrapper.approveApproval(request, apiConfig);
+});
+ipcMain.handle('approve-approval-in-bulk', async (event, request: sdk.ApprovalsV2025ApiApproveApprovalInBulkRequest) => {
+    return await sdkWrapper.approveApprovalInBulk(request, apiConfig);
+});
+ipcMain.handle('cancel-approval', async (event, request: sdk.ApprovalsV2025ApiCancelApprovalRequest) => {
+    return await sdkWrapper.cancelApproval(request, apiConfig);
+});
+ipcMain.handle('delete-approval-config-request', async (event, request: sdk.ApprovalsV2025ApiDeleteApprovalConfigRequestRequest) => {
+    return await sdkWrapper.deleteApprovalConfigRequest(request, apiConfig);
 });
 ipcMain.handle('get-approval', async (event, request: sdk.ApprovalsV2025ApiGetApprovalRequest) => {
     return await sdkWrapper.getApproval(request, apiConfig);
@@ -196,8 +228,20 @@ ipcMain.handle('get-approval', async (event, request: sdk.ApprovalsV2025ApiGetAp
 ipcMain.handle('get-approvals', async (event, request: sdk.ApprovalsV2025ApiGetApprovalsRequest = {}) => {
     return await sdkWrapper.getApprovals(request, apiConfig);
 });
+ipcMain.handle('get-approvals-config', async (event, request: sdk.ApprovalsV2025ApiGetApprovalsConfigRequest) => {
+    return await sdkWrapper.getApprovalsConfig(request, apiConfig);
+});
+ipcMain.handle('move-approval', async (event, request: sdk.ApprovalsV2025ApiMoveApprovalRequest) => {
+    return await sdkWrapper.moveApproval(request, apiConfig);
+});
+ipcMain.handle('put-approvals-config', async (event, request: sdk.ApprovalsV2025ApiPutApprovalsConfigRequest) => {
+    return await sdkWrapper.putApprovalsConfig(request, apiConfig);
+});
 ipcMain.handle('reject-approval', async (event, request: sdk.ApprovalsV2025ApiRejectApprovalRequest) => {
     return await sdkWrapper.rejectApproval(request, apiConfig);
+});
+ipcMain.handle('reject-approval-in-bulk', async (event, request: sdk.ApprovalsV2025ApiRejectApprovalInBulkRequest) => {
+    return await sdkWrapper.rejectApprovalInBulk(request, apiConfig);
 });
 ipcMain.handle('update-approvals-attributes', async (event, request: sdk.ApprovalsV2025ApiUpdateApprovalsAttributesRequest) => {
     return await sdkWrapper.updateApprovalsAttributes(request, apiConfig);
@@ -609,8 +653,8 @@ ipcMain.handle('search-form-definitions-by-tenant', async (event, request: sdk.C
 ipcMain.handle('search-form-element-data-by-element-id', async (event, request: sdk.CustomFormsV2025ApiSearchFormElementDataByElementIDRequest) => {
     return await sdkWrapper.searchFormElementDataByElementID(request, apiConfig);
 });
-ipcMain.handle('search-form-instances-by-tenant', async (event, ) => {
-    return await sdkWrapper.searchFormInstancesByTenant(apiConfig);
+ipcMain.handle('search-form-instances-by-tenant', async (event, request: sdk.CustomFormsV2025ApiSearchFormInstancesByTenantRequest = {}) => {
+    return await sdkWrapper.searchFormInstancesByTenant(request, apiConfig);
 });
 ipcMain.handle('search-pre-defined-select-options', async (event, ) => {
     return await sdkWrapper.searchPreDefinedSelectOptions(apiConfig);
@@ -641,14 +685,84 @@ ipcMain.handle('get-user-level', async (event, request: sdk.CustomUserLevelsV202
 ipcMain.handle('list-all-authorization-right-sets', async (event, request: sdk.CustomUserLevelsV2025ApiListAllAuthorizationRightSetsRequest = {}) => {
     return await sdkWrapper.listAllAuthorizationRightSets(request, apiConfig);
 });
+ipcMain.handle('list-user-level-identities', async (event, request: sdk.CustomUserLevelsV2025ApiListUserLevelIdentitiesRequest) => {
+    return await sdkWrapper.listUserLevelIdentities(request, apiConfig);
+});
 ipcMain.handle('list-user-levels', async (event, request: sdk.CustomUserLevelsV2025ApiListUserLevelsRequest = {}) => {
     return await sdkWrapper.listUserLevels(request, apiConfig);
 });
 ipcMain.handle('publish-custom-user-level', async (event, request: sdk.CustomUserLevelsV2025ApiPublishCustomUserLevelRequest) => {
     return await sdkWrapper.publishCustomUserLevel(request, apiConfig);
 });
+ipcMain.handle('show-user-level-counts', async (event, request: sdk.CustomUserLevelsV2025ApiShowUserLevelCountsRequest) => {
+    return await sdkWrapper.showUserLevelCounts(request, apiConfig);
+});
 ipcMain.handle('update-user-level', async (event, request: sdk.CustomUserLevelsV2025ApiUpdateUserLevelRequest) => {
     return await sdkWrapper.updateUserLevel(request, apiConfig);
+});
+
+ipcMain.handle('cancel-task', async (event, request: sdk.DataAccessSecurityV2025ApiCancelTaskRequest) => {
+    return await sdkWrapper.cancelTask(request, apiConfig);
+});
+ipcMain.handle('create-application', async (event, request: sdk.DataAccessSecurityV2025ApiCreateApplicationRequest) => {
+    return await sdkWrapper.createApplication(request, apiConfig);
+});
+ipcMain.handle('create-schedule', async (event, request: sdk.DataAccessSecurityV2025ApiCreateScheduleRequest) => {
+    return await sdkWrapper.createSchedule(request, apiConfig);
+});
+ipcMain.handle('das-owners-assign-post', async (event, request: sdk.DataAccessSecurityV2025ApiDasOwnersAssignPostRequest) => {
+    return await sdkWrapper.dasOwnersAssignPost(request, apiConfig);
+});
+ipcMain.handle('das-owners-owner-identity-id-resources-get', async (event, request: sdk.DataAccessSecurityV2025ApiDasOwnersOwnerIdentityIdResourcesGetRequest) => {
+    return await sdkWrapper.dasOwnersOwnerIdentityIdResourcesGet(request, apiConfig);
+});
+ipcMain.handle('das-owners-reelect-post', async (event, request: sdk.DataAccessSecurityV2025ApiDasOwnersReelectPostRequest) => {
+    return await sdkWrapper.dasOwnersReelectPost(request, apiConfig);
+});
+ipcMain.handle('das-owners-resources-resource-id-get', async (event, request: sdk.DataAccessSecurityV2025ApiDasOwnersResourcesResourceIdGetRequest) => {
+    return await sdkWrapper.dasOwnersResourcesResourceIdGet(request, apiConfig);
+});
+ipcMain.handle('das-owners-source-identity-id-reassign-destination-identity-id-post', async (event, request: sdk.DataAccessSecurityV2025ApiDasOwnersSourceIdentityIdReassignDestinationIdentityIdPostRequest) => {
+    return await sdkWrapper.dasOwnersSourceIdentityIdReassignDestinationIdentityIdPost(request, apiConfig);
+});
+ipcMain.handle('delete-application', async (event, request: sdk.DataAccessSecurityV2025ApiDeleteApplicationRequest) => {
+    return await sdkWrapper.deleteApplication(request, apiConfig);
+});
+ipcMain.handle('delete-schedule', async (event, request: sdk.DataAccessSecurityV2025ApiDeleteScheduleRequest) => {
+    return await sdkWrapper.deleteSchedule(request, apiConfig);
+});
+ipcMain.handle('delete-task', async (event, request: sdk.DataAccessSecurityV2025ApiDeleteTaskRequest) => {
+    return await sdkWrapper.deleteTask(request, apiConfig);
+});
+ipcMain.handle('get-application', async (event, request: sdk.DataAccessSecurityV2025ApiGetApplicationRequest) => {
+    return await sdkWrapper.getApplication(request, apiConfig);
+});
+ipcMain.handle('get-applications', async (event, request: sdk.DataAccessSecurityV2025ApiGetApplicationsRequest = {}) => {
+    return await sdkWrapper.getApplications(request, apiConfig);
+});
+ipcMain.handle('get-owners', async (event, request: sdk.DataAccessSecurityV2025ApiGetOwnersRequest) => {
+    return await sdkWrapper.getOwners(request, apiConfig);
+});
+ipcMain.handle('get-schedule', async (event, request: sdk.DataAccessSecurityV2025ApiGetScheduleRequest) => {
+    return await sdkWrapper.getSchedule(request, apiConfig);
+});
+ipcMain.handle('get-schedules', async (event, request: sdk.DataAccessSecurityV2025ApiGetSchedulesRequest = {}) => {
+    return await sdkWrapper.getSchedules(request, apiConfig);
+});
+ipcMain.handle('get-task', async (event, request: sdk.DataAccessSecurityV2025ApiGetTaskRequest) => {
+    return await sdkWrapper.getTask(request, apiConfig);
+});
+ipcMain.handle('get-tasks', async (event, request: sdk.DataAccessSecurityV2025ApiGetTasksRequest = {}) => {
+    return await sdkWrapper.getTasks(request, apiConfig);
+});
+ipcMain.handle('put-application', async (event, request: sdk.DataAccessSecurityV2025ApiPutApplicationRequest) => {
+    return await sdkWrapper.putApplication(request, apiConfig);
+});
+ipcMain.handle('put-schedule', async (event, request: sdk.DataAccessSecurityV2025ApiPutScheduleRequest) => {
+    return await sdkWrapper.putSchedule(request, apiConfig);
+});
+ipcMain.handle('start-task-rerun', async (event, request: sdk.DataAccessSecurityV2025ApiStartTaskRerunRequest) => {
+    return await sdkWrapper.startTaskRerun(request, apiConfig);
 });
 
 ipcMain.handle('create-data-segment', async (event, request: sdk.DataSegmentationV2025ApiCreateDataSegmentRequest) => {
@@ -674,6 +788,10 @@ ipcMain.handle('patch-data-segment', async (event, request: sdk.DataSegmentation
 });
 ipcMain.handle('publish-data-segment', async (event, request: sdk.DataSegmentationV2025ApiPublishDataSegmentRequest) => {
     return await sdkWrapper.publishDataSegment(request, apiConfig);
+});
+
+ipcMain.handle('send-declassify-machine-account-from-source', async (event, request: sdk.DeclassifySourceV2025ApiSendDeclassifyMachineAccountFromSourceRequest) => {
+    return await sdkWrapper.sendDeclassifyMachineAccountFromSource(request, apiConfig);
 });
 
 ipcMain.handle('create-dimension', async (event, request: sdk.DimensionsV2025ApiCreateDimensionRequest) => {
@@ -946,8 +1064,8 @@ ipcMain.handle('get-saved-potential-roles', async (event, request: sdk.IAIRoleMi
 ipcMain.handle('patch-potential-role', async (event, request: sdk.IAIRoleMiningV2025ApiPatchPotentialRoleRequest) => {
     return await sdkWrapper.patchPotentialRole(request, apiConfig);
 });
-ipcMain.handle('patch-potential-role-1', async (event, request: sdk.IAIRoleMiningV2025ApiPatchPotentialRole0Request) => {
-    return await sdkWrapper.patchPotentialRole_1(request, apiConfig);
+ipcMain.handle('patch-potential-role-session', async (event, request: sdk.IAIRoleMiningV2025ApiPatchPotentialRoleSessionRequest) => {
+    return await sdkWrapper.patchPotentialRoleSession(request, apiConfig);
 });
 ipcMain.handle('patch-role-mining-session', async (event, request: sdk.IAIRoleMiningV2025ApiPatchRoleMiningSessionRequest) => {
     return await sdkWrapper.patchRoleMiningSession(request, apiConfig);
@@ -1499,6 +1617,31 @@ ipcMain.handle('patch-org-config', async (event, request: sdk.OrgConfigV2025ApiP
     return await sdkWrapper.patchOrgConfig(request, apiConfig);
 });
 
+ipcMain.handle('create-parameter', async (event, request: sdk.ParameterStorageV2025ApiCreateParameterRequest = {}) => {
+    return await sdkWrapper.createParameter(request, apiConfig);
+});
+ipcMain.handle('delete-parameter', async (event, request: sdk.ParameterStorageV2025ApiDeleteParameterRequest) => {
+    return await sdkWrapper.deleteParameter(request, apiConfig);
+});
+ipcMain.handle('get-attestation-document', async (event, request: sdk.ParameterStorageV2025ApiGetAttestationDocumentRequest) => {
+    return await sdkWrapper.getAttestationDocument(request, apiConfig);
+});
+ipcMain.handle('get-parameter', async (event, request: sdk.ParameterStorageV2025ApiGetParameterRequest) => {
+    return await sdkWrapper.getParameter(request, apiConfig);
+});
+ipcMain.handle('get-parameter-references', async (event, request: sdk.ParameterStorageV2025ApiGetParameterReferencesRequest) => {
+    return await sdkWrapper.getParameterReferences(request, apiConfig);
+});
+ipcMain.handle('get-parameter-storage-specification', async (event, request: sdk.ParameterStorageV2025ApiGetParameterStorageSpecificationRequest = {}) => {
+    return await sdkWrapper.getParameterStorageSpecification(request, apiConfig);
+});
+ipcMain.handle('search-parameters', async (event, request: sdk.ParameterStorageV2025ApiSearchParametersRequest = {}) => {
+    return await sdkWrapper.searchParameters(request, apiConfig);
+});
+ipcMain.handle('update-parameter', async (event, request: sdk.ParameterStorageV2025ApiUpdateParameterRequest) => {
+    return await sdkWrapper.updateParameter(request, apiConfig);
+});
+
 ipcMain.handle('create-password-org-config', async (event, request: sdk.PasswordConfigurationV2025ApiCreatePasswordOrgConfigRequest) => {
     return await sdkWrapper.createPasswordOrgConfig(request, apiConfig);
 });
@@ -1574,6 +1717,32 @@ ipcMain.handle('patch-personal-access-token', async (event, request: sdk.Persona
     return await sdkWrapper.patchPersonalAccessToken(request, apiConfig);
 });
 
+ipcMain.handle('create-custom-privilege-criteria', async (event, request: sdk.PrivilegeCriteriaV2025ApiCreateCustomPrivilegeCriteriaRequest) => {
+    return await sdkWrapper.createCustomPrivilegeCriteria(request, apiConfig);
+});
+ipcMain.handle('delete-custom-privilege-criteria', async (event, request: sdk.PrivilegeCriteriaV2025ApiDeleteCustomPrivilegeCriteriaRequest) => {
+    return await sdkWrapper.deleteCustomPrivilegeCriteria(request, apiConfig);
+});
+ipcMain.handle('get-privilege-criteria', async (event, request: sdk.PrivilegeCriteriaV2025ApiGetPrivilegeCriteriaRequest) => {
+    return await sdkWrapper.getPrivilegeCriteria(request, apiConfig);
+});
+ipcMain.handle('list-privilege-criteria', async (event, request: sdk.PrivilegeCriteriaV2025ApiListPrivilegeCriteriaRequest) => {
+    return await sdkWrapper.listPrivilegeCriteria(request, apiConfig);
+});
+ipcMain.handle('put-custom-privilege-criteria-value', async (event, request: sdk.PrivilegeCriteriaV2025ApiPutCustomPrivilegeCriteriaValueRequest) => {
+    return await sdkWrapper.putCustomPrivilegeCriteriaValue(request, apiConfig);
+});
+
+ipcMain.handle('get-privilege-criteria-config', async (event, request: sdk.PrivilegeCriteriaConfigurationV2025ApiGetPrivilegeCriteriaConfigRequest) => {
+    return await sdkWrapper.getPrivilegeCriteriaConfig(request, apiConfig);
+});
+ipcMain.handle('list-privilege-criteria-config', async (event, request: sdk.PrivilegeCriteriaConfigurationV2025ApiListPrivilegeCriteriaConfigRequest) => {
+    return await sdkWrapper.listPrivilegeCriteriaConfig(request, apiConfig);
+});
+ipcMain.handle('patch-privilege-criteria-config', async (event, request: sdk.PrivilegeCriteriaConfigurationV2025ApiPatchPrivilegeCriteriaConfigRequest) => {
+    return await sdkWrapper.patchPrivilegeCriteriaConfig(request, apiConfig);
+});
+
 ipcMain.handle('get-public-identities', async (event, request: sdk.PublicIdentitiesV2025ApiGetPublicIdentitiesRequest = {}) => {
     return await sdkWrapper.getPublicIdentities(request, apiConfig);
 });
@@ -1628,6 +1797,19 @@ ipcMain.handle('get-role-insights-requests', async (event, request: sdk.RoleInsi
 });
 ipcMain.handle('get-role-insights-summary', async (event, request: sdk.RoleInsightsV2025ApiGetRoleInsightsSummaryRequest = {}) => {
     return await sdkWrapper.getRoleInsightsSummary(request, apiConfig);
+});
+
+ipcMain.handle('cancel-role-propagation', async (event, request: sdk.RolePropagationV2025ApiCancelRolePropagationRequest = {}) => {
+    return await sdkWrapper.cancelRolePropagation(request, apiConfig);
+});
+ipcMain.handle('get-ongoing-role-propagation', async (event, request: sdk.RolePropagationV2025ApiGetOngoingRolePropagationRequest = {}) => {
+    return await sdkWrapper.getOngoingRolePropagation(request, apiConfig);
+});
+ipcMain.handle('get-role-propagation-status', async (event, request: sdk.RolePropagationV2025ApiGetRolePropagationStatusRequest) => {
+    return await sdkWrapper.getRolePropagationStatus(request, apiConfig);
+});
+ipcMain.handle('start-role-propagation', async (event, request: sdk.RolePropagationV2025ApiStartRolePropagationRequest = {}) => {
+    return await sdkWrapper.startRolePropagation(request, apiConfig);
 });
 
 ipcMain.handle('create-role', async (event, request: sdk.RolesV2025ApiCreateRoleRequest) => {
@@ -1896,6 +2078,37 @@ ipcMain.handle('update-status-check-details', async (event, request: sdk.Service
     return await sdkWrapper.updateStatusCheckDetails(request, apiConfig);
 });
 
+ipcMain.handle('create-stream', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiCreateStreamRequest) => {
+    return await sdkWrapper.createStream(request, apiConfig);
+});
+ipcMain.handle('delete-stream', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiDeleteStreamRequest) => {
+    return await sdkWrapper.deleteStream(request, apiConfig);
+});
+ipcMain.handle('get-jwks-data', async (event, ) => {
+    return await sdkWrapper.getJWKSData(apiConfig);
+});
+ipcMain.handle('get-ssf-configuration', async (event, ) => {
+    return await sdkWrapper.getSSFConfiguration(apiConfig);
+});
+ipcMain.handle('get-stream', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamRequest = {}) => {
+    return await sdkWrapper.getStream(request, apiConfig);
+});
+ipcMain.handle('get-stream-status', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiGetStreamStatusRequest) => {
+    return await sdkWrapper.getStreamStatus(request, apiConfig);
+});
+ipcMain.handle('send-stream-verification', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiSendStreamVerificationRequest) => {
+    return await sdkWrapper.sendStreamVerification(request, apiConfig);
+});
+ipcMain.handle('set-stream-configuration', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiSetStreamConfigurationRequest) => {
+    return await sdkWrapper.setStreamConfiguration(request, apiConfig);
+});
+ipcMain.handle('update-stream-configuration', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamConfigurationRequest) => {
+    return await sdkWrapper.updateStreamConfiguration(request, apiConfig);
+});
+ipcMain.handle('update-stream-status', async (event, request: sdk.SharedSignalsFrameworkSSFV2025ApiUpdateStreamStatusRequest) => {
+    return await sdkWrapper.updateStreamStatus(request, apiConfig);
+});
+
 ipcMain.handle('get-status-by-source-id', async (event, request: sdk.SourceUsagesV2025ApiGetStatusBySourceIdRequest) => {
     return await sdkWrapper.getStatusBySourceId(request, apiConfig);
 });
@@ -1995,6 +2208,9 @@ ipcMain.handle('import-entitlements-schema', async (event, request: sdk.SourcesV
 });
 ipcMain.handle('import-uncorrelated-accounts', async (event, request: sdk.SourcesV2025ApiImportUncorrelatedAccountsRequest) => {
     return await sdkWrapper.importUncorrelatedAccounts(request, apiConfig);
+});
+ipcMain.handle('list-password-policy-holders-on-source', async (event, request: sdk.SourcesV2025ApiListPasswordPolicyHoldersOnSourceRequest) => {
+    return await sdkWrapper.listPasswordPolicyHoldersOnSource(request, apiConfig);
 });
 ipcMain.handle('list-provisioning-policies', async (event, request: sdk.SourcesV2025ApiListProvisioningPoliciesRequest) => {
     return await sdkWrapper.listProvisioningPolicies(request, apiConfig);
@@ -2198,16 +2414,6 @@ ipcMain.handle('set-tenant-ui-metadata', async (event, request: sdk.UIMetadataV2
     return await sdkWrapper.setTenantUiMetadata(request, apiConfig);
 });
 
-ipcMain.handle('create-vendor-connector-mapping', async (event, request: sdk.VendorConnectorMappingsV2025ApiCreateVendorConnectorMappingRequest) => {
-    return await sdkWrapper.createVendorConnectorMapping(request, apiConfig);
-});
-ipcMain.handle('delete-vendor-connector-mapping', async (event, request: sdk.VendorConnectorMappingsV2025ApiDeleteVendorConnectorMappingRequest) => {
-    return await sdkWrapper.deleteVendorConnectorMapping(request, apiConfig);
-});
-ipcMain.handle('get-vendor-connector-mappings', async (event, ) => {
-    return await sdkWrapper.getVendorConnectorMappings(apiConfig);
-});
-
 ipcMain.handle('approve-approval-item', async (event, request: sdk.WorkItemsV2025ApiApproveApprovalItemRequest) => {
     return await sdkWrapper.approveApprovalItem(request, apiConfig);
 });
@@ -2334,6 +2540,632 @@ ipcMain.handle('test-workflow', async (event, request: sdk.WorkflowsV2025ApiTest
     return await sdkWrapper.testWorkflow(request, apiConfig);
 });
 
+
+
+ipcMain.handle('get-advanced-search-nerm', async (event, ) => {
+    return await sdkWrapper.getAdvancedSearchNerm(apiConfig);
+});
+ipcMain.handle('patch-advanced-search-nerm', async (event, request: sdk.AdvancedSearchNERMApiPatchAdvancedSearchRequest) => {
+    return await sdkWrapper.patchAdvancedSearchNerm(request, apiConfig);
+});
+ipcMain.handle('search-advanced-search-nerm', async (event, request: sdk.AdvancedSearchNERMApiSearchAdvancedSearchRequest) => {
+    return await sdkWrapper.searchAdvancedSearchNerm(request, apiConfig);
+});
+ipcMain.handle('search-advanced-searchby-id-nerm', async (event, request: sdk.AdvancedSearchNERMApiSearchAdvancedSearchbyIDRequest) => {
+    return await sdkWrapper.searchAdvancedSearchbyIDNerm(request, apiConfig);
+});
+ipcMain.handle('submit-advanced-search-nerm', async (event, request: sdk.AdvancedSearchNERMApiSubmitAdvancedSearchRequest) => {
+    return await sdkWrapper.submitAdvancedSearchNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-attribute-option-by-id-nerm', async (event, request: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByIdRequest) => {
+    return await sdkWrapper.deleteAttributeOptionByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-attribute-option-by-uid-nerm', async (event, request: sdk.AttributeOptionsNERMApiDeleteAttributeOptionByUidRequest = {}) => {
+    return await sdkWrapper.deleteAttributeOptionByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-attribute-option-by-id-nerm', async (event, request: sdk.AttributeOptionsNERMApiGetAttributeOptionByIdRequest) => {
+    return await sdkWrapper.getAttributeOptionByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-attribute-option-by-uid-nerm', async (event, request: sdk.AttributeOptionsNERMApiGetAttributeOptionByUidRequest = {}) => {
+    return await sdkWrapper.getAttributeOptionByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-attribute-options-nerm', async (event, request: sdk.AttributeOptionsNERMApiGetAttributeOptionsRequest = {}) => {
+    return await sdkWrapper.getAttributeOptionsNerm(request, apiConfig);
+});
+ipcMain.handle('patch-attribute-option-by-id-nerm', async (event, request: sdk.AttributeOptionsNERMApiPatchAttributeOptionByIdRequest) => {
+    return await sdkWrapper.patchAttributeOptionByIdNerm(request, apiConfig);
+});
+ipcMain.handle('patch-attribute-option-by-uid-nerm', async (event, request: sdk.AttributeOptionsNERMApiPatchAttributeOptionByUidRequest) => {
+    return await sdkWrapper.patchAttributeOptionByUidNerm(request, apiConfig);
+});
+ipcMain.handle('patch-attribute-options-nerm', async (event, request: sdk.AttributeOptionsNERMApiPatchAttributeOptionsRequest) => {
+    return await sdkWrapper.patchAttributeOptionsNerm(request, apiConfig);
+});
+ipcMain.handle('submit-attribute-option-nerm', async (event, request: sdk.AttributeOptionsNERMApiSubmitAttributeOptionRequest) => {
+    return await sdkWrapper.submitAttributeOptionNerm(request, apiConfig);
+});
+ipcMain.handle('submit-attribute-options-nerm', async (event, request: sdk.AttributeOptionsNERMApiSubmitAttributeOptionsRequest) => {
+    return await sdkWrapper.submitAttributeOptionsNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-attribute-nerm', async (event, request: sdk.AttributesNERMApiCreateAttributeRequest) => {
+    return await sdkWrapper.createAttributeNerm(request, apiConfig);
+});
+ipcMain.handle('delete-attribute-by-id-nerm', async (event, request: sdk.AttributesNERMApiDeleteAttributeByIdRequest) => {
+    return await sdkWrapper.deleteAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-attribute-by-uid-nerm', async (event, request: sdk.AttributesNERMApiDeleteAttributeByUidRequest = {}) => {
+    return await sdkWrapper.deleteAttributeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-attribute-by-id-nerm', async (event, request: sdk.AttributesNERMApiGetAttributeByIdRequest) => {
+    return await sdkWrapper.getAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-attribute-by-uid-nerm', async (event, request: sdk.AttributesNERMApiGetAttributeByUidRequest = {}) => {
+    return await sdkWrapper.getAttributeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-attributes-nerm', async (event, request: sdk.AttributesNERMApiGetAttributesRequest = {}) => {
+    return await sdkWrapper.getAttributesNerm(request, apiConfig);
+});
+ipcMain.handle('update-attribute-by-id-nerm', async (event, request: sdk.AttributesNERMApiUpdateAttributeByIdRequest) => {
+    return await sdkWrapper.updateAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-attribute-by-uid-nerm', async (event, request: sdk.AttributesNERMApiUpdateAttributeByUidRequest) => {
+    return await sdkWrapper.updateAttributeByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('search-nerm', async (event, request: sdk.AuditsNERMApiSearchRequest) => {
+    return await sdkWrapper.searchNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-master-record-nerm', async (event, request: sdk.ConsolidationNERMApiDeleteMasterRecordRequest) => {
+    return await sdkWrapper.deleteMasterRecordNerm(request, apiConfig);
+});
+ipcMain.handle('patch-data-record-nerm', async (event, request: sdk.ConsolidationNERMApiPatchDataRecordRequest) => {
+    return await sdkWrapper.patchDataRecordNerm(request, apiConfig);
+});
+
+ipcMain.handle('delegations-get-nerm', async (event, request: sdk.DelegationsNERMApiDelegationsGetRequest = {}) => {
+    return await sdkWrapper.delegationsGetNerm(request, apiConfig);
+});
+ipcMain.handle('delegations-id-delete-nerm', async (event, request: sdk.DelegationsNERMApiDelegationsIdDeleteRequest) => {
+    return await sdkWrapper.delegationsIdDeleteNerm(request, apiConfig);
+});
+ipcMain.handle('delegations-id-get-nerm', async (event, request: sdk.DelegationsNERMApiDelegationsIdGetRequest) => {
+    return await sdkWrapper.delegationsIdGetNerm(request, apiConfig);
+});
+ipcMain.handle('delegations-id-patch-nerm', async (event, request: sdk.DelegationsNERMApiDelegationsIdPatchRequest) => {
+    return await sdkWrapper.delegationsIdPatchNerm(request, apiConfig);
+});
+ipcMain.handle('delegations-post-nerm', async (event, request: sdk.DelegationsNERMApiDelegationsPostRequest) => {
+    return await sdkWrapper.delegationsPostNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-form-attribute-nerm', async (event, request: sdk.FormAttributesNERMApiCreateFormAttributeRequest) => {
+    return await sdkWrapper.createFormAttributeNerm(request, apiConfig);
+});
+ipcMain.handle('delete-form-attribute-by-id-nerm', async (event, request: sdk.FormAttributesNERMApiDeleteFormAttributeByIdRequest) => {
+    return await sdkWrapper.deleteFormAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-form-attribute-by-uid-nerm', async (event, request: sdk.FormAttributesNERMApiDeleteFormAttributeByUidRequest = {}) => {
+    return await sdkWrapper.deleteFormAttributeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-form-attribute-by-id-nerm', async (event, request: sdk.FormAttributesNERMApiGetFormAttributeByIdRequest) => {
+    return await sdkWrapper.getFormAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-form-attribute-by-uid-nerm', async (event, request: sdk.FormAttributesNERMApiGetFormAttributeByUidRequest = {}) => {
+    return await sdkWrapper.getFormAttributeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-form-attributes-nerm', async (event, ) => {
+    return await sdkWrapper.getFormAttributesNerm(apiConfig);
+});
+ipcMain.handle('update-form-attribute-by-id-nerm', async (event, request: sdk.FormAttributesNERMApiUpdateFormAttributeByIdRequest) => {
+    return await sdkWrapper.updateFormAttributeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-form-attribute-by-uid-nerm', async (event, request: sdk.FormAttributesNERMApiUpdateFormAttributeByUidRequest) => {
+    return await sdkWrapper.updateFormAttributeByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-form-nerm', async (event, request: sdk.FormsNERMApiCreateFormRequest) => {
+    return await sdkWrapper.createFormNerm(request, apiConfig);
+});
+ipcMain.handle('delete-form-by-id-nerm', async (event, request: sdk.FormsNERMApiDeleteFormByIdRequest) => {
+    return await sdkWrapper.deleteFormByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-form-by-uid-nerm', async (event, request: sdk.FormsNERMApiDeleteFormByUidRequest = {}) => {
+    return await sdkWrapper.deleteFormByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-form-by-id-nerm', async (event, request: sdk.FormsNERMApiGetFormByIdRequest) => {
+    return await sdkWrapper.getFormByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-form-by-uid-nerm', async (event, request: sdk.FormsNERMApiGetFormByUidRequest = {}) => {
+    return await sdkWrapper.getFormByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-forms-nerm', async (event, ) => {
+    return await sdkWrapper.getFormsNerm(apiConfig);
+});
+ipcMain.handle('update-form-by-id-nerm', async (event, request: sdk.FormsNERMApiUpdateFormByIdRequest) => {
+    return await sdkWrapper.updateFormByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-form-by-uid-nerm', async (event, request: sdk.FormsNERMApiUpdateFormByUidRequest) => {
+    return await sdkWrapper.updateFormByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-identity-proofing-results-nerm', async (event, request: sdk.IdentityProofingResultsNERMApiGetIdentityProofingResultsRequest = {}) => {
+    return await sdkWrapper.getIdentityProofingResultsNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-schema-mapped-profiles-collection-nerm', async (event, request: sdk.IscAccountsNERMApiGetSchemaMappedProfilesCollectionRequest = {}) => {
+    return await sdkWrapper.getSchemaMappedProfilesCollectionNerm(request, apiConfig);
+});
+ipcMain.handle('get-single-schema-mapped-profile-nerm', async (event, request: sdk.IscAccountsNERMApiGetSingleSchemaMappedProfileRequest) => {
+    return await sdkWrapper.getSingleSchemaMappedProfileNerm(request, apiConfig);
+});
+ipcMain.handle('update-profile-nerm', async (event, request: sdk.IscAccountsNERMApiUpdateProfileRequest) => {
+    return await sdkWrapper.updateProfileNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-job-status-nerm', async (event, request: sdk.JobStatusNERMApiGetJobStatusRequest) => {
+    return await sdkWrapper.getJobStatusNerm(request, apiConfig);
+});
+
+ipcMain.handle('patch-language-nerm', async (event, request: sdk.LanguagesNERMApiPatchLanguageRequest) => {
+    return await sdkWrapper.patchLanguageNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-page-content-translation-nerm', async (event, request: sdk.PageContentTranslationsNERMApiCreatePageContentTranslationRequest) => {
+    return await sdkWrapper.createPageContentTranslationNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-content-translation-by-id-nerm', async (event, request: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByIdRequest) => {
+    return await sdkWrapper.deletePageContentTranslationByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-content-translation-by-uid-nerm', async (event, request: sdk.PageContentTranslationsNERMApiDeletePageContentTranslationByUidRequest) => {
+    return await sdkWrapper.deletePageContentTranslationByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-content-translation-nerm', async (event, ) => {
+    return await sdkWrapper.getPageContentTranslationNerm(apiConfig);
+});
+ipcMain.handle('get-page-content-translation-by-id-nerm', async (event, request: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByIdRequest) => {
+    return await sdkWrapper.getPageContentTranslationByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-content-translation-by-uid-nerm', async (event, request: sdk.PageContentTranslationsNERMApiGetPageContentTranslationByUidRequest = {}) => {
+    return await sdkWrapper.getPageContentTranslationByUidNerm(request, apiConfig);
+});
+ipcMain.handle('update-page-content-translation-by-id-nerm', async (event, request: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByIdRequest) => {
+    return await sdkWrapper.updatePageContentTranslationByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-page-content-translation-by-uid-nerm', async (event, request: sdk.PageContentTranslationsNERMApiUpdatePageContentTranslationByUidRequest) => {
+    return await sdkWrapper.updatePageContentTranslationByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-page-content-nerm', async (event, request: sdk.PageContentsNERMApiCreatePageContentRequest) => {
+    return await sdkWrapper.createPageContentNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-content-by-id-nerm', async (event, request: sdk.PageContentsNERMApiDeletePageContentByIdRequest) => {
+    return await sdkWrapper.deletePageContentByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-content-by-uid-nerm', async (event, request: sdk.PageContentsNERMApiDeletePageContentByUidRequest) => {
+    return await sdkWrapper.deletePageContentByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-content-by-id-nerm', async (event, request: sdk.PageContentsNERMApiGetPageContentByIdRequest) => {
+    return await sdkWrapper.getPageContentByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-content-by-uid-nerm', async (event, request: sdk.PageContentsNERMApiGetPageContentByUidRequest = {}) => {
+    return await sdkWrapper.getPageContentByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-contents-nerm', async (event, ) => {
+    return await sdkWrapper.getPageContentsNerm(apiConfig);
+});
+ipcMain.handle('update-page-content-by-id-nerm', async (event, request: sdk.PageContentsNERMApiUpdatePageContentByIdRequest) => {
+    return await sdkWrapper.updatePageContentByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-page-content-by-uid-nerm', async (event, request: sdk.PageContentsNERMApiUpdatePageContentByUidRequest) => {
+    return await sdkWrapper.updatePageContentByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-page-element-nerm', async (event, request: sdk.PageElementsNERMApiCreatePageElementRequest) => {
+    return await sdkWrapper.createPageElementNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-element-by-id-nerm', async (event, request: sdk.PageElementsNERMApiDeletePageElementByIdRequest) => {
+    return await sdkWrapper.deletePageElementByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-page-element-by-uid-nerm', async (event, request: sdk.PageElementsNERMApiDeletePageElementByUidRequest = {}) => {
+    return await sdkWrapper.deletePageElementByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-element-by-id-nerm', async (event, request: sdk.PageElementsNERMApiGetPageElementByIdRequest) => {
+    return await sdkWrapper.getPageElementByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-element-by-uid-nerm', async (event, request: sdk.PageElementsNERMApiGetPageElementByUidRequest = {}) => {
+    return await sdkWrapper.getPageElementByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-page-elements-nerm', async (event, ) => {
+    return await sdkWrapper.getPageElementsNerm(apiConfig);
+});
+ipcMain.handle('update-page-element-by-id-nerm', async (event, request: sdk.PageElementsNERMApiUpdatePageElementByIdRequest) => {
+    return await sdkWrapper.updatePageElementByIdNerm(request, apiConfig);
+});
+ipcMain.handle('update-page-element-by-uid-nerm', async (event, request: sdk.PageElementsNERMApiUpdatePageElementByUidRequest) => {
+    return await sdkWrapper.updatePageElementByUidNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-profile-page-nerm', async (event, request: sdk.PagesNERMApiCreateProfilePageRequest) => {
+    return await sdkWrapper.createProfilePageNerm(request, apiConfig);
+});
+ipcMain.handle('create-workflow-page-nerm', async (event, request: sdk.PagesNERMApiCreateWorkflowPageRequest) => {
+    return await sdkWrapper.createWorkflowPageNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-permission-nerm', async (event, request: sdk.PermissionsNERMApiCreatePermissionRequest) => {
+    return await sdkWrapper.createPermissionNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-profile-type-role-nerm', async (event, request: sdk.ProfileTypeRolesNERMApiCreateProfileTypeRoleRequest) => {
+    return await sdkWrapper.createProfileTypeRoleNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-profile-type-by-id-nerm', async (event, request: sdk.ProfileTypesNERMApiDeleteProfileTypeByIdRequest) => {
+    return await sdkWrapper.deleteProfileTypeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-profile-type-by-uid-nerm', async (event, request: sdk.ProfileTypesNERMApiDeleteProfileTypeByUidRequest = {}) => {
+    return await sdkWrapper.deleteProfileTypeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-type-by-id-nerm', async (event, request: sdk.ProfileTypesNERMApiGetProfileTypeByIdRequest) => {
+    return await sdkWrapper.getProfileTypeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-type-by-uid-nerm', async (event, request: sdk.ProfileTypesNERMApiGetProfileTypeByUidRequest = {}) => {
+    return await sdkWrapper.getProfileTypeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-types-nerm', async (event, request: sdk.ProfileTypesNERMApiGetProfileTypesRequest = {}) => {
+    return await sdkWrapper.getProfileTypesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-profile-type-by-id-nerm', async (event, request: sdk.ProfileTypesNERMApiPatchProfileTypeByIdRequest) => {
+    return await sdkWrapper.patchProfileTypeByIdNerm(request, apiConfig);
+});
+ipcMain.handle('patch-profile-type-by-uid-nerm', async (event, request: sdk.ProfileTypesNERMApiPatchProfileTypeByUidRequest) => {
+    return await sdkWrapper.patchProfileTypeByUidNerm(request, apiConfig);
+});
+ipcMain.handle('submit-profile-type-nerm', async (event, request: sdk.ProfileTypesNERMApiSubmitProfileTypeRequest) => {
+    return await sdkWrapper.submitProfileTypeNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-profiles-nerm', async (event, request: sdk.ProfilesNERMApiCreateProfilesRequest) => {
+    return await sdkWrapper.createProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('delete-profile-by-id-nerm', async (event, request: sdk.ProfilesNERMApiDeleteProfileByIdRequest) => {
+    return await sdkWrapper.deleteProfileByIdNerm(request, apiConfig);
+});
+ipcMain.handle('delete-profiles-nerm', async (event, request: sdk.ProfilesNERMApiDeleteProfilesRequest) => {
+    return await sdkWrapper.deleteProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-avatar-nerm', async (event, request: sdk.ProfilesNERMApiGetProfileAvatarRequest) => {
+    return await sdkWrapper.getProfileAvatarNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-by-id-nerm', async (event, request: sdk.ProfilesNERMApiGetProfileByIdRequest) => {
+    return await sdkWrapper.getProfileByIdNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-upload-nerm', async (event, request: sdk.ProfilesNERMApiGetProfileUploadRequest) => {
+    return await sdkWrapper.getProfileUploadNerm(request, apiConfig);
+});
+ipcMain.handle('get-profiles-nerm', async (event, request: sdk.ProfilesNERMApiGetProfilesRequest = {}) => {
+    return await sdkWrapper.getProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-profile-by-id-nerm', async (event, request: sdk.ProfilesNERMApiPatchProfileByIdRequest) => {
+    return await sdkWrapper.patchProfileByIdNerm(request, apiConfig);
+});
+ipcMain.handle('patch-profiles-nerm', async (event, request: sdk.ProfilesNERMApiPatchProfilesRequest) => {
+    return await sdkWrapper.patchProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('submit-profile-nerm', async (event, request: sdk.ProfilesNERMApiSubmitProfileRequest) => {
+    return await sdkWrapper.submitProfileNerm(request, apiConfig);
+});
+ipcMain.handle('submit-profile-avatar-nerm', async (event, request: sdk.ProfilesNERMApiSubmitProfileAvatarRequest) => {
+    return await sdkWrapper.submitProfileAvatarNerm(request, apiConfig);
+});
+ipcMain.handle('submit-profile-upload-nerm', async (event, request: sdk.ProfilesNERMApiSubmitProfileUploadRequest) => {
+    return await sdkWrapper.submitProfileUploadNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-risk-level-nerm', async (event, request: sdk.RiskLevelsNERMApiGetRiskLevelRequest) => {
+    return await sdkWrapper.getRiskLevelNerm(request, apiConfig);
+});
+ipcMain.handle('get-risk-levels-nerm', async (event, request: sdk.RiskLevelsNERMApiGetRiskLevelsRequest = {}) => {
+    return await sdkWrapper.getRiskLevelsNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-risk-score-nerm', async (event, request: sdk.RiskScoresNERMApiGetRiskScoreRequest) => {
+    return await sdkWrapper.getRiskScoreNerm(request, apiConfig);
+});
+ipcMain.handle('get-risk-scores-nerm', async (event, request: sdk.RiskScoresNERMApiGetRiskScoresRequest = {}) => {
+    return await sdkWrapper.getRiskScoresNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-role-profile-nerm', async (event, request: sdk.RoleProfilesNERMApiDeleteRoleProfileRequest) => {
+    return await sdkWrapper.deleteRoleProfileNerm(request, apiConfig);
+});
+ipcMain.handle('get-role-profile-nerm', async (event, request: sdk.RoleProfilesNERMApiGetRoleProfileRequest) => {
+    return await sdkWrapper.getRoleProfileNerm(request, apiConfig);
+});
+ipcMain.handle('get-role-profiles-nerm', async (event, request: sdk.RoleProfilesNERMApiGetRoleProfilesRequest = {}) => {
+    return await sdkWrapper.getRoleProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-role-profile-nerm', async (event, request: sdk.RoleProfilesNERMApiPatchRoleProfileRequest) => {
+    return await sdkWrapper.patchRoleProfileNerm(request, apiConfig);
+});
+ipcMain.handle('patch-role-profiles-nerm', async (event, request: sdk.RoleProfilesNERMApiPatchRoleProfilesRequest) => {
+    return await sdkWrapper.patchRoleProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('submit-role-profile-nerm', async (event, request: sdk.RoleProfilesNERMApiSubmitRoleProfileRequest) => {
+    return await sdkWrapper.submitRoleProfileNerm(request, apiConfig);
+});
+ipcMain.handle('submit-role-profiles-nerm', async (event, request: sdk.RoleProfilesNERMApiSubmitRoleProfilesRequest) => {
+    return await sdkWrapper.submitRoleProfilesNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-role-nerm', async (event, request: sdk.RolesNERMApiGetRoleRequest) => {
+    return await sdkWrapper.getRoleNerm(request, apiConfig);
+});
+ipcMain.handle('get-roles-nerm', async (event, request: sdk.RolesNERMApiGetRolesRequest = {}) => {
+    return await sdkWrapper.getRolesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-role-nerm', async (event, request: sdk.RolesNERMApiPatchRoleRequest) => {
+    return await sdkWrapper.patchRoleNerm(request, apiConfig);
+});
+ipcMain.handle('patch-roles-nerm', async (event, request: sdk.RolesNERMApiPatchRolesRequest) => {
+    return await sdkWrapper.patchRolesNerm(request, apiConfig);
+});
+ipcMain.handle('submit-role-nerm', async (event, request: sdk.RolesNERMApiSubmitRoleRequest) => {
+    return await sdkWrapper.submitRoleNerm(request, apiConfig);
+});
+ipcMain.handle('submit-roles-nerm', async (event, request: sdk.RolesNERMApiSubmitRolesRequest) => {
+    return await sdkWrapper.submitRolesNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-synced-attribute-nerm', async (event, request: sdk.SyncedAttributesNERMApiCreateSyncedAttributeRequest) => {
+    return await sdkWrapper.createSyncedAttributeNerm(request, apiConfig);
+});
+ipcMain.handle('delete-synced-attribute-nerm', async (event, request: sdk.SyncedAttributesNERMApiDeleteSyncedAttributeRequest = {}) => {
+    return await sdkWrapper.deleteSyncedAttributeNerm(request, apiConfig);
+});
+ipcMain.handle('get-profile-type-attributes-nerm', async (event, request: sdk.SyncedAttributesNERMApiGetProfileTypeAttributesRequest = {}) => {
+    return await sdkWrapper.getProfileTypeAttributesNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-system-role-permission-nerm', async (event, request: sdk.SystemRolePermissionsNERMApiCreateSystemRolePermissionRequest) => {
+    return await sdkWrapper.createSystemRolePermissionNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-system-roles-nerm', async (event, request: sdk.SystemRolesNERMApiGetSystemRolesRequest = {}) => {
+    return await sdkWrapper.getSystemRolesNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-user-manager-nerm', async (event, request: sdk.UserManagersNERMApiGetUserManagerRequest) => {
+    return await sdkWrapper.getUserManagerNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-managers-nerm', async (event, request: sdk.UserManagersNERMApiGetUserManagersRequest = {}) => {
+    return await sdkWrapper.getUserManagersNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-manager-nerm', async (event, request: sdk.UserManagersNERMApiPatchUserManagerRequest) => {
+    return await sdkWrapper.patchUserManagerNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-managers-nerm', async (event, request: sdk.UserManagersNERMApiPatchUserManagersRequest) => {
+    return await sdkWrapper.patchUserManagersNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-manager-nerm', async (event, request: sdk.UserManagersNERMApiSubmitUserManagerRequest) => {
+    return await sdkWrapper.submitUserManagerNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-managers-nerm', async (event, request: sdk.UserManagersNERMApiSubmitUserManagersRequest) => {
+    return await sdkWrapper.submitUserManagersNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-user-profiles-nerm', async (event, request: sdk.UserProfilesNERMApiCreateUserProfilesRequest) => {
+    return await sdkWrapper.createUserProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('delete-user-profile-nerm', async (event, request: sdk.UserProfilesNERMApiDeleteUserProfileRequest) => {
+    return await sdkWrapper.deleteUserProfileNerm(request, apiConfig);
+});
+ipcMain.handle('delete-user-profiles-nerm', async (event, request: sdk.UserProfilesNERMApiDeleteUserProfilesRequest) => {
+    return await sdkWrapper.deleteUserProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-profile-nerm', async (event, request: sdk.UserProfilesNERMApiGetUserProfileRequest) => {
+    return await sdkWrapper.getUserProfileNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-profiles-nerm', async (event, request: sdk.UserProfilesNERMApiGetUserProfilesRequest = {}) => {
+    return await sdkWrapper.getUserProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-profile-nerm', async (event, request: sdk.UserProfilesNERMApiPatchUserProfileRequest) => {
+    return await sdkWrapper.patchUserProfileNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-profiles-nerm', async (event, request: sdk.UserProfilesNERMApiPatchUserProfilesRequest) => {
+    return await sdkWrapper.patchUserProfilesNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-profile-nerm', async (event, request: sdk.UserProfilesNERMApiSubmitUserProfileRequest) => {
+    return await sdkWrapper.submitUserProfileNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-user-role-nerm', async (event, request: sdk.UserRolesNERMApiDeleteUserRoleRequest) => {
+    return await sdkWrapper.deleteUserRoleNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-role-nerm', async (event, request: sdk.UserRolesNERMApiGetUserRoleRequest) => {
+    return await sdkWrapper.getUserRoleNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-roles-nerm', async (event, request: sdk.UserRolesNERMApiGetUserRolesRequest = {}) => {
+    return await sdkWrapper.getUserRolesNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-role-nerm', async (event, request: sdk.UserRolesNERMApiPatchUserRoleRequest) => {
+    return await sdkWrapper.patchUserRoleNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-roles-nerm', async (event, request: sdk.UserRolesNERMApiPatchUserRolesRequest) => {
+    return await sdkWrapper.patchUserRolesNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-role-nerm', async (event, request: sdk.UserRolesNERMApiSubmitUserRoleRequest) => {
+    return await sdkWrapper.submitUserRoleNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-roles-nerm', async (event, request: sdk.UserRolesNERMApiSubmitUserRolesRequest) => {
+    return await sdkWrapper.submitUserRolesNerm(request, apiConfig);
+});
+
+ipcMain.handle('delete-user-nerm', async (event, request: sdk.UsersNERMApiDeleteUserRequest) => {
+    return await sdkWrapper.deleteUserNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-nerm', async (event, request: sdk.UsersNERMApiGetUserRequest) => {
+    return await sdkWrapper.getUserNerm(request, apiConfig);
+});
+ipcMain.handle('get-user-avatar-nerm', async (event, request: sdk.UsersNERMApiGetUserAvatarRequest) => {
+    return await sdkWrapper.getUserAvatarNerm(request, apiConfig);
+});
+ipcMain.handle('get-users-nerm', async (event, request: sdk.UsersNERMApiGetUsersRequest = {}) => {
+    return await sdkWrapper.getUsersNerm(request, apiConfig);
+});
+ipcMain.handle('patch-user-nerm', async (event, request: sdk.UsersNERMApiPatchUserRequest) => {
+    return await sdkWrapper.patchUserNerm(request, apiConfig);
+});
+ipcMain.handle('patch-users-nerm', async (event, request: sdk.UsersNERMApiPatchUsersRequest) => {
+    return await sdkWrapper.patchUsersNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-nerm', async (event, request: sdk.UsersNERMApiSubmitUserRequest) => {
+    return await sdkWrapper.submitUserNerm(request, apiConfig);
+});
+ipcMain.handle('submit-user-avatar-nerm', async (event, request: sdk.UsersNERMApiSubmitUserAvatarRequest) => {
+    return await sdkWrapper.submitUserAvatarNerm(request, apiConfig);
+});
+ipcMain.handle('submit-users-nerm', async (event, request: sdk.UsersNERMApiSubmitUsersRequest) => {
+    return await sdkWrapper.submitUsersNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-workflow-action-performer-nerm', async (event, request: sdk.WorkflowActionPerformerNERMApiCreateWorkflowActionPerformerRequest) => {
+    return await sdkWrapper.createWorkflowActionPerformerNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-approval-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateApprovalActionRequest) => {
+    return await sdkWrapper.createApprovalActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-ask-security-question-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateAskSecurityQuestionActionRequest) => {
+    return await sdkWrapper.createAskSecurityQuestionActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-auto-assign-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateAutoAssignActionRequest) => {
+    return await sdkWrapper.createAutoAssignActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-batch-update-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateBatchUpdateActionRequest) => {
+    return await sdkWrapper.createBatchUpdateActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-close-session-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateCloseSessionActionRequest) => {
+    return await sdkWrapper.createCloseSessionActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-contributors-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateContributorsActionRequest) => {
+    return await sdkWrapper.createContributorsActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-create-profile-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateCreateProfileActionRequest) => {
+    return await sdkWrapper.createCreateProfileActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-duplicate-prevention-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateDuplicatePreventionActionRequest) => {
+    return await sdkWrapper.createDuplicatePreventionActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-email-verification-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateEmailVerificationActionRequest) => {
+    return await sdkWrapper.createEmailVerificationActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-fulfillment-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateFulfillmentActionRequest) => {
+    return await sdkWrapper.createFulfillmentActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-identity-proofing-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateIdentityProofingActionRequest) => {
+    return await sdkWrapper.createIdentityProofingActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-invitation-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateInvitationActionRequest) => {
+    return await sdkWrapper.createInvitationActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-ldap-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateLdapActionRequest) => {
+    return await sdkWrapper.createLdapActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-notification-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateNotificationActionRequest) => {
+    return await sdkWrapper.createNotificationActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-password-reset-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreatePasswordResetActionRequest) => {
+    return await sdkWrapper.createPasswordResetActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-profile-check-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateProfileCheckActionRequest) => {
+    return await sdkWrapper.createProfileCheckActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-profile-select-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateProfileSelectActionRequest) => {
+    return await sdkWrapper.createProfileSelectActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-request-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateRequestActionRequest) => {
+    return await sdkWrapper.createRequestActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-rest-api-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateRestApiActionRequest) => {
+    return await sdkWrapper.createRestApiActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-review-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateReviewActionRequest) => {
+    return await sdkWrapper.createReviewActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-run-workflow-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateRunWorkflowActionRequest) => {
+    return await sdkWrapper.createRunWorkflowActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-set-attributes-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateSetAttributesActionRequest) => {
+    return await sdkWrapper.createSetAttributesActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-set-security-question-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateSetSecurityQuestionActionRequest) => {
+    return await sdkWrapper.createSetSecurityQuestionActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-soap-api-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateSoapApiActionRequest) => {
+    return await sdkWrapper.createSoapApiActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-status-change-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateStatusChangeActionRequest) => {
+    return await sdkWrapper.createStatusChangeActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-unassign-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateUnassignActionRequest) => {
+    return await sdkWrapper.createUnassignActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-update-profile-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateUpdateProfileActionRequest) => {
+    return await sdkWrapper.createUpdateProfileActionNerm(request, apiConfig);
+});
+ipcMain.handle('create-username-password-action-nerm', async (event, request: sdk.WorkflowActionsNERMApiCreateUsernamePasswordActionRequest) => {
+    return await sdkWrapper.createUsernamePasswordActionNerm(request, apiConfig);
+});
+ipcMain.handle('get-workflow-actions-nerm', async (event, request: sdk.WorkflowActionsNERMApiGetWorkflowActionsRequest = {}) => {
+    return await sdkWrapper.getWorkflowActionsNerm(request, apiConfig);
+});
+
+ipcMain.handle('get-workflow-session-nerm', async (event, request: sdk.WorkflowSessionsNERMApiGetWorkflowSessionRequest) => {
+    return await sdkWrapper.getWorkflowSessionNerm(request, apiConfig);
+});
+ipcMain.handle('get-workflow-session-upload-nerm', async (event, request: sdk.WorkflowSessionsNERMApiGetWorkflowSessionUploadRequest) => {
+    return await sdkWrapper.getWorkflowSessionUploadNerm(request, apiConfig);
+});
+ipcMain.handle('get-workflow-sessions-nerm', async (event, request: sdk.WorkflowSessionsNERMApiGetWorkflowSessionsRequest = {}) => {
+    return await sdkWrapper.getWorkflowSessionsNerm(request, apiConfig);
+});
+ipcMain.handle('patch-workflow-session-nerm', async (event, request: sdk.WorkflowSessionsNERMApiPatchWorkflowSessionRequest) => {
+    return await sdkWrapper.patchWorkflowSessionNerm(request, apiConfig);
+});
+ipcMain.handle('submit-workflow-session-nerm', async (event, request: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionRequest) => {
+    return await sdkWrapper.submitWorkflowSessionNerm(request, apiConfig);
+});
+ipcMain.handle('submit-workflow-session-upload-nerm', async (event, request: sdk.WorkflowSessionsNERMApiSubmitWorkflowSessionUploadRequest) => {
+    return await sdkWrapper.submitWorkflowSessionUploadNerm(request, apiConfig);
+});
+
+ipcMain.handle('create-automated-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateAutomatedWorkflowRequest) => {
+    return await sdkWrapper.createAutomatedWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-batch-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateBatchWorkflowRequest) => {
+    return await sdkWrapper.createBatchWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-create-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateCreateWorkflowRequest) => {
+    return await sdkWrapper.createCreateWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-login-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateLoginWorkflowRequest) => {
+    return await sdkWrapper.createLoginWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-password-update-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreatePasswordUpdateWorkflowRequest) => {
+    return await sdkWrapper.createPasswordUpdateWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-registration-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateRegistrationWorkflowRequest) => {
+    return await sdkWrapper.createRegistrationWorkflowNerm(request, apiConfig);
+});
+ipcMain.handle('create-update-workflow-nerm', async (event, request: sdk.WorkflowsNERMApiCreateUpdateWorkflowRequest) => {
+    return await sdkWrapper.createUpdateWorkflowNerm(request, apiConfig);
+});
+
+// --- GENERATED SDK METHODS END ---
 
 ipcMain.handle('generic-get', async(event, request: sdk.DefaultApiGenericGetRequest) => {
     return await sdkWrapper.genericGet(request, apiConfig);

@@ -77,6 +77,14 @@
                         placeholder="https://your-tenant.api.identitynow.com" required>
                       </mat-form-field>
                     </div>
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>NERM Base URL</mat-label>
+                        <input matInput [(ngModel)]="state.actualTenant.nermBaseUrl" name="nermBaseUrl"
+                          placeholder="https://your-tenant.nonemployee.com/api">
+                        <mat-hint>Non-Employee Risk Management API endpoint</mat-hint>
+                      </mat-form-field>
+                    </div>
                     <!-- Authentication Type Toggle -->
                     <div class="form-row">
                       <mat-form-field appearance="outline" class="full-width">

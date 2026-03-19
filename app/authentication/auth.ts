@@ -88,7 +88,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
     activeEnvironment = environment;
     // First, ensure the environment exists in config
     const envConfig = getConfigEnvironment(environment);
-    const { tenanturl, baseurl, authtype, bypassTLS, caCertPath } = envConfig;
+    const { tenanturl, baseurl, nermBaseurl, authtype, bypassTLS, caCertPath } = envConfig;
 
     // Configure TLS settings for this environment at the start of any authentication flow
     if (caCertPath && existsSync(caCertPath)) {
@@ -150,6 +150,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
             connectionResult = await connectToISCWithToken(
               baseurl,
               storedTokens.accessToken,
+              nermBaseurl,
             );
             break;
           case 'pat':
@@ -157,6 +158,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
               baseurl,
               storedTokens.clientId,
               storedTokens.clientSecret,
+              nermBaseurl,
             );
             break;
         }
@@ -195,7 +197,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
                   error: 'No OAuth tokens found for environment: ' + environment
                 };
               }
-              connectionResult = await connectToISCWithToken(baseurl, oauthTokens.accessToken);
+              connectionResult = await connectToISCWithToken(baseurl, oauthTokens.accessToken, nermBaseurl);
               break;
             case 'pat':
               const patTokens = getStoredPATTokens(environment);
@@ -205,7 +207,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
                   error: 'No PAT tokens found for environment: ' + environment
                 };
               }
-              connectionResult = await connectToISCWithPAT(baseurl, patTokens.clientId, patTokens.clientSecret);
+              connectionResult = await connectToISCWithPAT(baseurl, patTokens.clientId, patTokens.clientSecret, nermBaseurl);
               break;
           }
 
@@ -277,6 +279,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
         const connectionResult = await connectToISCWithToken(
           baseurl,
           oauthTokens.accessToken,
+          nermBaseurl,
         );
 
         return {
@@ -305,6 +308,7 @@ export const unifiedLogin = async (environment: string): Promise<{ success: bool
           baseurl,
           patTokens.clientId,
           patTokens.clientSecret,
+          nermBaseurl,
         );
 
         return {
@@ -355,7 +359,7 @@ export const refreshTokens = async (): Promise<{ success: boolean, error?: strin
         error: `Environment '${environment}' not found in configuration`
       };
     }
-    const { tenanturl, baseurl, authtype } = config.environments[environment];
+    const { tenanturl, baseurl, nermBaseurl, authtype } = config.environments[environment];
 
     switch (authtype) {
       case 'oauth': {
@@ -371,7 +375,7 @@ export const refreshTokens = async (): Promise<{ success: boolean, error?: strin
         }
 
         await refreshOAuthToken(environment);
-        await connectToISCWithToken(baseurl, getStoredOAuthTokens(environment)!.accessToken);
+        await connectToISCWithToken(baseurl, getStoredOAuthTokens(environment)!.accessToken, nermBaseurl);
         refreshActive = false;
         return { success: true, error: undefined };
       }
@@ -382,6 +386,7 @@ export const refreshTokens = async (): Promise<{ success: boolean, error?: strin
           baseurl,
           getStoredPATTokens(environment)!.clientId,
           getStoredPATTokens(environment)!.clientSecret,
+          nermBaseurl,
         );
         refreshActive = false;
         return { success: true, error: undefined };
@@ -401,6 +406,7 @@ export const connectToISCWithPAT = async (
   apiUrl: string,
   clientId: string,
   clientSecret: string,
+  nermBaseUrl?: string,
 ) => {
   console.log('Connecting to ISC with PAT:');
   let config: ConfigurationParameters = {
@@ -408,6 +414,7 @@ export const connectToISCWithPAT = async (
     clientSecret: clientSecret,
     tokenUrl: apiUrl + `/oauth/token`,
     baseurl: apiUrl,
+    nermBaseurl: nermBaseUrl,
   };
   try {
     apiConfig = new Configuration(config);
@@ -427,11 +434,13 @@ export const connectToISCWithPAT = async (
 export const connectToISCWithToken = async (
   apiUrl: string,
   accessToken: string,
+  nermBaseUrl?: string,
 ) => {
   console.log('Connecting to ISC with token:');
   let config: ConfigurationParameters = {
     accessToken: accessToken,
     baseurl: apiUrl,
+    nermBaseurl: nermBaseUrl,
   };
   try {
     apiConfig = new Configuration(config);
@@ -714,7 +723,7 @@ export function validateTokens(environment: string): { isValid: boolean, needsRe
  */
 export async function checkOauthCodeFlowComplete (uuid: string, environment: string): Promise<{ isComplete: boolean, success?: boolean, error?: string }> {
     try {
-      const { tenanturl, baseurl, authtype } = getConfigEnvironment(environment);
+      const { tenanturl, baseurl, nermBaseurl, authtype } = getConfigEnvironment(environment);
         const tokenResponse = await fetch(`${authLambdaTokenURL}/${uuid}`);
 
         if (tokenResponse.ok) {
@@ -753,7 +762,7 @@ export async function checkOauthCodeFlowComplete (uuid: string, environment: str
             };
 
             storeOAuthTokens(environment, tokenSet);
-            connectToISCWithToken(baseurl, tokenSet.accessToken);
+            connectToISCWithToken(baseurl, tokenSet.accessToken, nermBaseurl);
             return { isComplete: true, success: true };
         } else if (tokenResponse.status === 404 || tokenResponse.status === 400) {
             // Token not ready yet, continue polling (backend returns 400 when token not found)

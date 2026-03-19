@@ -17,6 +17,7 @@ export type Tenant = {
   name: string;
   apiUrl: string;
   tenantUrl: string;
+  nermBaseUrl: string;
   clientId: string | null;
   clientSecret: string | null;
   authtype: "oauth" | "pat";
@@ -50,6 +51,7 @@ export const getTenants = (): Tenant[] => {
         name: environment,
         apiUrl: envConfig.baseurl,
         tenantUrl: envConfig.tenanturl,
+        nermBaseUrl: envConfig.nermBaseurl || '',
         clientId: storedPATTokens?.clientId || null,
         clientSecret: storedPATTokens?.clientSecret || null,
         authtype: envConfig.authtype,
@@ -85,6 +87,7 @@ export interface CLIConfig {
     [key: string]: {
       tenanturl: string;
       baseurl: string;
+      nermBaseurl?: string;
       authtype: "oauth" | "pat";
       bypassTLS?: boolean;
       caCertPath?: string;
@@ -92,18 +95,18 @@ export interface CLIConfig {
   };
 }
 
-export function getConfigEnvironment(environment: string): { tenanturl: string, baseurl: string, authtype: string, bypassTLS?: boolean, caCertPath?: string } {
+export function getConfigEnvironment(environment: string): { tenanturl: string, baseurl: string, nermBaseurl: string, authtype: string, bypassTLS?: boolean, caCertPath?: string } {
   try {
     const config = getConfig();
     if (!config.environments[environment]) {
-      return { tenanturl: '', baseurl: '', authtype: 'undefined', bypassTLS: false, caCertPath: '' };
+      return { tenanturl: '', baseurl: '', nermBaseurl: '', authtype: 'undefined', bypassTLS: false, caCertPath: '' };
     }
 
-    const { tenanturl, baseurl, authtype, bypassTLS, caCertPath } = config.environments[environment];
-    return { tenanturl, baseurl, authtype, bypassTLS, caCertPath };
+    const { tenanturl, baseurl, nermBaseurl, authtype, bypassTLS, caCertPath } = config.environments[environment];
+    return { tenanturl, baseurl, nermBaseurl: nermBaseurl || '', authtype, bypassTLS, caCertPath };
   } catch (error) {
     console.error('Error getting config environment:', error);
-    return { tenanturl: '', baseurl: '', authtype: 'undefined', bypassTLS: false, caCertPath: '' };
+    return { tenanturl: '', baseurl: '', nermBaseurl: '', authtype: 'undefined', bypassTLS: false, caCertPath: '' };
   }
 }
 
@@ -148,6 +151,7 @@ export interface UpdateEnvironmentRequest {
   environmentName: string;
   tenantUrl: string;
   baseUrl: string;
+  nermBaseUrl?: string;
   authtype: 'oauth' | 'pat';
   clientId?: string;
   clientSecret?: string;
@@ -182,6 +186,7 @@ export const updateEnvironment = (
     config.environments[configureRequest.environmentName] = {
       tenanturl: configureRequest.tenantUrl,
       baseurl: configureRequest.baseUrl,
+      nermBaseurl: configureRequest.nermBaseUrl || '',
       authtype: configureRequest.authtype,
       bypassTLS: configureRequest.bypassTLS || false,
       caCertPath: configureRequest.caCertPath || '',

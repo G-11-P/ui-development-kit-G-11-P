@@ -40,7 +40,7 @@ export class ObjectBrowserComponent implements OnInit {
   constructor(private gitService: ConfigHubGitService) {}
 
   ngOnInit(): void {
-    this.refresh();
+    void this.refresh();
   }
 
   async refresh(): Promise<void> {

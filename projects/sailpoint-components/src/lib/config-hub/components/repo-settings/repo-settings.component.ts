@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -45,13 +45,14 @@ export class RepoSettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const required = (ctrl: AbstractControl): ValidationErrors | null => Validators.required(ctrl);
     this.form = this.fb.group({
-      repoUrl: ['', Validators.required],
+      repoUrl: ['', required],
       authMethod: ['pat'],
       pat: [''],
       sshKeyPath: [''],
-      defaultBranch: ['main', Validators.required],
-      backupsPath: ['backups', Validators.required],
+      defaultBranch: ['main', required],
+      backupsPath: ['backups', required],
     });
 
     const existing = this.gitService.settings();

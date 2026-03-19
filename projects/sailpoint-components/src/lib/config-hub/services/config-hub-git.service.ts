@@ -9,23 +9,24 @@ export class ConfigHubGitService {
   readonly branches = signal<string[]>([]);
   readonly loading = signal(false);
 
-  async loadSettings(): Promise<void> {
+  loadSettings(): Promise<void> {
     try {
       const raw = localStorage.getItem(SETTINGS_KEY);
       this.settings.set(raw ? (JSON.parse(raw) as GitRepoSettings) : null);
     } catch {
       this.settings.set(null);
     }
+    return Promise.resolve();
   }
 
-  async saveSettings(settings: GitRepoSettings): Promise<{ success: boolean; error?: string }> {
+  saveSettings(settings: GitRepoSettings): Promise<{ success: boolean; error?: string }> {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
       this.settings.set(settings);
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Failed to save settings';
-      return { success: false, error: msg };
+      return Promise.resolve({ success: false, error: msg });
     }
   }
 
@@ -124,7 +125,7 @@ export class ConfigHubGitService {
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${encodeURIComponent(ref)}`;
       const res = await fetch(url, { headers: this.githubHeaders(s) });
       if (!res.ok) return '';
-      const data = await res.json() as any;
+      const data = await res.json();
       return atob((data.content as string).replace(/\n/g, ''));
     } catch {
       return '';
@@ -172,7 +173,7 @@ export class ConfigHubGitService {
       const url = `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`;
       const res = await fetch(url, { headers: this.githubHeaders(s) });
       if (!res.ok) return [];
-      const data = await res.json() as any;
+      const data = await res.json();
       const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const pattern = new RegExp(`^${escapedBase}/([^/]+)/([^/]+)\\.json$`);
       const files: CommitFile[] = [];

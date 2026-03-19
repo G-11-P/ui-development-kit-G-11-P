@@ -65,8 +65,8 @@ export class CommitBrowserComponent implements OnInit {
 
   constructor(private gitService: ConfigHubGitService) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.loadCommits();
+  ngOnInit(): void {
+    void this.loadCommits();
   }
 
   // ── Loaders ───────────────────────────────────────────────────────────────
@@ -124,7 +124,7 @@ export class CommitBrowserComponent implements OnInit {
     if (nameSource) {
       try {
         const parsed = JSON.parse(nameSource);
-        const name = parsed?.object?.name ?? parsed?.self?.name ?? parsed?.name ?? file.objectId;
+        const name = (parsed?.object?.name ?? parsed?.self?.name ?? parsed?.name ?? file.objectId) as string;
         const map = new Map(this.fileNames());
         map.set(file.filePath, name);
         this.fileNames.set(map);

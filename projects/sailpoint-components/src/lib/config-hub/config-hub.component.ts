@@ -48,7 +48,11 @@ export class ConfigHubComponent implements OnInit {
     private dialog: MatDialog,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    void this.initialize();
+  }
+
+  private async initialize(): Promise<void> {
     await this.gitService.loadSettings();
     const s = this.gitService.settings();
     this.hasSettings.set(!!s?.repoUrl);

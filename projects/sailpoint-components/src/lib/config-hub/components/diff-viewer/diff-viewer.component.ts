@@ -55,11 +55,11 @@ export class DiffViewerComponent implements OnChanges {
 
   constructor(private gitService: ConfigHubGitService) {}
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['backupObject']) {
       const obj = this.backupObject();
       if (obj) {
-        await this.loadHistory(obj);
+        void this.loadHistory(obj);
       } else {
         this.reset();
       }

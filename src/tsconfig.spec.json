@@ -16,6 +16,7 @@
       "@angular/cdk/layout": ["node_modules/@angular/cdk/types/layout.d.ts"],
       "@angular/cdk/drag-drop": ["node_modules/@angular/cdk/types/drag-drop.d.ts"],
       "@angular/material/button": ["node_modules/@angular/material/types/button.d.ts"],
+      "@angular/material/button-toggle": ["node_modules/@angular/material/types/button-toggle.d.ts"],
       "@angular/material/icon": ["node_modules/@angular/material/types/icon.d.ts"],
       "@angular/material/list": ["node_modules/@angular/material/types/list.d.ts"],
       "@angular/material/sidenav": ["node_modules/@angular/material/types/sidenav.d.ts"],

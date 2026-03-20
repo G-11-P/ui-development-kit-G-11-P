@@ -31,15 +31,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '24'
-        cache: 'npm'
 
-    - name: Configure Windows for npm install
+    - name: Enable Windows long paths
       shell: powershell
       run: |
-        # Disable real-time scanning for the duration of the job.
-        # Without this, Defender holds file handles on every extracted tarball,
-        # causing EPERM on cleanup and EMFILE once handles are exhausted.
-        Set-MpPreference -DisableRealtimeMonitoring $true
         # Allow paths longer than 260 chars so deeply-nested node_modules trees
         # don't cause EPERM errors when npm tries to clean up after itself.
         Set-ItemProperty `

@@ -32,3 +32,5 @@ export * from './lib/colab/components/colab-section/colab-section.component';
 export * from './lib/config-hub/config-hub.component';
 export * from './lib/colab/services/discourse.service';
 
+
+export * from './lib/saas-connectivity-creator/saas-connectivity-creator.component';

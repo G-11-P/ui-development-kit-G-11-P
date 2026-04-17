@@ -1,0 +1,1057 @@
+<div class="creator-container">
+
+  <!-- ── Toolbar ─────────────────────────────────────────────────────────── -->
+  <mat-toolbar color="primary">
+    <mat-icon>cable</mat-icon>
+    <span class="toolbar-title">SaaS Connectivity Creator</span>
+    <span class="toolbar-spacer"></span>
+    <span class="toolbar-subtitle">Build a new connector project</span>
+  </mat-toolbar>
+
+  <!-- ── Wizard ──────────────────────────────────────────────────────────── -->
+  <div class="stepper-wrapper">
+    <mat-stepper linear orientation="horizontal" #stepper>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 1 — Basic Info
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step [stepControl]="step1" label="Basic Info">
+        <form [formGroup]="step1" class="step-form">
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>info</mat-icon>
+              <mat-card-title>Connector Details</mat-card-title>
+              <mat-card-subtitle>Name and configure the identity of your connector</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="field-half">
+                  <mat-label>Connector Name</mat-label>
+                  <input matInput formControlName="connectorName" placeholder="my-api-connector" />
+                  <mat-hint>Lowercase letters, numbers, and hyphens only. Used as the project folder name.</mat-hint>
+                  @if (step1.get('connectorName')?.hasError('required')) {
+                    <mat-error>Connector name is required</mat-error>
+                  }
+                  @if (step1.get('connectorName')?.hasError('pattern')) {
+                    <mat-error>Only lowercase letters, numbers, and hyphens allowed</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field-half">
+                  <mat-label>Display Name</mat-label>
+                  <input matInput formControlName="displayName" placeholder="My API Connector" />
+                  <mat-hint>Human-readable name shown in Identity Security Cloud</mat-hint>
+                  @if (step1.get('displayName')?.hasError('required')) {
+                    <mat-error>Display name is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="field-full">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="2"
+                  placeholder="A connector for integrating with My API"></textarea>
+              </mat-form-field>
+
+              <div class="form-row form-row-aligned">
+                <div class="radio-group-field">
+                  <label class="field-label">Key Type</label>
+                  <mat-radio-group formControlName="keyType" class="radio-group">
+                    <mat-radio-button value="simple"
+                      matTooltip="Account ID is a single field (e.g. a username or GUID)">
+                      Simple
+                    </mat-radio-button>
+                    <mat-radio-button value="compound"
+                      matTooltip="Account ID is composed of multiple fields">
+                      Compound
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+
+                <div class="toggle-field">
+                  <mat-slide-toggle formControlName="supportsStatefulCommands"
+                    matTooltip="Enables delta aggregation — only fetch accounts changed since the last run">
+                    Supports Stateful Commands
+                  </mat-slide-toggle>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button mat-raised-button color="primary" matStepperNext [disabled]="step1.invalid">
+                Next
+                <mat-icon iconPositionEnd>chevron_right</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+      </mat-step>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 2 — Authentication
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step [stepControl]="step2" label="Authentication">
+        <form [formGroup]="step2" class="step-form">
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>lock</mat-icon>
+              <mat-card-title>Authentication</mat-card-title>
+              <mat-card-subtitle>Choose how your connector authenticates with the source system</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Authentication Type</mat-label>
+                <mat-select formControlName="authType">
+                  <mat-option value="apiKey">API Key</mat-option>
+                  <mat-option value="oauth2">OAuth 2.0</mat-option>
+                  <mat-option value="basicAuth">Basic Auth (Username / Password)</mat-option>
+                  <mat-option value="bearerToken">Bearer Token</mat-option>
+                  <mat-option value="custom">Custom</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- API Key -->
+              @if (step2.value.authType === 'apiKey') {
+                <div class="auth-detail">
+                  <p class="auth-description">
+                    A single secret field (<code>apiKey</code>) will be added to the connector configuration.
+                    Customize the label shown to users.
+                  </p>
+                  <mat-form-field appearance="outline" class="field-half">
+                    <mat-label>Field Label</mat-label>
+                    <input matInput formControlName="keyLabel" placeholder="API Key" />
+                  </mat-form-field>
+                </div>
+              }
+
+              <!-- OAuth 2.0 -->
+              @if (step2.value.authType === 'oauth2') {
+                <div class="auth-detail">
+                  <p class="auth-description">
+                    Four fields will be added: <code>clientId</code>, <code>clientSecret</code>,
+                    <code>tokenUrl</code>, and <code>scopes</code>.
+                    Implement the token exchange in the generated client.
+                  </p>
+                  <div class="auth-field-preview">
+                    <mat-chip-set>
+                      <mat-chip>clientId (secret)</mat-chip>
+                      <mat-chip>clientSecret (secret)</mat-chip>
+                      <mat-chip>tokenUrl (url)</mat-chip>
+                      <mat-chip>scopes (text)</mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </div>
+              }
+
+              <!-- Basic Auth -->
+              @if (step2.value.authType === 'basicAuth') {
+                <div class="auth-detail">
+                  <p class="auth-description">
+                    Two fields will be added for username and password. Customize the labels below.
+                  </p>
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="field-half">
+                      <mat-label>Username Label</mat-label>
+                      <input matInput formControlName="usernameLabel" placeholder="Username" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="field-half">
+                      <mat-label>Password Label</mat-label>
+                      <input matInput formControlName="passwordLabel" placeholder="Password" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              }
+
+              <!-- Bearer Token -->
+              @if (step2.value.authType === 'bearerToken') {
+                <div class="auth-detail">
+                  <p class="auth-description">
+                    A single secret token field will be added to the connector configuration.
+                  </p>
+                  <mat-form-field appearance="outline" class="field-half">
+                    <mat-label>Token Field Label</mat-label>
+                    <input matInput formControlName="tokenLabel" placeholder="Bearer Token" />
+                  </mat-form-field>
+                </div>
+              }
+
+              <!-- Custom -->
+              @if (step2.value.authType === 'custom') {
+                <div class="auth-detail">
+                  <p class="auth-description">
+                    No authentication fields will be pre-generated. Add your own configuration
+                    fields in Step 5 — Additional Configuration.
+                  </p>
+                </div>
+              }
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button mat-button matStepperPrevious>
+                <mat-icon>chevron_left</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="step2.invalid">
+                Next
+                <mat-icon iconPositionEnd>chevron_right</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+      </mat-step>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 3 — Operations
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step [stepControl]="step3" label="Operations">
+        <form [formGroup]="step3" class="step-form">
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>settings</mat-icon>
+              <mat-card-title>Supported Operations</mat-card-title>
+              <mat-card-subtitle>Select the connector commands your source system supports</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+
+              <!-- Core -->
+              <div class="command-group">
+                <p class="command-group-label">Core</p>
+                <div class="command-grid">
+                  <mat-checkbox [checked]="true" [disabled]="true"
+                    matTooltip="Always required — verifies connector credentials">
+                    std:test-connection
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Aggregation -->
+              <div class="command-group">
+                <p class="command-group-label">Aggregation</p>
+                <div class="command-grid">
+                  <mat-checkbox formControlName="accountList"
+                    matTooltip="List all accounts from the source">
+                    std:account:list
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="accountRead"
+                    matTooltip="Read a single account by ID">
+                    std:account:read
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Provisioning -->
+              <div class="command-group">
+                <p class="command-group-label">Provisioning</p>
+                <div class="command-grid">
+                  <mat-checkbox formControlName="accountCreate"
+                    matTooltip="Create a new account in the source">
+                    std:account:create
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="accountUpdate"
+                    matTooltip="Update attributes on an existing account">
+                    std:account:update
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="accountDelete"
+                    matTooltip="Delete an account from the source">
+                    std:account:delete
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Lifecycle -->
+              <div class="command-group">
+                <p class="command-group-label">Lifecycle</p>
+                <div class="command-grid">
+                  <mat-checkbox formControlName="accountEnable"
+                    matTooltip="Enable a disabled account">
+                    std:account:enable
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="accountDisable"
+                    matTooltip="Disable an account without deleting it">
+                    std:account:disable
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="accountUnlock"
+                    matTooltip="Unlock a locked account">
+                    std:account:unlock
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="changePassword"
+                    matTooltip="Change an account password">
+                    std:change-password
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Entitlements -->
+              <div class="command-group">
+                <p class="command-group-label">Entitlements</p>
+                <div class="command-grid">
+                  <mat-checkbox formControlName="entitlementList"
+                    matTooltip="List all entitlements (groups, roles) from the source">
+                    std:entitlement:list
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="entitlementRead"
+                    matTooltip="Read a single entitlement by ID">
+                    std:entitlement:read
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Advanced -->
+              <div class="command-group">
+                <p class="command-group-label">Advanced</p>
+                <div class="command-grid">
+                  <mat-checkbox formControlName="sourceDataDiscover"
+                    matTooltip="Expose queryable data sources from the connector">
+                    std:source-data:discover
+                  </mat-checkbox>
+                  <mat-checkbox formControlName="sourceDataRead"
+                    matTooltip="Read data from a specific source data key">
+                    std:source-data:read
+                  </mat-checkbox>
+                </div>
+              </div>
+
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button mat-button matStepperPrevious>
+                <mat-icon>chevron_left</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon iconPositionEnd>chevron_right</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+      </mat-step>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 4 — Account Schema
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step [stepControl]="step4" label="Account Schema">
+        <div class="step-form">
+
+          <!-- Account Attributes -->
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>manage_accounts</mat-icon>
+              <mat-card-title>Account Schema</mat-card-title>
+              <mat-card-subtitle>Define the attributes returned for each account</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content [formGroup]="step4">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="field-third">
+                  <mat-label>Display Attribute</mat-label>
+                  <mat-select formControlName="displayAttribute"
+                    matTooltip="Maps to Account Name in ISC — should be human-readable and unique">
+                    @for (name of currentAccountAttrNames; track name) {
+                      <mat-option [value]="name">{{ name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field-third">
+                  <mat-label>Identity Attribute</mat-label>
+                  <mat-select formControlName="identityAttribute"
+                    matTooltip="Maps to Account ID in ISC — must be globally unique">
+                    @for (name of currentAccountAttrNames; track name) {
+                      <mat-option [value]="name">{{ name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field-third">
+                  <mat-label>Group Attribute</mat-label>
+                  <mat-select formControlName="groupAttribute"
+                    matTooltip="The multi-value attribute that holds entitlement references">
+                    <mat-option value="">(none)</mat-option>
+                    @for (name of currentAccountAttrNames; track name) {
+                      <mat-option [value]="name">{{ name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- Attribute table -->
+              <div class="table-container">
+                <table mat-table [dataSource]="accountAttributeRows" class="attribute-table">
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-form-field appearance="outline" class="table-field">
+                        <input matInput [formControl]="$any(row).get('name')" placeholder="attributeName" />
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>Type</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-form-field appearance="outline" class="table-field-sm">
+                        <mat-select [formControl]="$any(row).get('type')">
+                          @for (t of attributeTypes; track t) {
+                            <mat-option [value]="t">{{ t }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-form-field appearance="outline" class="table-field-lg">
+                        <input matInput [formControl]="$any(row).get('description')" placeholder="Optional description" />
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="multi">
+                    <th mat-header-cell *matHeaderCellDef
+                      matTooltip="Multi-value: attribute holds an array of values">Multi</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox [formControl]="$any(row).get('multi')"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="entitlement">
+                    <th mat-header-cell *matHeaderCellDef
+                      matTooltip="Mark as an entitlement attribute">Entitlement</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox [formControl]="$any(row).get('entitlement')"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="managed">
+                    <th mat-header-cell *matHeaderCellDef
+                      matTooltip="Managed: ISC can grant/revoke this entitlement">Managed</th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox [formControl]="$any(row).get('managed')"
+                        [disabled]="!$any(row).get('entitlement').value"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      <button mat-icon-button color="warn" (click)="removeAccountAttribute(i)"
+                        matTooltip="Remove attribute">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="accountAttributeColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: accountAttributeColumns;"></tr>
+                </table>
+              </div>
+
+              <div class="table-actions">
+                <button mat-stroked-button (click)="addAccountAttribute()">
+                  <mat-icon>add</mat-icon>
+                  Add Attribute
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Entitlement Schema (conditional) -->
+          @if (hasEntitlements) {
+            <mat-card class="sub-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>group</mat-icon>
+                <mat-card-title>Entitlement Schema</mat-card-title>
+                <mat-card-subtitle>Define the attributes for groups / entitlements</mat-card-subtitle>
+              </mat-card-header>
+
+              <mat-card-content [formGroup]="entitlementSchemaGroup">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="field-half">
+                    <mat-label>Display Attribute</mat-label>
+                    <mat-select formControlName="entitlementDisplayAttribute">
+                      @for (ctrl of entitlementAttributes.controls; track $index) {
+                        <mat-option [value]="ctrl.get('name')?.value">{{ ctrl.get('name')?.value }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="field-half">
+                    <mat-label>Identity Attribute</mat-label>
+                    <mat-select formControlName="entitlementIdentityAttribute">
+                      @for (ctrl of entitlementAttributes.controls; track $index) {
+                        <mat-option [value]="ctrl.get('name')?.value">{{ ctrl.get('name')?.value }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="table-container">
+                  <table mat-table [dataSource]="entitlementAttributeRows" class="attribute-table">
+
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef>Name</th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-form-field appearance="outline" class="table-field">
+                          <input matInput [formControl]="$any(row).get('name')" placeholder="attributeName" />
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                      <th mat-header-cell *matHeaderCellDef>Type</th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-form-field appearance="outline" class="table-field-sm">
+                          <mat-select [formControl]="$any(row).get('type')">
+                            @for (t of attributeTypes; track t) {
+                              <mat-option [value]="t">{{ t }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef>Description</th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-form-field appearance="outline" class="table-field-lg">
+                          <input matInput [formControl]="$any(row).get('description')" placeholder="Optional description" />
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let row; let i = index">
+                        <button mat-icon-button color="warn" (click)="removeEntitlementAttribute(i)"
+                          matTooltip="Remove attribute">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="entitlementAttributeColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: entitlementAttributeColumns;"></tr>
+                  </table>
+                </div>
+
+                <div class="table-actions">
+                  <button mat-stroked-button (click)="addEntitlementAttribute()">
+                    <mat-icon>add</mat-icon>
+                    Add Attribute
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+
+          <!-- Account Create Template (conditional) -->
+          @if (hasAccountCreate) {
+            <mat-card class="sub-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>person_add</mat-icon>
+                <mat-card-title>Account Create Template</mat-card-title>
+                <mat-card-subtitle>Map identity attributes to new account fields</mat-card-subtitle>
+              </mat-card-header>
+
+              <mat-card-content>
+                <p class="hint-text">
+                  Use <strong>Sync from Schema</strong> to auto-populate fields from your account attributes,
+                  then choose how each value is sourced.
+                </p>
+                <div class="table-actions" style="margin-bottom: 12px;">
+                  <button mat-stroked-button (click)="syncCreateFieldsFromSchema()">
+                    <mat-icon>sync</mat-icon>
+                    Sync from Schema
+                  </button>
+                </div>
+
+                @if (accountCreateFields.controls.length > 0) {
+                  @for (field of accountCreateFields.controls; track $index; let i = $index) {
+                    <div class="create-field-row" [formGroup]="$any(field)">
+                      <mat-form-field appearance="outline" class="field-sm">
+                        <mat-label>Key</mat-label>
+                        <input matInput formControlName="key" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="field-sm">
+                        <mat-label>Label</mat-label>
+                        <input matInput formControlName="label" />
+                      </mat-form-field>
+
+                      <mat-checkbox formControlName="required" class="required-check">Required</mat-checkbox>
+
+                      <mat-form-field appearance="outline" class="field-sm">
+                        <mat-label>Value Source</mat-label>
+                        <mat-select formControlName="initialValueType">
+                          <mat-option value="identityAttribute">Identity Attribute</mat-option>
+                          <mat-option value="generator">Generator</mat-option>
+                          <mat-option value="static">Static Value</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="field-sm">
+                        <mat-label>
+                          @if (field.get('initialValueType')?.value === 'generator') { Generator }
+                          @else if (field.get('initialValueType')?.value === 'static') { Value }
+                          @else { Identity Attr Name }
+                        </mat-label>
+                        @if (field.get('initialValueType')?.value === 'generator') {
+                          <mat-select formControlName="initialValueRef">
+                            @for (g of generatorOptions; track g.value) {
+                              <mat-option [value]="g.value">{{ g.label }}</mat-option>
+                            }
+                          </mat-select>
+                        } @else {
+                          <input matInput formControlName="initialValueRef" />
+                        }
+                      </mat-form-field>
+
+                      <button mat-icon-button color="warn" (click)="accountCreateFields.removeAt(i)"
+                        matTooltip="Remove field">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                }
+              </mat-card-content>
+            </mat-card>
+          }
+
+          <div class="step-nav">
+            <button mat-button matStepperPrevious>
+              <mat-icon>chevron_left</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="step4.invalid">
+              Next
+              <mat-icon iconPositionEnd>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-step>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 5 — Additional Configuration
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step label="Additional Config">
+        <div class="step-form">
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>tune</mat-icon>
+              <mat-card-title>Additional Configuration</mat-card-title>
+              <mat-card-subtitle>Add extra config fields beyond authentication (e.g. base URL, tenant ID)</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              @if (additionalSections.length === 0) {
+                <p class="empty-state">No additional configuration sections. Click <strong>Add Section</strong> to add custom fields.</p>
+              }
+
+              @for (section of additionalSections.controls; track $index; let si = $index) {
+                <div class="config-section-block" [formGroup]="$any(section)">
+                  <div class="section-header-row">
+                    <mat-form-field appearance="outline" class="field-half">
+                      <mat-label>Section Title</mat-label>
+                      <input matInput formControlName="sectionTitle" placeholder="e.g. Connection Settings" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="field-half">
+                      <mat-label>Help Message (optional)</mat-label>
+                      <input matInput formControlName="sectionHelpMessage" placeholder="Shown below section title" />
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" (click)="removeSection(si)"
+                      matTooltip="Remove section">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <!-- ── Config item expansion panels ─────────────────────── -->
+                  @for (item of getSectionItemRows(si); track $index; let ii = $index) {
+                    <mat-expansion-panel class="config-item-panel" [formGroup]="$any(item)">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title class="panel-title-row">
+                          <span class="type-badge">{{ $any(item).get('type').value }}</span>
+                          <span class="panel-key">{{ $any(item).get('key').value || 'new field' }}</span>
+                        </mat-panel-title>
+                        <mat-panel-description class="panel-desc-row">
+                          {{ $any(item).get('label').value }}
+                          <button mat-icon-button color="warn" class="panel-delete"
+                            (click)="$event.stopPropagation(); removeConfigItem(si, ii)"
+                            matTooltip="Remove field">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+
+                      <!-- ── Base fields (all types) ─────────────────────── -->
+                      <div class="item-base-fields">
+                        <div class="form-row">
+                          <mat-form-field appearance="outline" class="field-sm">
+                            <mat-label>Key</mat-label>
+                            <input matInput formControlName="key" placeholder="myField" />
+                            <mat-hint>Used in connector code to read this value</mat-hint>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="field-sm">
+                            <mat-label>Label</mat-label>
+                            <input matInput formControlName="label" placeholder="My Field" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="field-sm">
+                            <mat-label>Type</mat-label>
+                            <mat-select formControlName="type">
+                              @for (t of configItemTypes; track t) {
+                                <mat-option [value]="t">{{ t }}</mat-option>
+                              }
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-checkbox formControlName="required" class="required-check">Required</mat-checkbox>
+                        </div>
+                        <div class="form-row">
+                          <mat-form-field appearance="outline" class="field-half">
+                            <mat-label>Parent Key (conditional display)</mat-label>
+                            <input matInput formControlName="parentKey" placeholder="authMethod" />
+                            <mat-hint>Show this field only when another field equals the value below</mat-hint>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="field-half">
+                            <mat-label>Parent Value</mat-label>
+                            <input matInput formControlName="parentValue" placeholder="oauth2" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- ── list: helpKey ─────────────────────────────────── -->
+                      @if ($any(item).get('type').value === 'list') {
+                        <div class="type-config-section">
+                          <p class="type-config-label">List Options</p>
+                          <mat-form-field appearance="outline" class="field-full">
+                            <mat-label>Help Text (helpKey)</mat-label>
+                            <input matInput formControlName="helpKey"
+                              placeholder="Enter one value per line, e.g. example.com" />
+                            <mat-hint>Displayed below the list input as guidance to administrators</mat-hint>
+                          </mat-form-field>
+                        </div>
+                      }
+
+                      <!-- ── select / radio: options ───────────────────────── -->
+                      @if (optionTypes.includes($any(item).get('type').value)) {
+                        <div class="type-config-section">
+                          <p class="type-config-label">Options</p>
+                          @for (opt of getItemOptionRows(si, ii); track $index; let oi = $index) {
+                            <div class="option-row" [formGroup]="$any(opt)">
+                              <mat-form-field appearance="outline" class="field-sm">
+                                <mat-label>Label</mat-label>
+                                <input matInput formControlName="label" placeholder="Display text" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline" class="field-sm">
+                                <mat-label>Value</mat-label>
+                                <input matInput formControlName="value" placeholder="storedValue" />
+                              </mat-form-field>
+                              <button mat-icon-button color="warn" (click)="removeOption(si, ii, oi)"
+                                matTooltip="Remove option">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </div>
+                          }
+                          <div class="table-actions">
+                            <button mat-stroked-button (click)="addOption(si, ii)">
+                              <mat-icon>add</mat-icon>
+                              Add Option
+                            </button>
+                          </div>
+                        </div>
+                      }
+
+                      <!-- ── keyValue: sub-field config ────────────────────── -->
+                      @if ($any(item).get('type').value === 'keyValue') {
+                        <div class="type-config-section">
+                          <p class="type-config-label">Key-Value Field Configuration</p>
+                          <div class="kv-config-grid">
+                            <div class="kv-side">
+                              <p class="kv-side-label">Key column</p>
+                              <mat-form-field appearance="outline" class="field-full">
+                                <mat-label>Label</mat-label>
+                                <input matInput formControlName="kvKeyLabel" placeholder="Key" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline" class="field-full">
+                                <mat-label>Max Length</mat-label>
+                                <input matInput formControlName="kvKeyMaxlength" placeholder="256" />
+                              </mat-form-field>
+                              <mat-checkbox formControlName="kvKeyRequired">Required</mat-checkbox>
+                            </div>
+                            <mat-divider vertical></mat-divider>
+                            <div class="kv-side">
+                              <p class="kv-side-label">Value column</p>
+                              <mat-form-field appearance="outline" class="field-full">
+                                <mat-label>Label</mat-label>
+                                <input matInput formControlName="kvValueLabel" placeholder="Value" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline" class="field-full">
+                                <mat-label>Max Length</mat-label>
+                                <input matInput formControlName="kvValueMaxlength" placeholder="4096" />
+                              </mat-form-field>
+                              <mat-checkbox formControlName="kvValueRequired">Required</mat-checkbox>
+                            </div>
+                          </div>
+                        </div>
+                      }
+
+                      <!-- ── cardList: card config + subMenus ──────────────── -->
+                      @if ($any(item).get('type').value === 'cardList') {
+                        <div class="type-config-section">
+                          <p class="type-config-label">Card Display</p>
+                          <div class="form-row">
+                            <mat-form-field appearance="outline" class="field-third">
+                              <mat-label>Title Key</mat-label>
+                              <input matInput formControlName="titleKey"
+                                matTooltip="Key from a subMenu item used as the card title" />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="field-third">
+                              <mat-label>Subtitle Key</mat-label>
+                              <input matInput formControlName="subtitleKey"
+                                matTooltip="Key from a subMenu item used as the card subtitle" />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="field-third">
+                              <mat-label>Index Key (optional)</mat-label>
+                              <input matInput formControlName="indexKey" />
+                            </mat-form-field>
+                          </div>
+                          <div class="form-row">
+                            <mat-form-field appearance="outline" class="field-sm">
+                              <mat-label>Add Button Label</mat-label>
+                              <input matInput formControlName="buttonLabel" placeholder="Add" />
+                            </mat-form-field>
+                          </div>
+                          <div class="card-button-toggles">
+                            <mat-slide-toggle formControlName="addButton">Add button</mat-slide-toggle>
+                            <mat-slide-toggle formControlName="editButton">Edit button</mat-slide-toggle>
+                            <mat-slide-toggle formControlName="deleteButton">Delete button</mat-slide-toggle>
+                            <mat-slide-toggle formControlName="copyButton">Copy button</mat-slide-toggle>
+                            <mat-slide-toggle formControlName="dragNDropEnabled">Drag &amp; drop</mat-slide-toggle>
+                          </div>
+
+                          <mat-divider class="section-divider"></mat-divider>
+                          <p class="type-config-label">Sub-Menus</p>
+                          <p class="hint-text">Each sub-menu becomes a page in the card editor dialog. Add at least one.</p>
+
+                          @for (sm of getSubMenuRows(si, ii); track $index; let smi = $index) {
+                            <mat-card class="submenu-card" [formGroup]="$any(sm)">
+                              <mat-card-header>
+                                <mat-card-title>
+                                  <mat-form-field appearance="outline" class="field-half submenu-title-field">
+                                    <mat-label>Sub-Menu Label</mat-label>
+                                    <input matInput formControlName="label" placeholder="General" />
+                                  </mat-form-field>
+                                </mat-card-title>
+                                <button mat-icon-button color="warn" (click)="removeSubMenu(si, ii, smi)"
+                                  matTooltip="Remove sub-menu">
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </mat-card-header>
+
+                              <mat-card-content>
+                                @for (smiRow of getSubMenuItemRows(si, ii, smi); track $index; let smii = $index) {
+                                  <div class="submenu-item-row" [formGroup]="$any(smiRow)">
+                                    <mat-form-field appearance="outline" class="field-sm">
+                                      <mat-label>Key</mat-label>
+                                      <input matInput formControlName="key" placeholder="fieldKey" />
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" class="field-sm">
+                                      <mat-label>Label</mat-label>
+                                      <input matInput formControlName="label" placeholder="Field Label" />
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" class="field-sm">
+                                      <mat-label>Type</mat-label>
+                                      <mat-select formControlName="type">
+                                        @for (t of configItemTypes; track t) {
+                                          <mat-option [value]="t">{{ t }}</mat-option>
+                                        }
+                                      </mat-select>
+                                    </mat-form-field>
+                                    <mat-checkbox formControlName="required" class="required-check">Req.</mat-checkbox>
+                                    <button mat-icon-button color="warn"
+                                      (click)="removeSubMenuItem(si, ii, smi, smii)"
+                                      matTooltip="Remove field">
+                                      <mat-icon>delete</mat-icon>
+                                    </button>
+                                  </div>
+                                  <!-- Nested options for select/radio inside subMenu -->
+                                  @if (optionTypes.includes($any(smiRow).get('type').value)) {
+                                    <div class="submenu-item-options">
+                                      @for (opt of getSubMenuItemOptionRows(si, ii, smi, smii); track $index; let oi = $index) {
+                                        <div class="option-row" [formGroup]="$any(opt)">
+                                          <mat-form-field appearance="outline" class="field-sm">
+                                            <mat-label>Label</mat-label>
+                                            <input matInput formControlName="label" />
+                                          </mat-form-field>
+                                          <mat-form-field appearance="outline" class="field-sm">
+                                            <mat-label>Value</mat-label>
+                                            <input matInput formControlName="value" />
+                                          </mat-form-field>
+                                          <button mat-icon-button color="warn"
+                                            (click)="removeSubMenuItemOption(si, ii, smi, smii, oi)">
+                                            <mat-icon>delete</mat-icon>
+                                          </button>
+                                        </div>
+                                      }
+                                      <button mat-stroked-button (click)="addSubMenuItemOption(si, ii, smi, smii)">
+                                        <mat-icon>add</mat-icon> Add Option
+                                      </button>
+                                    </div>
+                                  }
+                                }
+                                <div class="table-actions">
+                                  <button mat-stroked-button (click)="addSubMenuItem(si, ii, smi)">
+                                    <mat-icon>add</mat-icon>
+                                    Add Field
+                                  </button>
+                                </div>
+                              </mat-card-content>
+                            </mat-card>
+                          }
+
+                          <div class="table-actions">
+                            <button mat-stroked-button (click)="addSubMenu(si, ii)">
+                              <mat-icon>add</mat-icon>
+                              Add Sub-Menu
+                            </button>
+                          </div>
+                        </div>
+                      }
+
+                    </mat-expansion-panel>
+                  }
+
+                  <div class="table-actions">
+                    <button mat-stroked-button (click)="addConfigItem(si)">
+                      <mat-icon>add</mat-icon>
+                      Add Field
+                    </button>
+                  </div>
+
+                  @if (si < additionalSections.length - 1) {
+                    <mat-divider class="section-divider"></mat-divider>
+                  }
+                </div>
+              }
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-stroked-button (click)="addSection()">
+                <mat-icon>add</mat-icon>
+                Add Section
+              </button>
+              <span class="spacer"></span>
+              <button mat-button matStepperPrevious>
+                <mat-icon>chevron_left</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Review &amp; Generate
+                <mat-icon iconPositionEnd>chevron_right</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           STEP 6 — Review & Generate
+      ════════════════════════════════════════════════════════════════════ -->
+      <mat-step label="Review & Generate">
+        <div class="step-form">
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>download</mat-icon>
+              <mat-card-title>Review &amp; Download</mat-card-title>
+              <mat-card-subtitle>
+                Preview the generated files, then download your connector project as a ZIP
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <!-- Summary chips -->
+              <div class="summary-row">
+                <mat-chip-set>
+                  <mat-chip>
+                    <mat-icon matChipAvatar>label</mat-icon>
+                    {{ step1.value.connectorName }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon matChipAvatar>lock</mat-icon>
+                    {{ step2.value.authType }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon matChipAvatar>vpn_key</mat-icon>
+                    {{ step1.value.keyType }} key
+                  </mat-chip>
+                  @if (step1.value.supportsStatefulCommands) {
+                    <mat-chip>
+                      <mat-icon matChipAvatar>sync</mat-icon>
+                      stateful
+                    </mat-chip>
+                  }
+                </mat-chip-set>
+              </div>
+
+              <mat-divider class="section-divider"></mat-divider>
+
+              <!-- File previews -->
+              <mat-tab-group animationDuration="0">
+                <mat-tab label="connector-spec.json">
+                  <pre class="code-preview">{{ generatedSpec }}</pre>
+                </mat-tab>
+                <mat-tab label="src/index.ts">
+                  <pre class="code-preview">{{ generatedIndexTs }}</pre>
+                </mat-tab>
+                <mat-tab [label]="'src/' + step1.value.connectorName + '-client.ts'">
+                  <pre class="code-preview">{{ generatedClientTs }}</pre>
+                </mat-tab>
+                <mat-tab label="package.json">
+                  <pre class="code-preview">{{ generatedPackageJson }}</pre>
+                </mat-tab>
+                <mat-tab label="tsconfig.json">
+                  <pre class="code-preview">{{ generatedTsConfig }}</pre>
+                </mat-tab>
+                <mat-tab label=".gitignore">
+                  <pre class="code-preview">{{ generatedGitIgnore }}</pre>
+                </mat-tab>
+              </mat-tab-group>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button mat-button matStepperPrevious>
+                <mat-icon>chevron_left</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" (click)="downloadProject()">
+                <mat-icon>download</mat-icon>
+                Download Project
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+
+    </mat-stepper>
+  </div>
+
+</div>

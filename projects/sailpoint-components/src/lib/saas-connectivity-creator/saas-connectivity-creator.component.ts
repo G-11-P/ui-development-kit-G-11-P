@@ -176,7 +176,9 @@ export class SaasConnectivityCreatorComponent {
     }
 
     get currentAccountAttrNames(): string[] {
-        return this.accountAttributes.controls.map(c => c.get('name')?.value).filter(Boolean);
+        return this.accountAttributes.controls
+            .map(c => c.get('name')?.value as string | undefined)
+            .filter((v): v is string => Boolean(v));
     }
 
     // ─── Step 4 helpers ──────────────────────────────────────────────────────────

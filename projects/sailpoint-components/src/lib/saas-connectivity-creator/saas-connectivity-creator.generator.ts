@@ -1,6 +1,5 @@
 import {
     AccountAttribute,
-    AccountCreateField,
     AuthType,
     ConfigItem,
     ConfigSection,
@@ -285,7 +284,7 @@ export class ConnectorCodeGenerator {
         const className = this.toClassName(state.connectorName);
         const clientFile = `./${state.connectorName}-client`;
         const imports = this.buildSdkImports(state);
-        const handlers = this.buildHandlers(state, className);
+        const handlers = this.buildHandlers(state);
 
         return `import {
 ${imports.map(i => `    ${i},`).join('\n')}
@@ -323,7 +322,7 @@ ${handlers.map(h => `        ${h}`).join('\n')}
         return imports.sort();
     }
 
-    private static buildHandlers(state: WizardState, className: string): string[] {
+    private static buildHandlers(state: WizardState): string[] {
         const { commands: c } = state;
         const handlers: string[] = [];
 

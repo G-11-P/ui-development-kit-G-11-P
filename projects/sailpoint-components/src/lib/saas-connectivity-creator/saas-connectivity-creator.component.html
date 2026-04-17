@@ -29,7 +29,7 @@
                 <mat-form-field appearance="outline" class="field-half">
                   <mat-label>Connector Name</mat-label>
                   <input matInput formControlName="connectorName" placeholder="my-api-connector" />
-                  <mat-hint>Lowercase letters, numbers, and hyphens only. Used as the project folder name.</mat-hint>
+                  <mat-hint>Lowercase letters, numbers, and hyphens only.</mat-hint>
                   @if (step1.get('connectorName')?.hasError('required')) {
                     <mat-error>Connector name is required</mat-error>
                   }
@@ -709,7 +709,7 @@
                           <mat-form-field appearance="outline" class="field-sm">
                             <mat-label>Key</mat-label>
                             <input matInput formControlName="key" placeholder="myField" />
-                            <mat-hint>Used in connector code to read this value</mat-hint>
+                            <mat-hint>Used in code to read this value</mat-hint>
                           </mat-form-field>
                           <mat-form-field appearance="outline" class="field-sm">
                             <mat-label>Label</mat-label>

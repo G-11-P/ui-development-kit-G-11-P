@@ -112,10 +112,12 @@ export class ConnectorCodeGenerator {
         switch (authType) {
             case 'apiKey':
                 return [
+                    { key: 'apiUrl', label: 'Base URL', required: true, type: 'url' },
                     { key: 'apiKey', label: authConfig['keyLabel'] || 'API Key', required: true, type: 'secret' },
                 ];
             case 'oauth2':
                 return [
+                    { key: 'apiUrl', label: 'Base URL', required: true, type: 'url' },
                     { key: 'clientId', label: 'Client ID', required: true, type: 'secret' },
                     { key: 'clientSecret', label: 'Client Secret', required: true, type: 'secret' },
                     { key: 'tokenUrl', label: 'Token URL', required: true, type: 'url' },
@@ -123,11 +125,13 @@ export class ConnectorCodeGenerator {
                 ];
             case 'basicAuth':
                 return [
+                    { key: 'apiUrl', label: 'Base URL', required: true, type: 'url' },
                     { key: 'username', label: authConfig['usernameLabel'] || 'Username', required: true, type: 'text' },
                     { key: 'password', label: authConfig['passwordLabel'] || 'Password', required: true, type: 'secret' },
                 ];
             case 'bearerToken':
                 return [
+                    { key: 'apiUrl', label: 'Base URL', required: true, type: 'url' },
                     { key: 'token', label: authConfig['tokenLabel'] || 'Bearer Token', required: true, type: 'secret' },
                 ];
             case 'custom':
@@ -508,7 +512,7 @@ ${handlers.map(h => `        ${h}`).join('\n')}
 
         const hasEntitlements = state.commands.entitlementList || state.commands.entitlementRead;
 
-        return `import { ConnectorError } from '@sailpoint/connector-sdk'
+        return `import { ConnectorError, createConnectorHttpClient, AxiosInstance } from '@sailpoint/connector-sdk'
 
 ${accountType}
 
@@ -557,56 +561,94 @@ ${methods.join('\n\n')}
     private static buildClientAuthSetup(state: WizardState): string {
         switch (state.authType) {
             case 'apiKey':
-                return `    private readonly apiKey: string
+                return `    private httpClient: AxiosInstance
 
     constructor(config: any) {
-        this.apiKey = config?.apiKey
-        if (this.apiKey == null) {
+        if (config?.apiUrl == null) {
+            throw new ConnectorError('apiUrl must be provided from config')
+        }
+        if (config?.apiKey == null) {
             throw new ConnectorError('apiKey must be provided from config')
         }
+        this.httpClient = createConnectorHttpClient({
+            baseURL: config.apiUrl,
+            auth: {
+                type: 'apiKey',
+                in: 'header',
+                name: 'X-API-Key',
+                value: config.apiKey,
+            },
+        })
     }`;
             case 'oauth2':
-                return `    private readonly clientId: string
-    private readonly clientSecret: string
-    private readonly tokenUrl: string
-    private accessToken: string | null = null
+                return `    private httpClient: AxiosInstance
 
     constructor(config: any) {
-        this.clientId = config?.clientId
-        this.clientSecret = config?.clientSecret
-        this.tokenUrl = config?.tokenUrl
-        if (this.clientId == null || this.clientSecret == null) {
+        if (config?.apiUrl == null) {
+            throw new ConnectorError('apiUrl must be provided from config')
+        }
+        if (config?.clientId == null || config?.clientSecret == null) {
             throw new ConnectorError('clientId and clientSecret must be provided from config')
         }
-    }
-
-    private async getAccessToken(): Promise<string> {
-        if (this.accessToken) return this.accessToken
-        // TODO: implement OAuth 2.0 token exchange
-        throw new ConnectorError('OAuth 2.0 token exchange not yet implemented')
+        if (config?.tokenUrl == null) {
+            throw new ConnectorError('tokenUrl must be provided from config')
+        }
+        this.httpClient = createConnectorHttpClient({
+            baseURL: config.apiUrl,
+            auth: {
+                type: 'oauth2ClientCredentials',
+                tokenUrl: config.tokenUrl,
+                clientId: config.clientId,
+                clientSecret: config.clientSecret,
+                scope: config.scopes,
+            },
+        })
     }`;
             case 'basicAuth':
-                return `    private readonly username: string
-    private readonly password: string
+                return `    private httpClient: AxiosInstance
 
     constructor(config: any) {
-        this.username = config?.username
-        this.password = config?.password
-        if (this.username == null || this.password == null) {
+        if (config?.apiUrl == null) {
+            throw new ConnectorError('apiUrl must be provided from config')
+        }
+        if (config?.username == null || config?.password == null) {
             throw new ConnectorError('username and password must be provided from config')
         }
+        this.httpClient = createConnectorHttpClient({
+            baseURL: config.apiUrl,
+            auth: {
+                type: 'basic',
+                username: config.username,
+                password: config.password,
+            },
+        })
     }`;
             case 'bearerToken':
-                return `    private readonly token: string
+                return `    private httpClient: AxiosInstance
 
     constructor(config: any) {
-        this.token = config?.token
-        if (this.token == null) {
+        if (config?.apiUrl == null) {
+            throw new ConnectorError('apiUrl must be provided from config')
+        }
+        if (config?.token == null) {
             throw new ConnectorError('token must be provided from config')
         }
+        this.httpClient = createConnectorHttpClient({
+            baseURL: config.apiUrl,
+            auth: {
+                type: 'bearer',
+                token: config.token,
+            },
+        })
     }`;
             case 'custom':
-                return `    constructor(config: any) {}`;
+                return `    private httpClient: AxiosInstance
+
+    constructor(config: any) {
+        this.httpClient = createConnectorHttpClient({
+            baseURL: config.apiUrl,
+        })
+    }`;
         }
     }
 
@@ -615,8 +657,8 @@ ${methods.join('\n\n')}
         const methods: string[] = [];
 
         methods.push(`    async testConnection(): Promise<Record<string, unknown>> {
-        // TODO: make a lightweight API call to verify credentials
-        // throw new ConnectorError('Connection failed') if credentials are invalid
+        // TODO: replace with a real health-check endpoint
+        await this.httpClient.get('/')
         return {}
     }`);
 

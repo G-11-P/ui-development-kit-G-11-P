@@ -5,6 +5,22 @@ import {
     ConfigSection,
     WizardState,
 } from './saas-connectivity-creator.models';
+import {
+    cmdAccountCreate,
+    cmdAccountDelete,
+    cmdAccountDisable,
+    cmdAccountEnable,
+    cmdAccountList,
+    cmdAccountRead,
+    cmdAccountUnlock,
+    cmdAccountUpdate,
+    cmdChangePassword,
+    cmdEntitlementList,
+    cmdEntitlementRead,
+    cmdSourceDataDiscover,
+    cmdSourceDataRead,
+    cmdTestConnection,
+} from './saas-connectivity-creator.command-templates';
 
 export class ConnectorCodeGenerator {
 
@@ -288,21 +304,35 @@ export class ConnectorCodeGenerator {
 
         return `import {
 ${imports.map(i => `    ${i},`).join('\n')}
-} from '@sailpoint/connector-sdk';
-import { ${className}Client } from '${clientFile}';
+} from '@sailpoint/connector-sdk'
+import { ${className}Client } from '${clientFile}'
 
+// Connector must be exported as module property named connector
 export const connector = async () => {
-    const config = await readConfig();
-    const client = new ${className}Client(config);
+
+    // Get connector source config
+    const config = await readConfig()
+
+    // Use the vendor SDK, or implement own client as necessary, to initialize a client
+    const myClient = new ${className}Client(config)
 
     return createConnector()
 ${handlers.map(h => `        ${h}`).join('\n')}
-};
+}
 `;
     }
 
     private static buildSdkImports(state: WizardState): string[] {
-        const imports = ['createConnector', 'readConfig', 'Context', 'Response', 'StdTestConnectionOutput'];
+        // logger and StdTestConnectionInput are always included
+        const imports = [
+            'Context',
+            'createConnector',
+            'logger',
+            'readConfig',
+            'Response',
+            'StdTestConnectionInput',
+            'StdTestConnectionOutput',
+        ];
         const { commands: c } = state;
 
         if (c.accountList)        imports.push('StdAccountListInput', 'StdAccountListOutput');
@@ -324,104 +354,141 @@ ${handlers.map(h => `        ${h}`).join('\n')}
 
     private static buildHandlers(state: WizardState): string[] {
         const { commands: c } = state;
+        const idAttr = state.identityAttribute || 'id';
+        const entIdAttr = state.entitlementIdentityAttribute || 'id';
         const handlers: string[] = [];
 
-        handlers.push(`.stdTestConnection(async (context: Context, input: undefined, res: Response<StdTestConnectionOutput>) => {
-            res.send(await client.testConnection());
+        handlers.push(`.stdTestConnection(async (context: Context, input: StdTestConnectionInput, res: Response<StdTestConnectionOutput>) => {
+            logger.info('Running test connection')
+            res.send(await myClient.testConnection())
         })`);
 
         if (c.accountList) {
             handlers.push(`.stdAccountList(async (context: Context, input: StdAccountListInput, res: Response<StdAccountListOutput>) => {
-            const accounts = await client.getAccounts();
+            const accounts = await myClient.getAccounts()
             for (const account of accounts) {
-                res.send(account);
+                res.send({
+                    identity: account.${idAttr},
+                    uuid: account.${idAttr},
+                    attributes: account as any,
+                })
             }
+            logger.info(\`stdAccountList sent \${accounts.length} accounts\`)
         })`);
         }
 
         if (c.accountRead) {
             handlers.push(`.stdAccountRead(async (context: Context, input: StdAccountReadInput, res: Response<StdAccountReadOutput>) => {
-            const account = await client.getAccount(input.key);
-            res.send(account);
+            const account = await myClient.getAccount(input.identity)
+            res.send({
+                identity: account.${idAttr},
+                uuid: account.${idAttr},
+                attributes: account as any,
+            })
+            logger.info(\`stdAccountRead read account: \${input.identity}\`)
         })`);
         }
 
         if (c.accountCreate) {
             handlers.push(`.stdAccountCreate(async (context: Context, input: StdAccountCreateInput, res: Response<StdAccountCreateOutput>) => {
-            const account = await client.createAccount(input);
-            res.send(account);
+            const account = await myClient.createAccount(input)
+            res.send({
+                identity: account.${idAttr},
+                uuid: account.${idAttr},
+                attributes: account as any,
+            })
         })`);
         }
 
         if (c.accountUpdate) {
             handlers.push(`.stdAccountUpdate(async (context: Context, input: StdAccountUpdateInput, res: Response<StdAccountUpdateOutput>) => {
-            const account = await client.updateAccount(input.key, input.changes);
-            res.send(account);
+            await myClient.updateAccount(input.identity, input.changes)
+            res.send({})
         })`);
         }
 
         if (c.accountDelete) {
             handlers.push(`.stdAccountDelete(async (context: Context, input: StdAccountDeleteInput, res: Response<StdAccountDeleteOutput>) => {
-            await client.deleteAccount(input.key);
-            res.send({});
+            await myClient.deleteAccount(input.identity)
+            res.send({})
         })`);
         }
 
         if (c.accountEnable) {
             handlers.push(`.stdAccountEnable(async (context: Context, input: StdAccountEnableInput, res: Response<StdAccountEnableOutput>) => {
-            const account = await client.enableAccount(input.key);
-            res.send(account);
+            const account = await myClient.enableAccount(input.identity)
+            res.send({
+                identity: account.${idAttr},
+                uuid: account.${idAttr},
+                attributes: account as any,
+            })
         })`);
         }
 
         if (c.accountDisable) {
             handlers.push(`.stdAccountDisable(async (context: Context, input: StdAccountDisableInput, res: Response<StdAccountDisableOutput>) => {
-            const account = await client.disableAccount(input.key);
-            res.send(account);
+            const account = await myClient.disableAccount(input.identity)
+            res.send({
+                identity: account.${idAttr},
+                uuid: account.${idAttr},
+                attributes: account as any,
+            })
         })`);
         }
 
         if (c.accountUnlock) {
             handlers.push(`.stdAccountUnlock(async (context: Context, input: StdAccountUnlockInput, res: Response<StdAccountUnlockOutput>) => {
-            const account = await client.unlockAccount(input.key);
-            res.send(account);
+            const account = await myClient.unlockAccount(input.identity)
+            res.send({
+                identity: account.${idAttr},
+                uuid: account.${idAttr},
+                attributes: account as any,
+            })
         })`);
         }
 
         if (c.changePassword) {
             handlers.push(`.stdChangePassword(async (context: Context, input: StdChangePasswordInput, res: Response<StdChangePasswordOutput>) => {
-            await client.changePassword(input.key, input.password);
-            res.send({});
+            await myClient.changePassword(input.identity, input.password)
+            res.send({})
         })`);
         }
 
         if (c.entitlementList) {
             handlers.push(`.stdEntitlementList(async (context: Context, input: StdEntitlementListInput, res: Response<StdEntitlementListOutput>) => {
-            const groups = await client.getEntitlements();
+            const groups = await myClient.getEntitlements()
             for (const group of groups) {
-                res.send(group);
+                res.send({
+                    type: 'group',
+                    identity: group.${entIdAttr},
+                    attributes: group as any,
+                })
             }
         })`);
         }
 
         if (c.entitlementRead) {
             handlers.push(`.stdEntitlementRead(async (context: Context, input: StdEntitlementReadInput, res: Response<StdEntitlementReadOutput>) => {
-            const group = await client.getEntitlement(input.key);
-            res.send(group);
+            const group = await myClient.getEntitlement(input.identity)
+            res.send({
+                type: 'group',
+                identity: group.${entIdAttr},
+                attributes: group as any,
+            })
         })`);
         }
 
         if (c.sourceDataDiscover) {
             handlers.push(`.stdSourceDataDiscover(async (context: Context, input: StdSourceDataDiscoverInput, res: Response<StdSourceDataDiscoverOutput>) => {
-            const data = await client.discoverSourceData();
-            res.send(data);
+            const data = await myClient.discoverSourceData()
+            res.send(data as any)
         })`);
         }
 
         if (c.sourceDataRead) {
             handlers.push(`.stdSourceDataRead(async (context: Context, input: StdSourceDataReadInput, res: Response<StdSourceDataReadOutput>) => {
-            const data = await client.readSourceData(input.sourceDataKey);
-            res.send(data);
+            const data = await myClient.readSourceData(input.sourceDataKey)
+            res.send(data as any)
         })`);
         }
 
@@ -441,7 +508,9 @@ ${handlers.map(h => `        ${h}`).join('\n')}
 
         const hasEntitlements = state.commands.entitlementList || state.commands.entitlementRead;
 
-        return `${accountType}
+        return `import { ConnectorError } from '@sailpoint/connector-sdk'
+
+${accountType}
 
 ${hasEntitlements ? entitlementType + '\n\n' : ''}export class ${className}Client {
 ${authSetup}
@@ -488,44 +557,56 @@ ${methods.join('\n\n')}
     private static buildClientAuthSetup(state: WizardState): string {
         switch (state.authType) {
             case 'apiKey':
-                return `    private readonly apiKey: string;
+                return `    private readonly apiKey: string
 
-    constructor(private config: Record<string, string>) {
-        this.apiKey = config['apiKey'];
+    constructor(config: any) {
+        this.apiKey = config?.apiKey
+        if (this.apiKey == null) {
+            throw new ConnectorError('apiKey must be provided from config')
+        }
     }`;
             case 'oauth2':
-                return `    private readonly clientId: string;
-    private readonly clientSecret: string;
-    private readonly tokenUrl: string;
-    private accessToken: string | null = null;
+                return `    private readonly clientId: string
+    private readonly clientSecret: string
+    private readonly tokenUrl: string
+    private accessToken: string | null = null
 
-    constructor(private config: Record<string, string>) {
-        this.clientId = config['clientId'];
-        this.clientSecret = config['clientSecret'];
-        this.tokenUrl = config['tokenUrl'];
+    constructor(config: any) {
+        this.clientId = config?.clientId
+        this.clientSecret = config?.clientSecret
+        this.tokenUrl = config?.tokenUrl
+        if (this.clientId == null || this.clientSecret == null) {
+            throw new ConnectorError('clientId and clientSecret must be provided from config')
+        }
     }
 
     private async getAccessToken(): Promise<string> {
-        if (this.accessToken) return this.accessToken;
+        if (this.accessToken) return this.accessToken
         // TODO: implement OAuth 2.0 token exchange
-        throw new Error('OAuth 2.0 token exchange not yet implemented');
+        throw new ConnectorError('OAuth 2.0 token exchange not yet implemented')
     }`;
             case 'basicAuth':
-                return `    private readonly username: string;
-    private readonly password: string;
+                return `    private readonly username: string
+    private readonly password: string
 
-    constructor(private config: Record<string, string>) {
-        this.username = config['username'];
-        this.password = config['password'];
+    constructor(config: any) {
+        this.username = config?.username
+        this.password = config?.password
+        if (this.username == null || this.password == null) {
+            throw new ConnectorError('username and password must be provided from config')
+        }
     }`;
             case 'bearerToken':
-                return `    private readonly token: string;
+                return `    private readonly token: string
 
-    constructor(private config: Record<string, string>) {
-        this.token = config['token'];
+    constructor(config: any) {
+        this.token = config?.token
+        if (this.token == null) {
+            throw new ConnectorError('token must be provided from config')
+        }
     }`;
             case 'custom':
-                return `    constructor(private config: Record<string, string>) {}`;
+                return `    constructor(config: any) {}`;
         }
     }
 
@@ -533,9 +614,10 @@ ${methods.join('\n\n')}
         const { commands: c } = state;
         const methods: string[] = [];
 
-        methods.push(`    async testConnection(): Promise<void> {
+        methods.push(`    async testConnection(): Promise<Record<string, unknown>> {
         // TODO: make a lightweight API call to verify credentials
         // throw new ConnectorError('Connection failed') if credentials are invalid
+        return {}
     }`);
 
         if (c.accountList) {
@@ -562,9 +644,8 @@ ${methods.join('\n\n')}
         }
 
         if (c.accountUpdate) {
-            methods.push(`    async updateAccount(key: string, changes: unknown[]): Promise<Account> {
+            methods.push(`    async updateAccount(key: string, changes: unknown[]): Promise<void> {
         // TODO: apply the attribute changes to the account via the API
-        return ${dummyAccount};
     }`);
         }
 
@@ -640,21 +721,52 @@ ${methods.join('\n\n')}
         const pkg = {
             name: state.connectorName,
             version: '0.1.0',
-            description: state.description || `${state.displayName} SaaS connector`,
             main: 'dist/index.js',
             scripts: {
-                build: 'tsc',
-                start: 'node dist/index.js',
+                clean: 'shx rm -rf ./dist',
+                prebuild: 'npm run clean',
+                build: 'npx ncc build ./src/index.ts -o ./dist -m -C',
+                dev: 'cross-env NODE_OPTIONS=--enable-source-maps spcx run dist/index.js',
+                debug: 'spcx run dist/index.js',
+                prettier: 'npx prettier --write .',
+                test: 'jest --coverage',
+                'prepack-zip': 'npm ci && npm run build',
+                'pack-zip': 'spcx package',
             },
+            private: true,
             dependencies: {
-                '@sailpoint/connector-sdk': '^1.0.0',
+                '@sailpoint/connector-sdk': '^1.2.1',
             },
             devDependencies: {
-                typescript: '^5.0.0',
-                '@types/node': '^18.0.0',
+                '@types/jest': '^27.0.1',
+                '@vercel/ncc': '^0.38.1',
+                'cross-env': '7.0.3',
+                jest: '^27.0.6',
+                prettier: '^2.3.2',
+                shx: '^0.3.3',
+                'ts-jest': '^27.0.5',
+                typescript: '^4.9.5',
             },
-            engines: {
-                node: '>=18.0.0',
+            jest: {
+                preset: 'ts-jest',
+                testEnvironment: 'node',
+                clearMocks: true,
+                collectCoverage: true,
+                coverageThreshold: {
+                    global: {
+                        statements: 60,
+                        branches: 50,
+                        functions: 40,
+                        lines: 60,
+                    },
+                },
+            },
+            prettier: {
+                printWidth: 120,
+                trailingComma: 'es5',
+                tabWidth: 4,
+                semi: false,
+                singleQuote: true,
             },
         };
         return JSON.stringify(pkg, null, 2);
@@ -667,17 +779,17 @@ ${methods.join('\n\n')}
             compilerOptions: {
                 target: 'ES2020',
                 module: 'commonjs',
-                lib: ['ES2020'],
-                outDir: './dist',
-                rootDir: './src',
+                outDir: 'dist',
+                rootDir: 'src',
                 strict: true,
+                moduleResolution: 'node',
                 esModuleInterop: true,
                 skipLibCheck: true,
+                sourceMap: true,
                 forceConsistentCasingInFileNames: true,
-                resolveJsonModule: true,
             },
             include: ['src/**/*'],
-            exclude: ['node_modules', 'dist'],
+            exclude: ['node_modules', '**/*.spec.ts', '**/*.spec.js'],
         };
         return JSON.stringify(config, null, 2);
     }
@@ -685,28 +797,104 @@ ${methods.join('\n\n')}
     // ─── .gitignore ──────────────────────────────────────────────────────────────
 
     static generateGitIgnore(): string {
-        return `# Dependencies
+        return `# macOS General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Intellij
+.idea/
+*.iml
+
+# Dependency directories
 node_modules/
 
-# Build output
+# Compiled source
 dist/
-
-# Environment files
-.env
-.env.local
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
+coverage/
 `;
+    }
+
+    // ─── index.spec.ts ───────────────────────────────────────────────────────────
+
+    static generateIndexSpec(state: WizardState): string {
+        const authKey = this.getAuthConfigKey(state);
+        return `import { connector } from './index'
+import { Connector, RawResponse, ResponseType, StandardCommand, AssumeAwsRoleRequest, AssumeAwsRoleResponse } from '@sailpoint/connector-sdk'
+import { PassThrough } from 'stream'
+
+const mockConfig: any = {
+    ${authKey}: 'xxx123'
+}
+process.env.CONNECTOR_CONFIG = Buffer.from(JSON.stringify(mockConfig)).toString('base64')
+
+describe('connector unit tests', () => {
+
+    it('connector SDK major version should be the same as Connector.SDK_VERSION', async () => {
+        expect((await connector()).sdkVersion).toStrictEqual(Connector.SDK_VERSION)
+    })
+
+    it('should execute stdTestConnectionHandler', async () => {
+        await (await connector())._exec(
+            StandardCommand.StdTestConnection,
+            {reloadConfig() {
+                return Promise.resolve()
+            },
+            assumeAwsRole(assumeAwsRoleRequest: AssumeAwsRoleRequest): Promise<AssumeAwsRoleResponse> {
+                return Promise.resolve(new AssumeAwsRoleResponse('accessKeyId', 'secretAccessKey', 'sessionToken', '123'))
+            }
+        },
+            undefined,
+            new PassThrough({ objectMode: true }).on('data', (chunk) => expect(chunk).toStrictEqual(new RawResponse({}, ResponseType.Output)))
+        )
+    })
+})
+`;
+    }
+
+    // ─── my-client.spec.ts ───────────────────────────────────────────────────────
+
+    static generateClientSpec(state: WizardState): string {
+        const className = this.toClassName(state.connectorName);
+        const authKey = this.getAuthConfigKey(state);
+        return `import { ConnectorError } from '@sailpoint/connector-sdk'
+import { ${className}Client } from './${state.connectorName}-client'
+
+const mockConfig: any = {
+    ${authKey}: 'xxx123'
+}
+
+describe('connector client unit tests', () => {
+
+    const myClient = new ${className}Client(mockConfig)
+
+    it('connector client test connection', async () => {
+        expect(await myClient.testConnection()).toStrictEqual({})
+    })
+
+    it('invalid connector client', async () => {
+        try {
+            new ${className}Client({})
+        } catch (e) {
+            expect(e instanceof ConnectorError).toBeTruthy()
+        }
+    })
+})
+`;
+    }
+
+    private static getAuthConfigKey(state: WizardState): string {
+        switch (state.authType) {
+            case 'apiKey':      return 'apiKey';
+            case 'oauth2':      return 'clientId';
+            case 'basicAuth':   return 'username';
+            case 'bearerToken': return 'token';
+            case 'custom':      return 'token';
+        }
     }
 
     // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -720,6 +908,60 @@ npm-debug.log*
 
     private static toTitleCase(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1).replace(/([A-Z])/g, ' $1');
+    }
+
+    // ─── Claude Code commands ────────────────────────────────────────────────────
+
+    static generateClaudeCommands(state: WizardState): Record<string, string> {
+        const cn = state.connectorName;
+        const cls = this.toClassName(cn);
+        return {
+            'implement-test-connection.md':      cmdTestConnection(cn, cls),
+            'implement-account-list.md':         cmdAccountList(cn, cls),
+            'implement-account-read.md':         cmdAccountRead(cn, cls),
+            'implement-account-create.md':       cmdAccountCreate(cn, cls),
+            'implement-account-update.md':       cmdAccountUpdate(cn, cls),
+            'implement-account-delete.md':       cmdAccountDelete(cn, cls),
+            'implement-account-enable.md':       cmdAccountEnable(cn, cls),
+            'implement-account-disable.md':      cmdAccountDisable(cn, cls),
+            'implement-account-unlock.md':       cmdAccountUnlock(cn, cls),
+            'implement-change-password.md':      cmdChangePassword(cn, cls),
+            'implement-entitlement-list.md':     cmdEntitlementList(cn, cls),
+            'implement-entitlement-read.md':     cmdEntitlementRead(cn, cls),
+            'implement-source-data-discover.md': cmdSourceDataDiscover(cn, cls),
+            'implement-source-data-read.md':     cmdSourceDataRead(cn, cls),
+        };
+    }
+
+    // ─── Cursor rules ─────────────────────────────────────────────────────────────
+
+    static generateCursorRules(state: WizardState): Record<string, string> {
+        const commands = this.generateClaudeCommands(state);
+        const descriptions: Record<string, string> = {
+            'implement-test-connection':      'Implement std:test-connection — replace the testConnection() stub with a real API call',
+            'implement-account-list':         'Implement std:account:list — replace the getAccounts() stub with a paginated API call',
+            'implement-account-read':         'Implement std:account:read — replace the getAccount() stub with a real API call',
+            'implement-account-create':       'Implement std:account:create — replace the createAccount() stub with a real API call',
+            'implement-account-update':       'Implement std:account:update — replace the updateAccount() stub with real API calls',
+            'implement-account-delete':       'Implement std:account:delete — replace the deleteAccount() stub with a real API call',
+            'implement-account-enable':       'Implement std:account:enable — replace the enableAccount() stub with a real API call',
+            'implement-account-disable':      'Implement std:account:disable — replace the disableAccount() stub with a real API call',
+            'implement-account-unlock':       'Implement std:account:unlock — replace the unlockAccount() stub with a real API call',
+            'implement-change-password':      'Implement std:change-password — replace the changePassword() stub with a real API call',
+            'implement-entitlement-list':     'Implement std:entitlement:list — replace the getEntitlements() stub with a paginated API call',
+            'implement-entitlement-read':     'Implement std:entitlement:read — replace the getEntitlement() stub with a real API call',
+            'implement-source-data-discover': 'Implement std:source-data:discover — replace the discoverSourceData() stub',
+            'implement-source-data-read':     'Implement std:source-data:read — replace the readSourceData() stub',
+        };
+
+        const result: Record<string, string> = {};
+        for (const [mdFile, content] of Object.entries(commands)) {
+            const key = mdFile.replace(/\.md$/, '');
+            const desc = descriptions[key] ?? key;
+            const mdcContent = `---\ndescription: ${desc}\nglobs: \nalwaysApply: false\n---\n\n${content}`;
+            result[`${key}.mdc`] = mdcContent;
+        }
+        return result;
     }
 
     // ─── Section helpers for additional config preview ───────────────────────────

@@ -425,6 +425,14 @@ export class SaasConnectivityCreatorComponent {
         return ConnectorCodeGenerator.generateGitIgnore();
     }
 
+    get generatedIndexSpec(): string {
+        return ConnectorCodeGenerator.generateIndexSpec(this.buildWizardState());
+    }
+
+    get generatedClientSpec(): string {
+        return ConnectorCodeGenerator.generateClientSpec(this.buildWizardState());
+    }
+
     // ─── Download ────────────────────────────────────────────────────────────────
 
     async downloadProject(): Promise<void> {
@@ -440,6 +448,20 @@ export class SaasConnectivityCreatorComponent {
         const src = folder.folder('src')!;
         src.file('index.ts', ConnectorCodeGenerator.generateIndexTs(state));
         src.file(`${state.connectorName}-client.ts`, ConnectorCodeGenerator.generateClientTs(state));
+        src.file('index.spec.ts', ConnectorCodeGenerator.generateIndexSpec(state));
+        src.file(`${state.connectorName}-client.spec.ts`, ConnectorCodeGenerator.generateClientSpec(state));
+
+        const claudeCommands = ConnectorCodeGenerator.generateClaudeCommands(state);
+        const claudeCommandsFolder = folder.folder('.claude')!.folder('commands')!;
+        for (const [filename, content] of Object.entries(claudeCommands)) {
+            claudeCommandsFolder.file(filename, content);
+        }
+
+        const cursorRules = ConnectorCodeGenerator.generateCursorRules(state);
+        const cursorRulesFolder = folder.folder('.cursor')!.folder('rules')!;
+        for (const [filename, content] of Object.entries(cursorRules)) {
+            cursorRulesFolder.file(filename, content);
+        }
 
         const blob = await zip.generateAsync({ type: 'blob' });
         const url = URL.createObjectURL(blob);

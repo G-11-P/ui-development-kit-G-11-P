@@ -197,6 +197,13 @@
           Config Hub
         </a>
       }
+        @if (isComponentEnabled('saas-connectivity-creator')) {
+          <a mat-list-item class="sidebar-link" routerLink="/saas-connectivity-creator" routerLinkActive="active-link"
+            [class.disabled]="!isConnected" (click)="onNavItemClick($event)">
+            <mat-icon class="card-icon">dashboard</mat-icon>
+            Saas Connectivity Creator
+          </a>
+        }
       </mat-nav-list>
     </mat-sidenav>
   }

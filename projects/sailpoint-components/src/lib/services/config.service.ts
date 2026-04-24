@@ -142,6 +142,14 @@ export class ConfigService {
             icon: 'dashboard',
             description: 'Manage config hub in SailPoint.',
             enabled: false
+        },
+        {
+            name: 'saas-connectivity-creator',
+            displayName: 'Saas Connectivity Creator',
+            route: '/saas-connectivity-creator',
+            icon: 'dashboard',
+            description: 'Manage saas connectivity creator in SailPoint.',
+            enabled: false
         }
     ];
 

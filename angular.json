@@ -22,27 +22,22 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular/build:application",
           "options": {
             "preserveSymlinks": true,
             "outputPath": "dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/prismjs/themes/prism-tomorrow.css",
-              "src/styles.scss",
               "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.scss"
             ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "./angular.webpack.js",
-              "replaceDuplicatePlugins": true
-            }
+            "scripts": []
           },
           "configurations": {
             "dev": {
@@ -50,10 +45,7 @@
               "outputHashing": "none",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -66,10 +58,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -82,10 +71,7 @@
               "outputHashing": "none",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -98,10 +84,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -112,7 +95,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "angular-electron:build"
           },

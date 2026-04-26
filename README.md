@@ -58,7 +58,7 @@ The UI Development Kit is a comprehensive template for building desktop applicat
 
 ### Angular
 
-This project is built with **Angular 19**, leveraging the latest features and improvements of the Angular framework. Angular provides:
+This project is built with **Angular 21**, leveraging the latest features and improvements of the Angular framework. Angular provides:
 
 - Component-based architecture for maintainable code
 - TypeScript support for enhanced development experience
